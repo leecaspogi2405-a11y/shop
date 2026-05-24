@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Xdragon - Strawberry Elephant Shop</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #121214;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .shop-header {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1a1a1e;
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+            box-sizing: border-box;
+            border: 1px solid #29292e;
+        }
+
+        .shop-header h2 { margin: 0; font-size: 16px; color: #ff4d6d; }
+        .currency-display { background-color: #ff4d6d; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+
+        .shop-container { width: 100%; max-width: 400px; }
+
+        .shop-item {
+            background-color: #1a1a1e;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            border: 1px solid #29292e;
+        }
+
+        .item-icon { font-size: 60px; margin-bottom: 10px; }
+        .shop-item h3 { margin: 10px 0 5px 0; font-size: 22px; color: #ff4d6d; }
+        .item-desc { font-size: 13px; color: #a0a0a5; margin-bottom: 20px; line-height: 1.4; }
+        .price { font-weight: bold; color: #00ffcc; margin-bottom: 20px; font-size: 20px; }
+
+        .buy-btn {
+            background-color: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.2s;
+        }
+        .buy-btn:active { background-color: #cc3b54; }
+
+        .notification-box {
+            position: fixed;
+            top: -140px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1c1c24;
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 12px;
+            width: 85%;
+            max-width: 360px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            border-left: 5px solid #ff4d6d;
+            z-index: 9999;
+            transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-sizing: border-box;
+        }
+
+        .notification-box.show { top: 20px; }
+        .notification-box p { margin: 0; font-size: 13px; line-height: 1.5; }
+        .code-highlight { background: #2a2a35; padding: 4px 8px; border-radius: 4px; color: #00ffcc; font-family: monospace; font-weight: bold; font-size: 15px; display: inline-block; margin-top: 5px; border: 1px dashed #00ffcc; }
+    </style>
+</head>
+<body>
+
+    <div class="shop-header">
+        <h2>🛠️ Xdragon Web Shop</h2>
+        <div class="currency-display">💰 Cash: $<span id="player-cash">500</span></div>
+    </div>
+
+    <div class="shop-container">
+        <div class="shop-item">
+            <div class="item-icon">🐘🍓</div>
+            <h3>Strawberry Elephant</h3>
+            <p class="item-desc">A super rare and limited mutation for your game! Buy now while codes last.</p>
+            <div class="price">💰 $100</div>
+            <button class="buy-btn" onclick="buyProduct()">Buy Product</button>
+        </div>
+    </div>
+
+    <div id="app-notification" class="notification-box">
+        <p id="notification-text"></p>
+    </div>
+
+    <script>
+        let currentCash = 500;
+        let availableCodes = [];
+
+        // Generates STRAWBERRY001 to STRAWBERRY1000 automatically on page load
+        for (let i = 1; i <= 1000; i++) {
+            let paddedNumber = String(i).padStart(3, '0');
+            availableCodes.push("STRAWBERRY" + paddedNumber);
+        }
+
+        function buyProduct() {
+            const cashDisplay = document.getElementById('player-cash');
+            const itemPrice = 100;
+
+            if (currentCash < itemPrice) {
+                alert("❌ You don't have enough Cash to buy this!");
+                return;
+            }
+
+            if (availableCodes.length === 0) {
+                alert("❌ Out of stock!");
+                return;
+            }
+
+            let highQualityCode = availableCodes.shift();
+            currentCash -= itemPrice;
+            cashDisplay.textContent = currentCash;
+
+            triggerNotification(highQualityCode);
+        }
+
+        function triggerNotification(code) {
+            const notification = document.getElementById('app-notification');
+            const notifText = document.getElementById('notification-text');
+
+            notifText.innerHTML = `<strong>Dev Xdragon:</strong> You have been received a Code, thanks for buying this product! Don't show this code: <br><span class="code-highlight">${code}</span>`;
+
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 12000);
+        }
+    </script>
+</body>
+</html>
