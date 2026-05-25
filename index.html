@@ -256,7 +256,7 @@
 
     <div class="modal-overlay hidden" id="tutorial-modal">
         <div class="modal-content">
-            <h3> HOW TO PLAY</h3>
+            <h3>🎮 HOW TO PLAY</h3>
             <ol>
                 <li>Click or tap the big <b>PLAY</b> button below to launch the minigame screen.</li>
                 <li>Control your avatar circle by pressing <b>A / D</b> or <b>Left / Right arrow keys</b> on your keyboard. If you are on a phone, simply tap the <b>Left or Right side</b> of the screen.</li>
@@ -317,8 +317,8 @@
 
                 codeOutput.innerText = "CODE: " + generatedCode;
                 codeOutput.classList.remove('hidden');
-                buyBtn.disabled = true;
-                buyBtn.style.backgroundColor = "#747d8c";
+                
+                // INFINITY BUY FIX: Hindi na ididisable ang button para makabili ulit kung may sapat na cash!
             } else {
                 alert("🚨 Insufficient Cash! You need $25,000. Play the game below to grind your distance points safely!");
             }
@@ -375,8 +375,8 @@
             ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
             ctx.fill();
 
-            let spawnChance = 0.03 + (distance * 0.00003);
-            if(Math.random() < Math.min(spawnChance, 0.14)) {
+            let spawnChance = 0.035 + (distance * 0.00004);
+            if(Math.random() < Math.min(spawnChance, 0.15)) {
                 obstacles.push({
                     x: Math.random() * (canvas.width - 50),
                     y: -20,
