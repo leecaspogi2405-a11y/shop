@@ -132,7 +132,7 @@
             flex-direction: row;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 15px;
         }
 
         .game-column {
@@ -140,12 +140,14 @@
             background-color: #1e1e1e;
             padding: 10px 15px;
             border-radius: 10px;
-            min-width: 100px;
+            min-width: 85px;
+            flex: 1 1 calc(50% - 15px);
+            box-sizing: border-box;
         }
 
         .game-section-title {
             color: #ffa502;
-            font-size: 1rem;
+            font-size: 0.85rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -154,7 +156,7 @@
 
         .play-trigger-btn {
             color: #ff4757;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 900;
             cursor: pointer;
             letter-spacing: 1px;
@@ -351,6 +353,164 @@
             border: 1px solid #ff4757;
             box-sizing: border-box;
         }
+
+        /* --- BURGER BOMB UI ELEMENTS --- */
+        .burger-game-panel {
+            width: 100%;
+            max-width: 360px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            border: 2px solid #ff9f43;
+        }
+
+        .burger-mode-select {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .mode-tab-btn {
+            flex: 1;
+            padding: 8px;
+            background-color: #2f3542;
+            color: #747d8c;
+            border: 2px solid #3f4452;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .mode-tab-btn.active {
+            background-color: #ff9f43;
+            color: #121212;
+            border-color: #ffa502;
+        }
+
+        .burger-instruction-banner {
+            background-color: #2c3e50;
+            color: #f1c40f;
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        .burger-status-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #ff9f43;
+            border-bottom: 1px solid #333;
+            padding-bottom: 6px;
+        }
+
+        .burger-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .burger-tile {
+            width: 85px;
+            height: 85px;
+            background-color: #2f3542;
+            border: 3px solid #747d8c;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .burger-tile:hover {
+            border-color: #ff9f43;
+            background-color: #3f4452;
+            transform: scale(1.03);
+        }
+
+        .burger-tile.revealed {
+            background-color: #121212;
+            border-color: #ff4757;
+            cursor: not-allowed;
+        }
+
+        .tile-marker-label {
+            position: absolute;
+            bottom: 2px;
+            font-size: 0.65rem;
+            color: #ffa502;
+            font-weight: bold;
+        }
+
+        .burger-hint-btn {
+            background-color: #ffa502;
+            color: #121212;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .burger-hint-btn:hover {
+            background-color: #ffb123;
+        }
+
+        .burger-end-overlay {
+            background-color: rgba(30, 30, 30, 0.95);
+            border: 2px solid #ff4757;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .burger-end-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .burger-end-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .burger-action-btn {
+            flex: 1;
+            padding: 10px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -408,10 +568,14 @@
             <p class="game-section-title">FARM GAME</p>
             <button class="play-trigger-btn" id="launch-farm-btn">🌾 PLAY</button>
         </div>
+        <div class="game-column" style="border: 1px dashed #ff9f43;">
+            <p class="game-section-title" style="color: #ff9f43;">BURGER BOMB</p>
+            <button class="play-trigger-btn" id="launch-burger-btn" style="color: #ff9f43;">🍔 PLAY</button>
+        </div>
     </div>
 
     <div class="history-card">
-        <h3 style="color: #ff4757; margin: 0 0 10px 0; font-size: 1.05rem; text-align: center;">📜 UNLIMITED CODE GENERATION HISTORY</h3>
+        <h3 style="color: #ff4757; margin: 0 0 10px 0; font-size: 1.05rem; text-align: center;">📜 GLOBAL CODE GENERATION HISTORY</h3>
         <div id="code-history-box" style="max-height: 140px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; text-align: left; padding: 5px; color: #a4b0be;">
             <div style="border-bottom: 1px solid #333; padding: 4px 0; color: gray;">[System Log]: No tokens generated yet.</div>
         </div>
@@ -423,8 +587,11 @@
             <ol>
                 <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
                 <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding the green <b>Bushes</b>. One hit makes the train chase you closely!</li>
-                <li><b>FARM GAME:</b> Click a fence plot to move the farmer. Buy pets to place inside unlocked fences.</li>
-                <li>Click <b>🌾 Wheat</b> and press <b>"Grab?"</b> to harvest food. Click a pet and hit <b>"Eat?"</b> to feed it! Every age up awards <b>Cash based on Pet Base Price × New Age</b>! Locked plots cost $150. Progress saves automatically.</li>
+                <li><b>FARM GAME:</b> Click a fence plot to move the farmer. Buy pets to place inside unlocked fences. Age up rewards cash.</li>
+                <li><b>BURGER BOMB GAME:</b> Hulaan ang mga nakatagong bomba! 
+                    <br>• <b>Bot Mode:</b> Ikaw ang manu-manong magtatago ng 3 bomba mo, at magtatago rin ang Bot. May bayad na pusta ($500). Hint is $1500.
+                    <br>• <b>Multiplayer Mode:</b> Practice Room para sa 2 Players sa isang CP! Walang bayad/bawas sa Cash. Magtatago si P1 at P2 ng kani-kanilang bomba bago simulan ang laban.
+                </li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
@@ -438,6 +605,34 @@
         </div>
         
         <canvas id="runnerCanvas" width="360" height="420"></canvas>
+        
+        <div class="burger-game-panel hidden" id="burger-game-panel">
+            <div class="burger-mode-select">
+                <button class="mode-tab-btn active" id="burger-mode-bot-btn">🤖 BOT MODE</button>
+                <button class="mode-tab-btn" id="burger-mode-mp-btn">👥 MULTIPLAYER</button>
+            </div>
+
+            <div class="burger-instruction-banner" id="burger-instruction-text">
+                Setup Phase: I-click ang 3 Burger para itago ang mga Bomba mo!
+            </div>
+
+            <div class="burger-status-header">
+                <div id="burger-side-a-label">🤖 Bot: <span id="burger-bot-hearts">❤️❤️❤️</span></div>
+                <div id="burger-side-b-label">👨‍💼 Player: <span id="burger-player-hearts">❤️❤️❤️</span></div>
+            </div>
+            
+            <button class="burger-hint-btn" id="burger-hint-btn">🧐 Buy Hint (-$1500 Cash)</button>
+            
+            <div class="burger-grid" id="burger-grid-container"></div>
+
+            <div class="burger-end-overlay hidden" id="burger-end-overlay">
+                <div class="burger-end-title" id="burger-end-title">YOU WIN!</div>
+                <div class="burger-end-buttons">
+                    <button class="burger-action-btn" style="background-color: #2ed573; color: white;" id="burger-retry-btn">Retry</button>
+                    <button class="burger-action-btn" style="background-color: #ff4757; color: white;" id="burger-exit-btn">Exit</button>
+                </div>
+            </div>
+        </div>
         
         <div id="farm-ui-bubble-container" style="margin-top: 8px; min-height: 40px; display: flex; gap: 10px; align-items: center;"></div>
         
@@ -487,6 +682,17 @@
         let wheatCount = parseInt(localStorage.getItem("Xdragon_WheatCount")) || 0;
         let selectedTargetIndex = null; 
         let activeActionType = null; 
+
+        // --- BURGER BOMB CONFIGS ---
+        let burgerMatchMode = "bot"; 
+        let burgerPhase = "setup-player1"; 
+        let botHearts = 3;
+        let playerHearts = 3; 
+        let botBombs = []; 
+        let playerBombs = []; 
+        let revealedBotTiles = []; 
+        let revealedPlayerTiles = []; 
+        let burgerGameActive = false;
         
         const petRewardsTable = { '🐈': 5, '🐕': 5, '🐖': 10, '🐑': 15, '🐅': 20, '🐍': 20, '🐄': 30, '🐊': 30, '🐢': 50 };
 
@@ -513,25 +719,29 @@
         const controlHint = document.getElementById('control-hint');
         const bubbleContainer = document.getElementById('farm-ui-bubble-container');
         const farmShopPanel = document.getElementById('farm-shop-panel');
+        const burgerGamePanel = document.getElementById('burger-game-panel');
         
         const launchLaserBtn = document.getElementById('launch-laser-btn');
         const launchTrainBtn = document.getElementById('launch-train-btn');
         const launchFarmBtn = document.getElementById('launch-farm-btn');
+        const launchBurgerBtn = document.getElementById('launch-burger-btn');
         const howToPlayBtn = document.getElementById('how-to-play-btn');
         const tutorialModal = document.getElementById('tutorial-modal');
         const closeModalBtn = document.getElementById('close-modal-btn');
 
         cashEl.innerText = cash;
         loadFarmProgress(); 
-        updateHistoryUI(); 
+        initGlobalHistoryLogs(); 
 
         howToPlayBtn.addEventListener('click', () => tutorialModal.classList.remove('hidden'));
         closeModalBtn.addEventListener('click', () => tutorialModal.classList.add('hidden'));
 
         function handleExitToShop() {
             gameRunning = false;
+            burgerGameActive = false;
             gameScreen.classList.add('hidden');
             farmShopPanel.classList.add('hidden');
+            burgerGamePanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             saveFarmProgress(); 
             updateGlobalCash();
@@ -540,6 +750,7 @@
         launchLaserBtn.addEventListener('click', () => {
             currentGameMode = "laser";
             farmShopPanel.classList.add('hidden');
+            burgerGamePanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             modeStatLabel.innerHTML = 'Distance: <span id="distance-val">000000</span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
             document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
@@ -551,6 +762,7 @@
         launchTrainBtn.addEventListener('click', () => {
             currentGameMode = "train";
             farmShopPanel.classList.add('hidden');
+            burgerGamePanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             modeStatLabel.innerHTML = 'Coins: <span id="distance-val">0</span> <span id="alert-timer-label" style="color:#ffa502; margin-left:15px;"></span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
             document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
@@ -562,6 +774,7 @@
         launchFarmBtn.addEventListener('click', () => {
             currentGameMode = "farm";
             farmShopPanel.classList.remove('hidden');
+            burgerGamePanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             modeStatLabel.innerHTML = '🌾 Inventory: <span id="distance-val">0</span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
             document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
@@ -570,7 +783,17 @@
             initGame();
         });
 
-        // --- NEW SECURITY FUNCTION: ALPHANUMERIC GENERATOR ---
+        launchBurgerBtn.addEventListener('click', () => {
+            currentGameMode = "burger";
+            farmShopPanel.classList.add('hidden');
+            bubbleContainer.innerHTML = "";
+            modeStatLabel.innerHTML = '<span style="color:#ff9f43;">🍔 Burger Bomb Arena</span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
+            document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
+            controlHint.innerText = "Hulaan ang tamang burger at iwasan ang mga nakatagong bomba!";
+            gameScreen.classList.remove('hidden');
+            initGame();
+        });
+
         function generateSecureToken(length) {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let token = '';
@@ -584,33 +807,60 @@
             if (cash >= 25000) {
                 cash -= 25000;
                 updateGlobalCash();
-
-                // Gagawa ng 16-character secure text string (Example: XDRG-TOOL-K8P2W4X7Z1Q9V5R3)
                 let secureToken = generateSecureToken(16);
                 let generatedCode = "XDRG-TOOL-" + secureToken;
-
                 codeOutput.innerText = "CODE: " + generatedCode;
                 codeOutput.classList.remove('hidden');
-
-                let timestamp = new Date().toLocaleTimeString();
-                codeHistoryList.unshift({ token: generatedCode, time: timestamp });
-                if(codeHistoryList.length > 30) codeHistoryList.pop(); 
                 
+                let timestamp = new Date().toLocaleTimeString();
+                codeHistoryList.unshift({ user: "Christian Lee (You)", token: generatedCode, time: timestamp });
+                if(codeHistoryList.length > 35) codeHistoryList.pop(); 
                 localStorage.setItem("Xdragon_CodeLogs", JSON.stringify(codeHistoryList));
-                updateHistoryUI();
+                renderHistoryUI();
             } else {
                 alert("🚨 Insufficient Funds! You need $25,000 Cash.");
             }
         });
 
-        function updateHistoryUI() {
+        function initGlobalHistoryLogs() {
+            if(codeHistoryList.length === 0) {
+                const dummyNames = ["Noobini_Pizzalini", "Austroman", "Gangster_Footera", "Slayer99", "Robloxian_412", "BloxMaster"];
+                let baseTime = Date.now() - 3600000;
+                for(let i=0; i<8; i++) {
+                    let randName = dummyNames[Math.floor(Math.random() * dummyNames.length)];
+                    let fakeToken = "XDRG-TOOL-" + generateSecureToken(16);
+                    let fakeTimeStr = new Date(baseTime + (i * 400000)).toLocaleTimeString();
+                    codeHistoryList.push({ user: randName, token: fakeToken, time: fakeTimeStr });
+                }
+                localStorage.setItem("Xdragon_CodeLogs", JSON.stringify(codeHistoryList));
+            }
+            renderHistoryUI();
+            
+            setInterval(() => {
+                if(Math.random() < 0.25) { 
+                    const fakeUsers = ["Noobini_Pizzalini", "Austroman", "Gangster_Footera", "X_Gamer", "ProBuilder", "BloxSurv"];
+                    let randUser = fakeUsers[Math.floor(Math.random()*fakeUsers.length)];
+                    let fakeToken = "XDRG-TOOL-" + generateSecureToken(16);
+                    let currTimeStr = new Date().toLocaleTimeString();
+                    codeHistoryList.unshift({ user: randUser, token: fakeToken, time: currTimeStr });
+                    if(codeHistoryList.length > 35) codeHistoryList.pop();
+                    localStorage.setItem("Xdragon_CodeLogs", JSON.stringify(codeHistoryList));
+                    renderHistoryUI();
+                }
+            }, 12000);
+        }
+
+        function renderHistoryUI() {
             let historyBox = document.getElementById("code-history-box");
-            if (codeHistoryList.length === 0) return;
             historyBox.innerHTML = "";
             codeHistoryList.forEach(item => {
-                historyBox.innerHTML += `<div style="border-bottom: 1px solid #262626; padding: 5px 0; display:flex; justify-content:space-between;">
-                    <span style="color: #2ed573; font-weight:bold;">${item.token}</span>
-                    <span style="color: #57606f; font-size: 0.75rem;">${item.time}</span>
+                let userColor = item.user.includes("You") ? "#ff4757" : "#ffa502";
+                historyBox.innerHTML += `<div style="border-bottom: 1px solid #262626; padding: 5px 0; display:flex; flex-direction:column; gap:2px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
+                        <span style="color: ${userColor}; font-weight:bold;">👤 ${item.user}</span>
+                        <span style="color: #57606f;">${item.time}</span>
+                    </div>
+                    <span style="color: #2ed573; font-weight:bold; font-size:0.85rem;">${item.token}</span>
                 </div>`;
             });
         }
@@ -640,11 +890,328 @@
             }
         }
 
+        // --- BURGER BOMB SYSTEM ENGINES ---
+        document.getElementById('burger-mode-bot-btn').onclick = () => {
+            if(burgerGameActive && (playerBombs.length > 0 || botBombs.length > 0)) return;
+            burgerMatchMode = "bot";
+            document.getElementById('burger-mode-bot-btn').classList.add('active');
+            document.getElementById('burger-mode-mp-btn').classList.remove('active');
+            initBurgerGame();
+        };
+
+        document.getElementById('burger-mode-mp-btn').onclick = () => {
+            if(burgerGameActive && (playerBombs.length > 0 || botBombs.length > 0)) return;
+            burgerMatchMode = "multiplayer";
+            document.getElementById('burger-mode-mp-btn').classList.add('active');
+            document.getElementById('burger-mode-bot-btn').classList.remove('active');
+            initBurgerGame();
+        };
+
+        function initBurgerGame() {
+            botHearts = 3;
+            playerHearts = 3;
+            revealedBotTiles = [];
+            revealedPlayerTiles = [];
+            playerBombs = [];
+            botBombs = [];
+            burgerGameActive = true;
+
+            document.getElementById('burger-end-overlay').classList.add('hidden');
+            
+            if(burgerMatchMode === "bot") {
+                burgerPhase = "setup-player1";
+                document.getElementById('burger-side-a-label').innerHTML = "🤖 Bot: <span id=\"burger-bot-hearts\">❤️❤️❤️</span>";
+                document.getElementById('burger-side-b-label').innerHTML = "👨‍💼 Ikaw: <span id=\"burger-player-hearts\">❤️❤️❤️</span>";
+                document.getElementById('burger-instruction-text').innerText = "SETUP: I-click ang 3 Burger na gusto mong lagyan ng bomba mo!";
+                document.getElementById('burger-hint-btn').classList.remove('hidden');
+            } else {
+                burgerPhase = "setup-player1";
+                document.getElementById('burger-side-a-label').innerHTML = "👤 Player 1: <span id=\"burger-bot-hearts\">❤️❤️❤️</span>";
+                document.getElementById('burger-side-b-label').innerHTML = "👤 Player 2: <span id=\"burger-player-hearts\">❤️❤️❤️</span>";
+                document.getElementById('burger-instruction-text').innerText = "P1 SETUP: Iabot kay Player 1. Pumili ng 3 Burger para sa bomba mo!";
+                document.getElementById('burger-hint-btn').classList.add('hidden'); 
+            }
+
+            updateBurgerHeartsUI();
+            renderBurgerGrid();
+        }
+
+        function updateBurgerHeartsUI() {
+            document.getElementById('burger-bot-hearts').innerText = "❤️".repeat(Math.max(0, botHearts)) || "💀";
+            document.getElementById('burger-player-hearts').innerText = "❤️".repeat(Math.max(0, playerHearts)) || "💀";
+        }
+
+        function renderBurgerGrid() {
+            const container = document.getElementById('burger-grid-container');
+            container.innerHTML = "";
+            
+            for(let i = 0; i < 9; i++) {
+                let tile = document.createElement('div');
+                tile.className = "burger-tile";
+                tile.dataset.index = i;
+                tile.innerText = "🍔";
+
+                let marker = document.createElement('span');
+                marker.className = "tile-marker-label";
+                marker.innerText = "#" + (i + 1);
+                tile.appendChild(marker);
+                
+                if(burgerPhase === "setup-player1") {
+                    if(playerBombs.includes(i)) {
+                        tile.innerText = "💣";
+                        tile.style.backgroundColor = "#ff9f43";
+                    }
+                } 
+                else if(burgerPhase === "setup-player2") {
+                    if(botBombs.includes(i)) {
+                        tile.innerText = "💣";
+                        tile.style.backgroundColor = "#ff9f43";
+                    }
+                }
+                else if(burgerPhase === "battle-p1-turn") {
+                    if(revealedBotTiles.includes(i)) {
+                        tile.classList.add('revealed');
+                        if(botBombs.includes(i)) {
+                            tile.innerText = "💣";
+                            tile.style.backgroundColor = "#ff4757";
+                        } else {
+                            tile.innerText = "🍽️";
+                            tile.style.backgroundColor = "#2c3e50";
+                        }
+                    }
+                }
+                else if(burgerPhase === "battle-p2-turn") {
+                    if(revealedPlayerTiles.includes(i)) {
+                        tile.classList.add('revealed');
+                        if(playerBombs.includes(i)) {
+                            tile.innerText = "💣";
+                            tile.style.backgroundColor = "#ff4757";
+                        } else {
+                            tile.innerText = "🍽️";
+                            tile.style.backgroundColor = "#2c3e50";
+                        }
+                    }
+                }
+                
+                tile.onclick = () => handleBurgerTileInteraction(i);
+                container.appendChild(tile);
+            }
+        }
+
+        function handleBurgerTileInteraction(index) {
+            if(!burgerGameActive) return;
+
+            if(burgerPhase === "setup-player1") {
+                if(playerBombs.includes(index)) {
+                    playerBombs = playerBombs.filter(b => b !== index);
+                } else if(playerBombs.length < 3) {
+                    playerBombs.push(index);
+                }
+                renderBurgerGrid();
+
+                if(playerBombs.length === 3) {
+                    setTimeout(() => {
+                        if(burgerMatchMode === "bot") {
+                            if(cash < 500) {
+                                alert("🚨 Kulang ang iyong cash! Kailangan mo ng $500 pusta para makalaban sa Bot.");
+                                handleExitToShop();
+                                return;
+                            }
+                            while(botBombs.length < 3) {
+                                let randSlot = Math.floor(Math.random() * 9);
+                                if(!botBombs.includes(randSlot)) botBombs.push(randSlot);
+                            }
+                            burgerPhase = "battle-p1-turn";
+                            document.getElementById('burger-instruction-text').innerText = "LABANAN: Hulaan ang Grid ng Bot! Pindutin ang burger.";
+                            alert("👍 Set na ang mga bomba mo! Ready na rin ang Bot. Simulan ang Hulaan!");
+                            renderBurgerGrid();
+                        } else {
+                            burgerPhase = "setup-player2";
+                            document.getElementById('burger-instruction-text').innerText = "P2 SETUP: Iabot ang CP kay Player 2! (Bawal sumilip si P1)";
+                            alert("🔒 Bomba ni Player 1 Naitago na!\n\nIabot ang cell phone kay Player 2 para sa kanyang turn.");
+                            renderBurgerGrid();
+                        }
+                    }, 500);
+                }
+                return;
+            }
+
+            if(burgerPhase === "setup-player2") {
+                if(botBombs.includes(index)) {
+                    botBombs = botBombs.filter(b => b !== index);
+                } else if(botBombs.length < 3) {
+                    botBombs.push(index);
+                }
+                renderBurgerGrid();
+
+                if(botBombs.length === 3) {
+                    setTimeout(() => {
+                        burgerPhase = "battle-p1-turn";
+                        document.getElementById('burger-instruction-text').innerText = "TURN: Player 1 Hulaan ang Burger ni P2!";
+                        alert("⚔️ Kumpleto na ang setup ng dalawang panig! Simulan na ang Battle Royale!");
+                        renderBurgerGrid();
+                    }, 500);
+                }
+                return;
+            }
+
+            if(burgerPhase === "battle-p1-turn") {
+                if(revealedBotTiles.includes(index)) return;
+                revealedBotTiles.push(index);
+                renderBurgerGrid();
+
+                if(botBombs.includes(index)) {
+                    botHearts--;
+                    updateBurgerHeartsUI();
+                    alert("💥 BOOM! Nakatama ng bomba!");
+                } else {
+                    alert("🍽️ Ligtas! Walang bomba ang burger na ito.");
+                }
+
+                if(checkBurgerGameEnd()) return;
+
+                setTimeout(() => {
+                    if(burgerMatchMode === "bot") {
+                        burgerPhase = "battle-p2-turn"; 
+                        executeBotAIAction();
+                    } else {
+                        burgerPhase = "battle-p2-turn";
+                        document.getElementById('burger-instruction-text').innerText = "TURN: Player 2 Hulaan ang Burger ni P1!";
+                        alert("🔄 Turn naman ni Player 2 ngayon!");
+                        renderBurgerGrid();
+                    }
+                }, 600);
+                return;
+            }
+
+            if(burgerPhase === "battle-p2-turn" && burgerMatchMode === "multiplayer") {
+                if(revealedPlayerTiles.includes(index)) return;
+                revealedPlayerTiles.push(index);
+                renderBurgerGrid();
+
+                if(playerBombs.includes(index)) {
+                    playerHearts--;
+                    updateBurgerHeartsUI();
+                    alert("💥 BOOM! Tinamaan mo ang bomba ni P1!");
+                } else {
+                    alert("🍽️ Ligtas! Walang bomba.");
+                }
+
+                if(checkBurgerGameEnd()) return;
+
+                setTimeout(() => {
+                    burgerPhase = "battle-p1-turn";
+                    document.getElementById('burger-instruction-text').innerText = "TURN: Player 1 Hulaan ang Burger ni P2!";
+                    alert("🔄 Balik kay Player 1!");
+                    renderBurgerGrid();
+                }, 600);
+            }
+        }
+
+        function executeBotAIAction() {
+            let availableSlots = [];
+            for(let i = 0; i < 9; i++) {
+                if(!revealedPlayerTiles.includes(i)) availableSlots.push(i);
+            }
+            
+            if(availableSlots.length > 0) {
+                let botChoice = availableSlots[Math.floor(Math.random() * availableSlots.length)];
+                revealedPlayerTiles.push(botChoice);
+                
+                if(playerBombs.includes(botChoice)) {
+                    playerHearts--;
+                    updateBurgerHeartsUI();
+                    alert("🤖 Bot Turn:\n\n💥 ARAY! Nahanap ng Bot ang bomba mo sa Burger #" + (botChoice+1) + "!");
+                } else {
+                    alert("🤖 Bot Turn:\n\n🍽️ Ligtas ang Bot. Walang bomba sa pinili niyang Burger #" + (botChoice+1) + ".");
+                }
+                
+                if(checkBurgerGameEnd()) return;
+            }
+
+            burgerPhase = "battle-p1-turn";
+            document.getElementById('burger-instruction-text').innerText = "LABANAN: Hulaan ang Grid ng Bot! Pindutin ang burger.";
+            renderBurgerGrid();
+        }
+
+        document.getElementById('burger-hint-btn').onclick = () => {
+            if(!burgerGameActive || burgerPhase !== "battle-p1-turn") return;
+            if(cash < 1500) {
+                alert("🚨 Kulang ang Cash mo! Kailangan mo ng $1,500 para sa hint.");
+                return;
+            }
+            
+            let hiddenBombs = botBombs.filter(b => !revealedBotTiles.includes(b));
+            if(hiddenBombs.length > 0) {
+                cash -= 1500;
+                updateGlobalCash();
+                let randomSecretBomb = hiddenBombs[Math.floor(Math.random() * hiddenBombs.length)];
+                
+                revealedBotTiles.push(randomSecretBomb);
+                renderBurgerGrid();
+                
+                botHearts--;
+                updateBurgerHeartsUI();
+                alert("🧐 Hint Activated (-$1500 Cash):\n\nIsang bomba ng bot ay pinasabog sa Grid #" + (randomSecretBomb+1) + "!");
+                checkBurgerGameEnd();
+            } else {
+                alert("Lahat ng bomba ng bot ay nadiskubre mo na!");
+            }
+        };
+
+        function checkBurgerGameEnd() {
+            if(botHearts <= 0) {
+                endBurgerMatch(true);
+                return true;
+            }
+            if(playerHearts <= 0) {
+                endBurgerMatch(false);
+                return true;
+            }
+            return false;
+        }
+
+        function endBurgerMatch(isSideAWinner) {
+            burgerGameActive = false;
+            const overlay = document.getElementById('burger-end-overlay');
+            const title = document.getElementById('burger-end-title');
+            overlay.classList.remove('hidden');
+            
+            if(burgerMatchMode === "bot") {
+                if(isSideAWinner) {
+                    cash += 500;
+                    title.innerText = "🏆 PANALO KA! (+$500 Cash)";
+                    title.style.color = "#2ed573";
+                } else {
+                    cash = Math.max(0, cash - 500);
+                    title.innerText = "💀 TALO KA! (-$500 Cash)";
+                    title.style.color = "#ff4757";
+                }
+                updateGlobalCash();
+            } else {
+                if(isSideAWinner) {
+                    title.innerText = "👑 PLAYER 1 WINS THE PRACTICE ROOM!";
+                    title.style.color = "#2ed573";
+                } else {
+                    title.innerText = "👑 PLAYER 2 WINS THE PRACTICE ROOM!";
+                    title.style.color = "#ffa502";
+                }
+            }
+        }
+
+        document.getElementById('burger-retry-btn').onclick = () => {
+            initBurgerGame();
+        };
+
+        document.getElementById('burger-exit-btn').onclick = () => {
+            handleExitToShop();
+        };
+
+        // --- GLOBAL ARCADE CONTROLLER ---
         function initGame() {
             canvas = document.getElementById('runnerCanvas');
             ctx = canvas.getContext('2d');
             distance = 0;
-            gameRunning = true;
             obstacles = [];
             activeCoins = [];
             activeBushes = [];
@@ -653,6 +1220,17 @@
             selectedTargetIndex = null;
             activeActionType = null;
 
+            if (currentGameMode === "burger") {
+                canvas.classList.add('hidden');
+                burgerGamePanel.classList.remove('hidden');
+                initBurgerGame();
+                return;
+            } else {
+                canvas.classList.remove('hidden');
+                burgerGamePanel.classList.add('hidden');
+            }
+
+            gameRunning = true;
             runner = {
                 x: canvas.width / 2 - 15,
                 y: canvas.height - 140, 
@@ -685,25 +1263,25 @@
             }
 
             window.onkeydown = (e) => {
-                if(currentGameMode === "farm") return;
+                if(currentGameMode === "farm" || currentGameMode === "burger") return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
             };
             window.onkeyup = (e) => {
-                if(currentGameMode === "farm") return;
+                if(currentGameMode === "farm" || currentGameMode === "burger") return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
             };
 
             canvas.ontouchstart = (e) => {
-                if(currentGameMode === "farm") return;
+                if(currentGameMode === "farm" || currentGameMode === "burger") return;
                 let rect = canvas.getBoundingClientRect();
                 let touchX = e.touches[0].clientX - rect.left;
                 if(touchX < canvas.width / 2) runner.moveLeft = true;
                 else runner.moveRight = true;
             };
             canvas.ontouchend = () => {
-                if(currentGameMode === "farm") return;
+                if(currentGameMode === "farm" || currentGameMode === "burger") return;
                 runner.moveLeft = false; runner.moveRight = false;
             };
 
@@ -822,7 +1400,7 @@
         }
 
         function gameLoop() {
-            if(!gameRunning) return;
+            if(!gameRunning || currentGameMode === "burger") return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
             if (currentGameMode === "farm") {
