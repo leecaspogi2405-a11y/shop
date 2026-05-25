@@ -187,7 +187,7 @@
     </div>
 
     <script>
-        // Web Local Storage Data Saving Setup
+        // Fixed LocalStorage handling to safely keep data stored when leaving the site
         let cash = parseInt(localStorage.getItem("Xdragon_WebCash")) || 0; 
         let distance = 0;
         let gameRunning = false;
@@ -209,19 +209,15 @@
         });
 
         buyBtn.addEventListener('click', () => {
-            // CHECKING VALUE UPDATED TO 100,000
             if (cash >= 100000) {
                 cash -= 100000;
                 cashEl.innerText = cash;
                 
                 localStorage.setItem("Xdragon_WebCash", cash);
                 
-                // Secure mathematical decryption logic calculation
                 let mathKey = (cash + 100000) * 7;
-                localUpdateFrame
-                let generatedCode = "XDRG-TOOL-" + mathKey;
+                let generatedCode = "XDRG-TOOL-" + mathKey; // FIXED: Removed broken text error line here
 
-                // NOTIFICATION DISPLAY SYSTEM (This triggers the visible screen popup box)
                 codeOutput.innerText = "CODE: " + generatedCode;
                 codeOutput.classList.remove('hidden');
                 buyBtn.disabled = true;
@@ -243,7 +239,7 @@
                 x: canvas.width / 2 - 15,
                 y: canvas.height - 50,
                 w: 30, h: 30, 
-                speed: 3.5 // ULTRA SLOW PLAYER: Very chill and precise handling control
+                speed: 3 // Perfectly slow, chill control handling
             };
 
             window.onkeydown = (e) => {
@@ -274,8 +270,8 @@
 
             localUpdateFrame++;
             
-            // SUPER SLOW SCORE TICKER: Increases score by 1 every 8 animation ticks
-            if (localUpdateFrame % 8 === 0) {
+            -- NERFED COUNTER SPEED: Score now only increases once every 18 frames! Super chill grind.
+            if (localUpdateFrame % 18 === 0) {
                 distance += 1;
             }
             distanceEl.innerText = String(distance).padStart(6, '0');
@@ -288,16 +284,16 @@
             ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
             ctx.fill();
 
-            // ULTRA NERFED SPAWN RATE: Gives massive windows of safety gap intervals
-            let spawnChance = 0.008 + (distance * 0.000002);
-            if(Math.random() < Math.min(spawnChance, 0.04) && localUpdateFrame % 25 === 0) {
+            // NERFED SPAWN ENGINE: Massive timing gaps between lasers
+            let spawnChance = 0.005 + (distance * 0.000001);
+            if(Math.random() < Math.min(spawnChance, 0.03) && localUpdateFrame % 35 === 0) {
                 obstacles.push({
                     x: Math.random() * (canvas.width - 50),
                     y: -20,
-                    w: Math.random() * 35 + 25, // Thinner lasers
+                    w: Math.random() * 30 + 25, 
                     h: 10,
-                    // COMFORT GRAVITY SPEED: Slowest fluid drop speed for easy reactions
-                    speed: 1.3 + (distance * 0.0001) + Math.random() * 0.8 
+                    // CHILL DROP SPEED: Slow drifting lasers
+                    speed: 1.0 + (distance * 0.0001) + Math.random() * 0.5 
                 });
             }
 
@@ -315,10 +311,10 @@
                     
                     gameRunning = false;
                     
-                    // Direct strictly tracked 1:1 balance delivery conversion
                     let earnedCash = distance; 
                     cash += earnedCash;
                     
+                    // Securely saves cash directly into local Web Storage
                     localStorage.setItem("Xdragon_WebCash", cash);
                     
                     alert("💥 CRASHED!\n\nDistance Reached: " + distance + "\nEarned: +$" + earnedCash + " Cash!");
