@@ -852,6 +852,7 @@
 
         function renderHistoryUI() {
             let historyBox = document.getElementById("code-history-box");
+            if (!historyBox) return;
             historyBox.innerHTML = "";
             codeHistoryList.forEach(item => {
                 let userColor = item.user.includes("You") ? "#ff4757" : "#ffa502";
@@ -880,7 +881,7 @@
             if(savedFences) {
                 let parsedFences = JSON.parse(savedFences);
                 parsedFences.forEach((savedFence, idx) => {
-                    if (fences[idx]) {
+                    if (fences[idx] && savedFence) {
                         fences[idx].locked = savedFence.locked;
                         fences[idx].pet = savedFence.pet;
                         fences[idx].age = savedFence.age;
@@ -1307,7 +1308,7 @@
 
             for (let i = 0; i < fences.length; i++) {
                 let f = fences[i];
-                if (clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
+                if (f && clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
                     selectedTargetIndex = i;
                     
                     if (f.locked) {
@@ -1334,6 +1335,7 @@
             }
         }
 
+        // 🔥 MAAYOS NA NA FUNCTION (MAY BREAK NA AT SAFETY CHECK)
         function buyFarmPet(emoji, cost) {
             if (currentGameMode !== "farm") {
                 alert("You are outside the Farm mode! Enter the Farm Game first.");
@@ -1346,7 +1348,7 @@
 
             let slotFound = false;
             for (let i = 0; i < fences.length; i++) {
-                if (!fences[i].locked && fences[i].pet === null) {
+                if (fences[i] && !fences[i].locked && fences[i].pet === null) {
                     cash -= cost;
                     fences[i].pet = emoji;
                     fences[i].age = 1;
@@ -1355,7 +1357,7 @@
                     saveFarmProgress();
                     slotFound = true;
                     alert(`Pet successfully placed ${emoji} inside Fence Plot #${i+1}!`);
-                    break;
+                    break; // Huminto na rito para hindi masira ang looping system
                 }
             }
             if (!slotFound) {
@@ -1376,18 +1378,20 @@
                     document.getElementById('distance-val').innerText = wheatCount;
                     
                     let petObj = fences[selectedTargetIndex];
-                    petObj.xp += 50;
-                    
-                    if (petObj.xp >= 100) {
-                        petObj.xp = 0;
-                        petObj.age += 1; 
+                    if (petObj) {
+                        petObj.xp += 50;
                         
-                        let basePrice = petRewardsTable[petObj.pet] || 5;
-                        let customCashReward = basePrice * petObj.age;
-                        
-                        cash += customCashReward; 
-                        updateGlobalCash();
-                        alert(`🎉 Age Up! ${petObj.pet} reached Level ${petObj.age}! Earned +$${customCashReward} Cash!`);
+                        if (petObj.xp >= 100) {
+                            petObj.xp = 0;
+                            petObj.age += 1; 
+                            
+                            let basePrice = petRewardsTable[petObj.pet] || 5;
+                            let customCashReward = basePrice * petObj.age;
+                            
+                            cash += customCashReward; 
+                            updateGlobalCash();
+                            alert(`🎉 Age Up! ${petObj.pet} reached Level ${petObj.age}! Earned +$${customCashReward} Cash!`);
+                        }
                     }
                     
                     bubbleContainer.innerHTML = "";
@@ -1413,6 +1417,7 @@
                 ctx.fillText("🌾 🌾 🌾", wheatField.x + 6, wheatField.y + 32);
 
                 fences.forEach((f, idx) => {
+                    if (!f) return;
                     if (f.locked) {
                         ctx.fillStyle = 'rgba(139, 69, 19, 0.4)';
                         ctx.fillRect(f.x, f.y, f.w, f.h);
@@ -1458,7 +1463,7 @@
                         bubbleContainer.innerHTML = `<button class="farm-action-bubble" onclick="triggerFarmAction()">Grab 🌾?</button>`;
                     } else if (selectedTargetIndex !== null && selectedTargetIndex !== 999 && activeActionType === null) {
                         let targetFence = fences[selectedTargetIndex];
-                        if (!targetFence.locked && targetFence.pet) {
+                        if (targetFence && !targetFence.locked && targetFence.pet) {
                             activeActionType = 'eat';
                             bubbleContainer.innerHTML = `<button class="farm-action-bubble" onclick="triggerFarmAction()">Feed 🌾 to ${targetFence.pet}?</button>`;
                         }
