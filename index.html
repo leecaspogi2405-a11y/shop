@@ -175,11 +175,10 @@
             word-wrap: break-word;
         }
 
-        /* Modal Tutorial Box Styles */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: rgba(0, 0, 0, 0.75);
+            background-color: rgba(0, 0, 0, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -246,7 +245,7 @@
         <div class="description">
             A super rare tool for your game inventory!<br>Survive the lasers to earn cash.
         </div>
-        <div class="price-tag">💰 $100,000</div>
+        <div class="price-tag">💰 $25,000</div>
         <button class="btn" id="buy-btn">BUY PRODUCT</button>
         <div id="code-output" class="popup-box hidden"></div>
     </div>
@@ -257,13 +256,13 @@
 
     <div class="modal-overlay hidden" id="tutorial-modal">
         <div class="modal-content">
-            <h3>🎮 HOW TO PLAY</h3>
+            <h3> HOW TO PLAY</h3>
             <ol>
                 <li>Click or tap the big <b>PLAY</b> button below to launch the minigame screen.</li>
                 <li>Control your avatar circle by pressing <b>A / D</b> or <b>Left / Right arrow keys</b> on your keyboard. If you are on a phone, simply tap the <b>Left or Right side</b> of the screen.</li>
                 <li>Dodge the falling red laser beams. Every second you stay alive, your score distance ticks up.</li>
                 <li>When you crash into a laser, your accumulated distance points convert <b>1:1 straight into Cash</b>!</li>
-                <li>Grind your way up to <b>$100,000 Cash</b> to unlock the exclusive Strawberry Elephant code item!</li>
+                <li>Grind your way up to <b>$25,000 Cash</b> to unlock the exclusive Strawberry Elephant code item!</li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
@@ -276,7 +275,6 @@
     </div>
 
     <script>
-        // Web Local Storage Setup - Default starts at 0 if no local account data history is found
         let cash = parseInt(localStorage.getItem("Xdragon_WebCash")) || 0; 
         let distance = 0;
         let gameRunning = false;
@@ -289,14 +287,12 @@
         const buyBtn = document.getElementById('buy-btn');
         const codeOutput = document.getElementById('code-output');
         
-        // Tutorial Modal elements
         const howToPlayBtn = document.getElementById('how-to-play-btn');
         const tutorialModal = document.getElementById('tutorial-modal');
         const closeModalBtn = document.getElementById('close-modal-btn');
 
         cashEl.innerText = cash;
 
-        // Tutorial Modal Control Listeners
         howToPlayBtn.addEventListener('click', () => {
             tutorialModal.classList.remove('hidden');
         });
@@ -310,13 +306,13 @@
         });
 
         buyBtn.addEventListener('click', () => {
-            if (cash >= 100000) {
-                cash -= 100000;
+            if (cash >= 25000) {
+                cash -= 25000;
                 cashEl.innerText = cash;
                 
                 localStorage.setItem("Xdragon_WebCash", cash);
                 
-                let mathKey = (cash + 100000) * 7;
+                let mathKey = (cash + 25000) * 7;
                 let generatedCode = "XDRG-TOOL-" + mathKey;
 
                 codeOutput.innerText = "CODE: " + generatedCode;
@@ -324,7 +320,7 @@
                 buyBtn.disabled = true;
                 buyBtn.style.backgroundColor = "#747d8c";
             } else {
-                alert("🚨 Insufficient Cash! You need $100,000. Play the game below to grind your distance points safely!");
+                alert("🚨 Insufficient Cash! You need $25,000. Play the game below to grind your distance points safely!");
             }
         });
 
@@ -338,7 +334,7 @@
             runner = {
                 x: canvas.width / 2 - 15,
                 y: canvas.height - 50,
-                w: 30, h: 30, speed: 7, // Restored responsive snappy handling speed
+                w: 30, h: 30, speed: 6.5,
                 moveLeft: false, moveRight: false
             };
 
@@ -368,7 +364,6 @@
             if(!gameRunning) return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
-            // Restored standard original Distance engine tracking mechanics
             distance += 1;
             distanceEl.innerText = String(distance).padStart(6, '0');
 
@@ -380,15 +375,14 @@
             ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
             ctx.fill();
 
-            // Restored original challenging progressive obstacle scaling factor loops
-            let spawnChance = 0.035 + (distance * 0.00004);
-            if(Math.random() < Math.min(spawnChance, 0.16)) {
+            let spawnChance = 0.03 + (distance * 0.00003);
+            if(Math.random() < Math.min(spawnChance, 0.14)) {
                 obstacles.push({
                     x: Math.random() * (canvas.width - 50),
                     y: -20,
-                    w: Math.random() * 65 + 35, 
-                    h: 15,
-                    speed: 6.5 + (distance * 0.0012) + Math.random() * 4 // Restored original fast laser drop execution values
+                    w: Math.random() * 60 + 30, 
+                    h: 14,
+                    speed: 5.5 + (distance * 0.001) + Math.random() * 3.5
                 });
             }
 
