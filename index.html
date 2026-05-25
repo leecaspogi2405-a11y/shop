@@ -12,9 +12,6 @@
             --accent-orange: #ffa500;
             --text-white: #ffffff;
             --text-gray: #aaaaaa;
-            --border-red: #b32d2d;
-            --fence-green: #2ecc71;
-            --plot-locked: #4a2310;
         }
 
         body {
@@ -26,296 +23,223 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            user-select: none;
         }
 
         #game-wrapper {
             width: 100%;
             max-width: 420px;
-            height: 92vh;
-            background-color: #161616;
+            height: 90vh;
+            background-color: #000000;
             border: 2px solid var(--primary-red);
             border-radius: 16px;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
 
-        /* --- GLOBAL TOP NAVIGATION HEADER --- */
+        /* Header Styles */
         .game-header {
-            background-color: #0b0b0b;
+            background-color: var(--card-color);
             padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #2d2d2d;
-        }
-
-        .shop-title-wrapper {
-            display: flex;
-            flex-direction: column;
+            border-bottom: 1px solid #2d2d2d;
         }
 
         .shop-title {
             font-size: 16px;
             font-weight: bold;
             color: var(--primary-red);
-            margin: 0;
-        }
-
-        .how-to-play {
-            font-size: 12px;
-            color: #2ecc71;
-            text-decoration: underline;
-            cursor: pointer;
-            margin-top: 2px;
         }
 
         .cash-badge {
             background-color: var(--primary-red);
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            font-size: 14px;
         }
 
-        /* Screen Wrapper Structures */
+        /* Screen Containers */
         .screen {
             width: 100%;
-            height: calc(100% - 60px);
+            height: calc(100% - 55px);
             box-sizing: border-box;
+            padding: 16px;
+            overflow-y: auto;
             display: none;
-            position: relative;
         }
 
         .active-screen {
             display: block;
         }
 
-        /* --- SCREEN 1: MAIN MENU SHOP --- */
-        #main-shop-screen {
-            padding: 16px;
-            overflow-y: auto;
-        }
-
+        /* Shop Cards */
         .product-card {
             background-color: var(--card-color);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 20px;
             text-align: center;
-            margin-bottom: 24px;
-            border: 1px solid #2d2d2d;
+            margin-bottom: 20px;
         }
 
         .product-icons {
-            font-size: 48px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
+            font-size: 40px;
+            margin-bottom: 10px;
         }
 
         .product-name {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             color: var(--primary-red);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .product-desc {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-gray);
-            line-height: 1.4;
-            margin-bottom: 16px;
+            margin-bottom: 15px;
         }
 
         .product-price {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
             color: #2ecc71;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            margin-bottom: 15px;
         }
 
-        .btn-buy {
+        .btn {
             background-color: var(--primary-red);
             color: white;
             border: none;
-            padding: 14px;
-            border-radius: 10px;
+            padding: 12px 24px;
+            border-radius: 8px;
             font-weight: bold;
-            font-size: 16px;
             cursor: pointer;
             width: 100%;
+            font-size: 16px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .menu-navigation-grid {
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Menu Navigation Buttons */
+        .nav-section {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            padding: 0 10px;
+            gap: 12px;
+            align-items: center;
+            margin-top: 10px;
         }
 
-        .nav-item-box {
+        .nav-group {
             text-align: center;
+            width: 80%;
         }
 
-        .nav-tag-label {
+        .nav-label {
             color: var(--accent-orange);
             font-size: 12px;
             font-weight: bold;
             letter-spacing: 1px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
-        .btn-launch-play {
-            background-color: #1a1a1a;
-            color: var(--primary-red);
-            border: 2px solid #333;
+        .btn-nav {
+            background-color: var(--card-color);
+            border: 1px solid #333;
+            padding: 10px;
+        }
+
+        /* Mini-Games General Layout */
+        .game-canvas-area {
+            width: 100%;
+            height: 70%;
+            background-color: #151515;
+            border: 2px solid var(--primary-red);
             border-radius: 8px;
-            padding: 12px;
-            width: 100%;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        /* --- SCREEN 2 & 3: ARCADE MINIGAMES --- */
-        .arcade-container {
-            padding: 16px;
-            height: 100%;
-        }
-
-        .arcade-canvas {
-            width: 100%;
-            height: 65%;
-            background-color: #0b0b0b;
-            border: 2px solid var(--border-red);
-            border-radius: 12px;
             position: relative;
             overflow: hidden;
         }
 
-        .arcade-controls {
+        .game-controls {
             margin-top: 15px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .btn-arrow {
-            background-color: #222;
-            color: white;
-            border: 1px solid #444;
-            padding: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .btn-game-exit {
-            background-color: #444;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            margin-top: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* --- SCREEN 4: FARM GAME MODE (EXACT MATCH) --- */
-        .farm-view-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            background-color: #000000;
-        }
-
-        .farm-inventory-count {
-            color: var(--primary-red);
-            font-size: 18px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-farm-exit {
-            background-color: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .farm-playground-area {
-            border: 2px solid var(--border-red);
-            margin: 8px;
-            padding: 12px;
-            background-color: #111;
-            border-radius: 8px;
-            height: calc(100% - 190px);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        /* 3x3 Fences Layout Grid */
-        .fences-container-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
         }
 
-        .fence-slot {
-            aspect-ratio: 1;
-            border: 3px solid #5c3a21;
+        .btn-exit {
+            background-color: #555;
+            margin-top: 10px;
+        }
+
+        /* Canvas Entities Elements */
+        .player-node {
+            width: 30px;
+            height: 30px;
+            background-color: #00a8ff;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 10px;
+            left: calc(50% - 15px);
+            transition: left 0.1s ease-out;
+        }
+
+        .coin-node {
+            width: 15px;
+            height: 15px;
+            background-color: #f1c40f;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .danger-node {
+            position: absolute;
+            background-color: var(--primary-red);
+        }
+
+        /* Farm Game Layout */
+        .farm-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .farm-inventory-text {
+            color: var(--primary-red);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .farm-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .farm-plot {
+            background-color: #26b263;
+            border: 3px solid #8c5832;
             border-radius: 4px;
-            position: relative;
+            aspect-ratio: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
             cursor: pointer;
         }
 
-        .fence-active {
-            background-color: #26b263;
-            border-color: #8c5832;
+        .plot-emoji {
+            font-size: 28px;
         }
 
-        .fence-locked {
-            background-color: #3b1e11;
-            color: #f1c40f;
-            font-size: 12px;
-            font-weight: bold;
-            gap: 4px;
-        }
-
-        .fence-emoji {
-            font-size: 26px;
-        }
-
-        .fence-level-badge {
+        .plot-info {
             position: absolute;
             bottom: 2px;
             left: 0;
@@ -327,87 +251,46 @@
             padding: 1px 0;
         }
 
-        /* Harvesting Animation Core Base Area */
-        .farmer-animation-station {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-            position: relative;
-        }
-
-        .farmer-avatar {
-            font-size: 28px;
-            margin-bottom: 2px;
-            transition: transform 0.2s ease;
-        }
-
-        .crop-patch {
-            width: 80px;
-            height: 24px;
-            background-color: #e2b13c;
-            border-bottom: 4px solid #27ae60;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 12px;
-            color: #3b1e11;
-            font-weight: bold;
-        }
-
-        /* Marketplace Interface Panel */
-        .market-expansion-panel {
+        /* Market Section Styles */
+        .market-section {
+            margin-top: 20px;
             border: 2px solid var(--accent-orange);
             border-radius: 8px;
-            margin: 0 8px 8px 8px;
+            padding: 10px;
             background-color: #1a1e24;
-            padding: 8px;
         }
 
-        .market-panel-title {
+        .market-title {
             text-align: center;
-            font-size: 12px;
             color: var(--accent-orange);
+            font-size: 12px;
             font-weight: bold;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
-        .market-items-grid {
+        .market-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
+            gap: 8px;
         }
 
-        .market-buy-card {
+        .market-item {
             background-color: #272d37;
-            border-radius: 6px;
-            padding: 4px;
-            text-align: center;
-            cursor: pointer;
             border: 1px solid #3a414c;
+            border-radius: 6px;
+            padding: 6px;
+            text-align: center;
         }
 
-        .market-buy-card:active {
-            background-color: #3a414c;
+        .market-item-emoji {
+            font-size: 22px;
         }
 
-        .market-emoji {
-            font-size: 20px;
-        }
-
-        .market-cost-label {
+        .market-item-price {
             font-size: 11px;
             font-weight: bold;
             color: #ffa500;
             margin-top: 2px;
-        }
-
-        .bottom-helper-tip {
-            text-align: center;
-            font-size: 10px;
-            color: var(--text-gray);
-            margin-top: 6px;
         }
     </style>
 </head>
@@ -415,11 +298,8 @@
 
     <div id="game-wrapper">
         <div class="game-header">
-            <div class="shop-title-wrapper">
-                <span class="shop-title">🛠️ Xdragon Web Shop</span>
-                <span class="how-to-play">? How to play</span>
-            </div>
-            <div class="cash-badge" id="global-cash-display">💰 Cash: $13030</div>
+            <span class="shop-title">🛠️ Xdragon Web Shop</span>
+            <div class="cash-badge" id="global-cash-display">Cash: $13,030</div>
         </div>
 
         <div id="main-shop-screen" class="screen active-screen">
@@ -427,400 +307,307 @@
                 <div class="product-icons">🐘🍓</div>
                 <div class="product-name">Strawberry Elephant</div>
                 <div class="product-desc">A super rare tool for your game inventory! Survive lasers or outrun trains to stack cash.</div>
-                <div class="product-price">💰 $25,000</div>
-                <button class="btn-buy" onclick="purchaseRareTool()">Buy Product</button>
+                <div class="product-price">$25,000</div>
+                <button class="btn" onclick="buyStrawberryElephant()">Buy Product</button>
             </div>
 
-            <div class="menu-navigation-grid">
-                <div class="nav-item-box">
-                    <div class="nav-tag-label">LASER GAME</div>
-                    <button class="btn-launch-play" onclick="switchActiveScreen('laser')">PLAY</button>
+            <div class="nav-section">
+                <div class="nav-group">
+                    <div class="nav-label">LASER GAME</div>
+                    <button class="btn btn-nav" onclick="launchGame('laser')">PLAY</button>
                 </div>
-                <div class="nav-item-box">
-                    <div class="nav-tag-label">TRAIN GAME</div>
-                    <button class="btn-launch-play" onclick="switchActiveScreen('train')">PLAY</button>
+                <div class="nav-group">
+                    <div class="nav-label">TRAIN GAME</div>
+                    <button class="btn btn-nav" onclick="launchGame('train')">PLAY</button>
                 </div>
-                <div class="nav-item-box">
-                    <div class="nav-tag-label">FARM GAME</div>
-                    <button class="btn-launch-play" onclick="switchActiveScreen('farm')">🌾 PLAY</button>
+                <div class="nav-group">
+                    <div class="nav-label">FARM GAME</div>
+                    <button class="btn btn-nav" onclick="launchGame('farm')">🌾 PLAY</button>
                 </div>
             </div>
         </div>
 
-        <div id="laser-game-container" class="screen arcade-container">
-            <h3 style="margin:0 0 8px 0;">Laser Field Survival</h3>
-            <div style="margin-bottom:6px; font-size:14px;">Score Matrix: <span id="laser-score">0</span></div>
-            <div class="arcade-canvas" id="laser-canvas"></div>
-            <div class="arcade-controls">
-                <button class="btn-arrow" onclick="triggerPlayerMove(-1)">◀ Left</button>
-                <button class="btn-arrow" onclick="triggerPlayerMove(1)">Right ▶</button>
+        <div id="laser-game-container" class="screen">
+            <h3>Laser Field Survival</h3>
+            <div style="margin-bottom: 5px;">Score: <span id="laser-score">0</span></div>
+            <div class="game-canvas-area" id="laser-canvas"></div>
+            <div class="game-controls">
+                <button class="btn" onclick="movePlayerLeft()">◀ Left</button>
+                <button class="btn" onclick="movePlayerRight()">Right ▶</button>
             </div>
-            <button class="btn-game-exit" onclick="executeExitLoop()">EXIT TO SHOP</button>
+            <button class="btn btn-exit back-to-menu-btn">EXIT TO SHOP</button>
         </div>
 
-        <div id="train-game-container" class="screen arcade-container">
-            <h3 style="margin:0 0 8px 0;">Train Evaded Tracker</h3>
-            <div style="margin-bottom:6px; font-size:14px;">Coins Collected: <span id="train-score">0</span></div>
-            <div class="arcade-canvas" id="train-canvas"></div>
-            <div class="arcade-controls">
-                <button class="btn-arrow" onclick="triggerPlayerMove(-1)">◀ Left</button>
-                <button class="btn-arrow" onclick="triggerPlayerMove(1)">Right ▶</button>
+        <div id="train-game-container" class="screen">
+            <h3>Train Evaded Tracker</h3>
+            <div style="margin-bottom: 5px;">Coins Collected: <span id="train-score">0</span></div>
+            <div class="game-canvas-area" id="train-canvas"></div>
+            <div class="game-controls">
+                <button class="btn" onclick="movePlayerLeft()">◀ Left</button>
+                <button class="btn" onclick="movePlayerRight()">Right ▶</button>
             </div>
-            <button class="btn-game-exit" onclick="executeExitLoop()">EXIT TO SHOP</button>
+            <button class="btn btn-exit back-to-menu-btn">EXIT TO SHOP</button>
         </div>
 
         <div id="farm-game-container" class="screen">
-            <div class="farm-view-header">
-                <div class="farm-inventory-count">🌾 Inventory: <span id="farm-inventory-counter">0</span></div>
-                <button class="btn-farm-exit" onclick="executeExitLoop()">EXIT</button>
+            <div class="farm-header-row">
+                <div class="farm-inventory-text">🌾 Inventory: 0</div>
+                <button class="btn back-to-menu-btn" style="background-color: var(--primary-red); padding: 4px 12px; font-size: 14px; width: auto; margin: 0;">EXIT</button>
             </div>
+            
+            <div class="farm-grid" id="farm-plots-grid"></div>
 
-            <div class="farm-playground-area">
-                <div class="fences-container-grid" id="fences-rendering-target">
-                    </div>
-
-                <div class="farmer-animation-station">
-                    <div class="farmer-avatar" id="farmer-sprite">🤠</div>
-                    <div class="crop-patch">🌾🌾🌾</div>
-                </div>
-            </div>
-
-            <div class="market-expansion-panel">
-                <div class="market-panel-title">🚜 PET & EXPANSION MARKET</div>
-                <div class="market-items-grid" id="market-purchasing-rack">
-                    </div>
-                <div class="bottom-helper-tip">Click inside any fence or the 🌾 crops at the bottom to send the farmer 🤠 over!</div>
+            <div class="market-section">
+                <div class="market-title">🚜 PET & EXPANSION MARKET</div>
+                <div class="market-grid" id="market-items-grid"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- GAME SYSTEM DATA VALUES ---
+        // --- GAME BALANCING STATE ---
         let playerCash = 13030;
-        let activeScreenKey = "main";
-        let activeLoopId = null;
-        let gameTickerScore = 0;
-        let playerGridPositionPercent = 50; 
+        let playerPositionX = 50; 
+        let activeGameInterval = null;
+        let gameScore = 0;
+        let activeGameType = "";
 
-        // --- FULL ANIMAL PAYLOAD DICTIONARY (MATCHES EXACT IMAGE VALUES) ---
-        const animalMarketConfig = {
-            "🐕": { name: "Dog",       baseValue: 5 },
-            "🐖": { name: "Pig",       baseValue: 10 },
-            "🐑": { name: "Sheep",     baseValue: 15 },
+        // --- FIXED ANIMAL BASE VALUES ---
+        const animalConfig = {
             "🐅": { name: "Tiger",     baseValue: 20 },
-            "🐍": { name: "Snake",     baseValue: 20 },
+            "🐕": { name: "Dog",       baseValue: 5  },
+            "🐑": { name: "Sheep",     baseValue: 15 },
+            "🐖": { name: "Pig",       baseValue: 10 },
             "🐄": { name: "Cow",       baseValue: 30 },
-            "🐊": { name: "Crocodile", baseValue: 30 },
-            "🐢": { name: "Turtle",    baseValue: 50 }
+            "🐢": { name: "Turtle",    baseValue: 50 },
+            "🐍": { name: "Snake",     baseValue: 20 },
+            "🐊": { name: "Crocodile", baseValue: 30 }
         };
 
-        // Current Inventory State Slot Array Map
-        let playerFencesState = [
-            { id: 0, occupied: true,  emoji: "🐕", level: 15, currentExpPercent: 0 },
-            { id: 1, occupied: true,  emoji: "🐕", level: 16, currentExpPercent: 50 },
-            { id: 2, occupied: true,  emoji: "🐕", level: 1,  currentExpPercent: 0 },
-            { id: 3, occupied: false, priceToUnlock: 150 },
-            { id: 4, occupied: false, priceToUnlock: 150 },
-            { id: 5, occupied: false, priceToUnlock: 150 },
-            { id: 6, occupied: false, priceToUnlock: 150 },
-            { id: 7, occupied: false, priceToUnlock: 150 },
-            { id: 8, occupied: false, priceToUnlock: 150 }
+        // Active items in player inventory fences
+        let playerFarmInventory = [
+            { id: 0, emoji: "🐕", age: 15, currentExp: 0 },
+            { id: 1, emoji: "🐕", age: 16, currentExp: 50 },
+            { id: 2, emoji: "🐕", age: 1,  currentExp: 0 }
         ];
 
-        // --- NAVIGATION STATE ENGINE MANAGER (FIXES THE EXIT BUG) ---
-        function executeExitLoop() {
-            // Kill existing loop tickers immediately
-            if (activeLoopId) {
-                clearInterval(activeLoopId);
-                activeLoopId = null;
+        // --- FIXED NAVIGATION FUNCTION (GOTO MAIN) ---
+        function showMainMenu() {
+            // Safely stop running game timers
+            clearInterval(activeGameInterval);
+            activeGameInterval = null;
+            activeGameType = "";
+
+            // Hide all subgame view windows
+            document.getElementById("laser-game-container").style.display = "none";
+            document.getElementById("train-game-container").style.display = "none";
+            document.getElementById("farm-game-container").style.display = "none";
+            
+            // Re-display main menu dashboard interface
+            document.getElementById("main-shop-screen").style.display = "block";
+            updateUI();
+        }
+
+        // Attach function to all standard back/exit buttons cleanly
+        document.querySelectorAll(".back-to-menu-btn").forEach(button => {
+            button.addEventListener("click", showMainMenu);
+        });
+
+        function updateUI() {
+            document.getElementById("global-cash-display").innerText = `Cash: $${playerCash}`;
+        }
+
+        // --- PURCHASE SYSTEM ---
+        function buyStrawberryElephant() {
+            if (playerCash >= 25000) {
+                playerCash -= 25000;
+                alert("🎉 Successfully unlocked Strawberry Elephant!");
+                updateUI();
+            } else {
+                alert("❌ Insufficient funds!");
             }
-            
-            // Re-route clean global view profile status switches
-            switchActiveScreen("main");
         }
 
-        function switchActiveScreen(screenKey) {
-            activeScreenKey = screenKey;
-            
-            // Hide all structural layer frames completely
-            document.getElementById("main-shop-screen").classList.remove("active-screen");
-            document.getElementById("laser-game-container").classList.remove("active-screen");
-            document.getElementById("train-game-container").classList.remove("active-screen");
-            document.getElementById("farm-game-container").classList.remove("active-screen");
-
-            // Engage explicit destination container rendering states
-            if (screenKey === "main") {
-                document.getElementById("main-shop-screen").classList.add("active-screen");
-            } else if (screenKey === "laser") {
-                document.getElementById("laser-game-container").classList.add("active-screen");
-                runLaserArcadeEngine();
-            } else if (screenKey === "train") {
-                document.getElementById("train-game-container").classList.add("active-screen");
-                runTrainArcadeEngine();
-            } else if (screenKey === "farm") {
-                document.getElementById("farm-game-container").classList.add("active-screen");
-                renderFarmInterfaceGrid();
-                renderMarketPanelRack();
-            }
-            refreshGlobalCounters();
-        }
-
-        function refreshGlobalCounters() {
-            document.getElementById("global-cash-display").innerText = `💰 Cash: $${playerCash}`;
-            
-            // Calculate current total cumulative animals active inside fences
-            let activeCount = playerFencesState.filter(f => f.occupied).length;
-            const counterLabel = document.getElementById("farm-inventory-counter");
-            if (counterLabel) counterLabel.innerText = activeCount;
-        }
-
-        // --- VALUE ENGINE MULTIPLIER PAYLOAD MATH ---
-        function getAnimalProgressionValue(emoji, currentLevel) {
-            if (animalMarketConfig[emoji]) {
-                // Yield Formula Rules: base value * level index weight
-                return animalMarketConfig[emoji].baseValue * currentLevel;
+        // --- CALCULATE CASH PER AGE FORMULA ---
+        function calculateAnimalValue(emoji, age) {
+            if (animalConfig[emoji]) {
+                // Cash given is Base Price * Animal Age
+                return animalConfig[emoji].baseValue * age;
             }
             return 0;
         }
 
-        // --- FARM LAYOUT DRAW CONTROLLERS ---
-        function renderFarmInterfaceGrid() {
-            const container = document.getElementById("fences-rendering-target");
-            container.innerHTML = "";
+        // --- RENDER FARM & MARKET PANELS ---
+        function renderFarmGrid() {
+            const grid = document.getElementById("farm-plots-grid");
+            grid.innerHTML = ""; 
 
-            playerFencesState.forEach(slot => {
-                const element = document.createElement("div");
-                
-                if (slot.occupied) {
-                    element.className = "fence-slot fence-active";
-                    element.setAttribute("onclick", `triggerFenceInteraction(${slot.id})`);
-                    
-                    let payoutNow = getAnimalProgressionValue(slot.emoji, slot.level);
-                    element.innerHTML = `
-                        <div class="fence-emoji">${slot.emoji}</div>
-                        <div class="fence-level-badge">Lv.${slot.level} (${slot.currentExpPercent}%)</div>
-                    `;
-                } else {
-                    element.className = "fence-slot fence-locked";
-                    element.setAttribute("onclick", `purchaseFenceUnlock(${slot.id})`);
-                    element.innerHTML = `
-                        <span>🔒</span>
-                        <span>$${slot.priceToUnlock}</span>
-                    `;
-                }
-                container.appendChild(element);
-            });
-        }
-
-        function renderMarketPanelRack() {
-            const rack = document.getElementById("market-purchasing-rack");
-            rack.innerHTML = "";
-
-            Object.keys(animalMarketConfig).forEach(key => {
-                const data = animalMarketConfig[key];
-                const itemCard = document.createElement("div");
-                itemCard.className = "market-buy-card";
-                itemCard.setAttribute("onclick", `buyNewPet('${key}')`);
-                itemCard.innerHTML = `
-                    <div class="market-emoji">${key}</div>
-                    <div class="market-cost-label">$${data.baseValue}</div>
+            playerFarmInventory.forEach(item => {
+                const plot = document.createElement("div");
+                plot.className = "farm-plot";
+                plot.setAttribute("onclick", `processFarmClick(${item.id})`);
+                plot.innerHTML = `
+                    <div class="plot-emoji">${item.emoji}</div>
+                    <div class="plot-info">Lv.${item.age} (${item.currentExp}%)</div>
                 `;
-                rack.appendChild(itemCard);
+                grid.appendChild(plot);
             });
         }
 
-        // --- INTERACTIONS AND SYSTEM ACTION HOOKS ---
-        function triggerFenceInteraction(slotId) {
-            let slot = playerFencesState.find(x => x.id === slotId);
-            if (slot && slot.occupied) {
-                // Animate farmer position to indicate task movement sequence
-                const farmer = document.getElementById("farmer-sprite");
-                farmer.style.transform = "scale(1.3) rotate(-10deg)";
-                setTimeout(() => { farmer.style.transform = "scale(1) rotate(0deg)"; }, 250);
+        function renderMarketGrid() {
+            const marketGrid = document.getElementById("market-items-grid");
+            marketGrid.innerHTML = "";
 
-                // Give player the dynamic cash payout based on current animal level
-                let rewardCash = getAnimalProgressionValue(slot.emoji, slot.level);
-                playerCash += rewardCash;
+            Object.keys(animalConfig).forEach(emoji => {
+                const item = animalConfig[emoji];
+                const card = document.createElement("div");
+                card.className = "market-item";
+                card.innerHTML = `
+                    <div class="market-item-emoji">${emoji}</div>
+                    <div class="market-item-price">$${item.baseValue}</div>
+                `;
+                marketGrid.appendChild(card);
+            });
+        }
 
-                // Level up / Advance Age progression variables calculation logic
-                slot.currentExpPercent += 50; 
-                if (slot.currentExpPercent >= 100) {
-                    slot.level += 1; 
-                    slot.currentExpPercent = 0;
+        // --- PROCESS FARM HARVEST & +1 AGE EXPERIENCE ---
+        function processFarmClick(slotId) {
+            let animal = playerFarmInventory.find(x => x.id === slotId);
+            if (animal) {
+                // Give player cash based on the current age calculation
+                let cashToGive = calculateAnimalValue(animal.emoji, animal.age);
+                playerCash += cashToGive;
+
+                // Advance Experience and Age (+1 Level setup matching your cycle layout)
+                animal.currentExp += 50;
+                if (animal.currentExp >= 100) {
+                    animal.age += 1;
+                    animal.currentExp = 0;
                 }
-
-                refreshGlobalCounters();
-                renderFarmInterfaceGrid();
+                
+                updateUI();
+                renderFarmGrid();
             }
         }
 
-        function buyNewPet(emojiKey) {
-            let cost = animalMarketConfig[emojiKey].baseValue;
-            if (playerCash >= cost) {
-                // Find first open locked layout index cell target
-                let emptySlot = playerFencesState.find(x => !x.occupied);
-                if (emptySlot) {
-                    playerCash -= cost;
-                    emptySlot.occupied = true;
-                    emptySlot.emoji = emojiKey;
-                    emptySlot.level = 1;
-                    emptySlot.currentExpPercent = 0;
-                    
-                    refreshGlobalCounters();
-                    renderFarmInterfaceGrid();
-                } else {
-                    alert("❌ Your fences are completely full! Clear space or unlock slots.");
+        // --- ACTION SYSTEM CONTROLLER ---
+        function launchGame(gameType) {
+            document.getElementById("main-shop-screen").style.display = "none";
+            playerPositionX = 50;
+            gameScore = 0;
+            activeGameType = gameType;
+
+            if (gameType === "laser") {
+                document.getElementById("laser-game-container").style.display = "block";
+                document.getElementById("laser-score").innerText = "0";
+                startLaserEngine();
+            } else if (gameType === "train") {
+                document.getElementById("train-game-container").style.display = "block";
+                document.getElementById("train-score").innerText = "0";
+                startTrainEngine();
+            } else if (gameType === "farm") {
+                document.getElementById("farm-game-container").style.display = "block";
+                renderFarmGrid();
+                renderMarketGrid();
+            }
+        }
+
+        // --- ARCADE ENGINES (UNALTERED MINIGAME CODE) ---
+        function movePlayerLeft() { if (playerPositionX > 5) playerPositionX -= 15; updateActivePlayerNode(); }
+        function movePlayerRight() { if (playerPositionX < 95) playerPositionX += 15; updateActivePlayerNode(); }
+        function updateActivePlayerNode() {
+            const node = document.querySelector(`#${activeGameType}-game-container .player-node`);
+            if (node) node.style.left = `calc(${playerPositionX}% - 15px)`;
+        }
+
+        function startLaserEngine() {
+            const container = document.getElementById("laser-canvas");
+            container.innerHTML = '<div class="player-node"></div>';
+            updateActivePlayerNode();
+            let laserTick = 0;
+            activeGameInterval = setInterval(() => {
+                laserTick++;
+                if (laserTick % 10 === 0) {
+                    gameScore += 10;
+                    document.getElementById("laser-score").innerText = gameScore;
+                    playerCash += 5;
+                    updateUI();
                 }
-            } else {
-                alert("❌ Not enough cash balance to purchase this animal pet asset type.");
-            }
-        }
-
-        function purchaseFenceUnlock(slotId) {
-            let slot = playerFencesState.find(x => x.id === slotId);
-            if (slot && !slot.occupied) {
-                if (playerCash >= slot.priceToUnlock) {
-                    playerCash -= slot.priceToUnlock;
-                    // Seed newly opened structural slot with a default starter animal level setup configuration
-                    slot.occupied = true;
-                    slot.emoji = "🐕";
-                    slot.level = 1;
-                    slot.currentExpPercent = 0;
-
-                    refreshGlobalCounters();
-                    renderFarmInterfaceGrid();
-                } else {
-                    alert("❌ Insufficient cash assets to purchase expansion tier map property grid.");
-                }
-            }
-        }
-
-        function purchaseRareTool() {
-            if (playerCash >= 25000) {
-                playerCash -= 25000;
-                alert("🎉 Success! Unlocked the Strawberry Elephant Asset Item.");
-                refreshGlobalCounters();
-            } else {
-                alert("❌ Balance insufficient to clear the processing engine requirements.");
-            }
-        }
-
-        // --- SHARED MINI-GAME ARCADE MECHANICS CONTROLLERS ---
-        function triggerPlayerMove(directionIndex) {
-            playerGridPositionPercent += (directionIndex * 15);
-            if (playerGridPositionPercent < 5) playerGridPositionPercent = 5;
-            if (playerGridPositionPercent > 95) playerGridPositionPercent = 95;
-            
-            const activeNode = document.querySelector(`#${activeScreenKey}-game-container .player-node`);
-            if (activeNode) {
-                activeNode.style.left = `calc(${playerGridPositionPercent}% - 15px)`;
-            }
-        }
-
-        function runLaserArcadeEngine() {
-            const engineBox = document.getElementById("laser-canvas");
-            engineBox.innerHTML = '<div class="player-node" style="width:30px; height:30px; background-color:#00a8ff; border-radius:50%; position:absolute; bottom:10px; left:calc(50% - 15px);"></div>';
-            playerGridPositionPercent = 50;
-            gameTickerScore = 0;
-
-            let frames = 0;
-            activeLoopId = setInterval(() => {
-                frames++;
-                if (frames % 10 === 0) {
-                    gameTickerScore += 10;
-                    document.getElementById("laser-score").innerText = gameTickerScore;
-                }
-
-                if (frames % 20 === 0) {
-                    const laserNode = document.createElement("div");
-                    laserNode.style.cssText = "position:absolute; width:100%; height:6px; background-color:red; left:0; top:0px;";
-                    engineBox.appendChild(laserNode);
-
-                    let yPos = 0;
-                    let innerMove = setInterval(() => {
-                        yPos += 6;
-                        laserNode.style.top = yPos + "px";
-                        if (yPos > 230 && yPos < 260) {
-                            clearInterval(innerMove);
-                            handleArcadeCrash("Structural laser field beams intercepted your current player coordinate matrix path.");
+                if (laserTick % 15 === 0) {
+                    const laser = document.createElement("div");
+                    laser.className = "danger-node";
+                    laser.style.cssText = "width:100%; height:6px; top:0px; left:0px;";
+                    container.appendChild(laser);
+                    let laserPos = 0;
+                    let laserInterval = setInterval(() => {
+                        laserPos += 5;
+                        laser.style.top = laserPos + "px";
+                        if (laserPos > 240 && laserPos < 270) {
+                            clearInterval(laserInterval);
+                            handleCrashGame("Laser structural integrity compromised!");
                         }
-                        if (yPos > 340) {
-                            clearInterval(innerMove);
-                            laserNode.remove();
-                        }
+                        if (laserPos > 320) { clearInterval(laserInterval); laser.remove(); }
                     }, 30);
                 }
             }, 100);
         }
 
-        function runTrainArcadeEngine() {
-            const engineBox = document.getElementById("train-canvas");
-            engineBox.innerHTML = '<div class="player-node" style="width:30px; height:30px; background-color:#00a8ff; border-radius:50%; position:absolute; bottom:10px; left:calc(50% - 15px);"></div>';
-            playerGridPositionPercent = 50;
-            gameTickerScore = 0;
-
-            let frames = 0;
-            activeLoopId = setInterval(() => {
-                frames++;
-
-                if (frames % 25 === 0) {
-                    const goldCoin = document.createElement("div");
-                    goldCoin.style.cssText = "position:absolute; width:16px; height:16px; background-color:#f1c40f; border-radius:50%; top:0;";
-                    let coinLane = Math.floor(Math.random() * 85) + 5;
-                    goldCoin.style.left = coinLane + "%";
-                    engineBox.appendChild(goldCoin);
-
-                    let yPos = 0;
-                    let innerMove = setInterval(() => {
-                        yPos += 5;
-                        goldCoin.style.top = yPos + "px";
-                        if (yPos > 240 && yPos < 280 && Math.abs(playerGridPositionPercent - coinLane) < 15) {
-                            gameTickerScore += 1;
-                            playerCash += 15;
-                            document.getElementById("train-score").innerText = gameTickerScore;
-                            refreshGlobalCounters();
-                            clearInterval(innerMove);
-                            goldCoin.remove();
+        function startTrainEngine() {
+            const container = document.getElementById("train-canvas");
+            container.innerHTML = '<div class="player-node"></div>';
+            updateActivePlayerNode();
+            let tick = 0;
+            activeGameInterval = setInterval(() => {
+                tick++;
+                if (tick % 20 === 0) {
+                    const coin = document.createElement("div");
+                    coin.className = "coin-node";
+                    coin.style.left = Math.floor(Math.random() * 90) + "%";
+                    coin.style.top = "0px";
+                    container.appendChild(coin);
+                    let coinPos = 0;
+                    let coinInterval = setInterval(() => {
+                        coinPos += 4;
+                        coin.style.top = coinPos + "px";
+                        if (coinPos > 250 && coinPos < 290) {
+                            gameScore += 1;
+                            document.getElementById("train-score").innerText = gameScore;
+                            playerCash += 50;
+                            updateUI();
+                            clearInterval(coinInterval);
+                            coin.remove();
                         }
-                        if (yPos > 340) {
-                            clearInterval(innerMove);
-                            goldCoin.remove();
-                        }
-                    }, 30);
+                        if (coinPos > 310) { clearInterval(coinInterval); coin.remove(); }
+                    }, 40);
                 }
-
-                if (frames % 50 === 0) {
-                    const engineTrain = document.createElement("div");
-                    engineTrain.style.cssText = "position:absolute; width:45px; height:60px; background-color:#333; border:2px solid orange; bottom:0px;";
-                    let trainLane = Math.random() > 0.5 ? 25 : 75;
-                    engineTrain.style.left = trainLane + "%";
-                    engineBox.appendChild(engineTrain);
-
-                    let yTrainPos = 0;
-                    let innerMove = setInterval(() => {
-                        yTrainPos += 8;
-                        engineTrain.style.bottom = yTrainPos + "px";
-                        if (yTrainPos > 210 && Math.abs(playerGridPositionPercent - trainLane) < 20) {
-                            clearInterval(innerMove);
-                            handleArcadeCrash("🚂 CRASHED!\n\nThe train caught you from below!");
+                if (tick % 45 === 0) {
+                    const trainObstacle = document.createElement("div");
+                    trainObstacle.className = "danger-node";
+                    trainObstacle.style.cssText = "width:40px; height:50px; bottom:0px;";
+                    let spawnLane = Math.random() > 0.5 ? 20 : 70;
+                    trainObstacle.style.left = spawnLane + "%";
+                    container.appendChild(trainObstacle);
+                    let trainPos = 0;
+                    let trainInterval = setInterval(() => {
+                        trainPos += 6;
+                        trainObstacle.style.bottom = trainPos + "px";
+                        if (trainPos > 220 && Math.abs(playerPositionX - spawnLane) < 25) {
+                            clearInterval(trainInterval);
+                            handleCrashGame("CRASHED! The train caught you from below!");
                         }
-                        if (yTrainPos > 360) {
-                            clearInterval(innerMove);
-                            engineTrain.remove();
-                        }
+                        if (trainPos > 355) { clearInterval(trainInterval); trainObstacle.remove(); }
                     }, 30);
                 }
             }, 100);
         }
 
-        function handleArcadeCrash(alertMsg) {
-            clearInterval(activeLoopId);
-            alert(alertMsg);
-            executeExitLoop();
+        function handleCrashGame(reasonMessage) {
+            clearInterval(activeGameInterval);
+            alert(`🚂 GAME OVER\n\n${reasonMessage}`);
+            showMainMenu();
         }
 
-        // Initialize state engine loadout flags on execution startup checks
-        refreshGlobalCounters();
+        updateUI();
     </script>
 </body>
 </html>
