@@ -209,7 +209,7 @@
             background-color: #2f3542;
             border: 2px dashed #2ed573;
             padding: 15px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-family: monospace;
             color: #2ed573;
             margin-top: 15px;
@@ -339,6 +339,18 @@
             font-size: 0.85rem;
             font-weight: bold;
         }
+
+        .history-card {
+            background-color: #1e1e1e;
+            width: 100%;
+            max-width: 420px;
+            margin-top: 20px;
+            border-radius: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 1px solid #ff4757;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -346,7 +358,7 @@
     <div class="header-board">
         <div class="shop-title-container">
             <span class="shop-title">🛠️ Xdragon Web Shop</span>
-            <button class="how-to-play-btn" id="how-to-play-btn">❔ How to play</button>
+            <button class="how-to-play-btn" id="how-to-play-btn">Paragraph Manual</button>
         </div>
         <span class="cash-display">💰 Cash: $<span id="cash-amount">0</span></span>
     </div>
@@ -395,6 +407,13 @@
         <div class="game-column">
             <p class="game-section-title">FARM GAME</p>
             <button class="play-trigger-btn" id="launch-farm-btn">🌾 PLAY</button>
+        </div>
+    </div>
+
+    <div class="history-card">
+        <h3 style="color: #ff4757; margin: 0 0 10px 0; font-size: 1.05rem; text-align: center;">📜 UNLIMITED CODE GENERATION HISTORY</h3>
+        <div id="code-history-box" style="max-height: 140px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; text-align: left; padding: 5px; color: #a4b0be;">
+            <div style="border-bottom: 1px solid #333; padding: 4px 0; color: gray;">[System Log]: No tokens generated yet.</div>
         </div>
     </div>
 
@@ -465,23 +484,11 @@
         let isTrainAlertActive = false;
         let alertEndTime = 0;
 
-        // --- FARM CORE ENGINE DATA MODULES ---
         let wheatCount = parseInt(localStorage.getItem("Xdragon_WheatCount")) || 0;
         let selectedTargetIndex = null; 
         let activeActionType = null; 
         
-        // Custom dynamic age calculations parameters table setup matching your prices structure
-        const petRewardsTable = {
-            '🐈': 5,  // Default starting pet base valuation
-            '🐕': 5,
-            '🐖': 10,
-            '🐑': 15,
-            '🐅': 20,
-            '🐍': 20,
-            '🐄': 30,
-            '🐊': 30,
-            '🐢': 50
-        };
+        const petRewardsTable = { '🐈': 5, '🐕': 5, '🐖': 10, '🐑': 15, '🐅': 20, '🐍': 20, '🐄': 30, '🐊': 30, '🐢': 50 };
 
         let fences = [
             { id: 0, x: 30,  y: 30,  w: 80, h: 80, locked: false, pet: '🐈', age: 1, xp: 0 },
@@ -496,6 +503,7 @@
         ];
         
         let wheatField = { x: 140, y: 340, w: 80, h: 50 };
+        let codeHistoryList = JSON.parse(localStorage.getItem("Xdragon_CodeLogs")) || [];
 
         const cashEl = document.getElementById('cash-amount');
         const buyBtn = document.getElementById('buy-btn');
@@ -515,11 +523,11 @@
 
         cashEl.innerText = cash;
         loadFarmProgress(); 
+        updateHistoryUI(); 
 
         howToPlayBtn.addEventListener('click', () => tutorialModal.classList.remove('hidden'));
         closeModalBtn.addEventListener('click', () => tutorialModal.classList.add('hidden'));
 
-        // --- GLOBAL CENTRALIZED EXIT CONTROLLER FUNCTION ---
         function handleExitToShop() {
             gameRunning = false;
             gameScreen.classList.add('hidden');
@@ -562,18 +570,50 @@
             initGame();
         });
 
+        // --- NEW SECURITY FUNCTION: ALPHANUMERIC GENERATOR ---
+        function generateSecureToken(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let token = '';
+            for (let i = 0; i < length; i++) {
+                token += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return token;
+        }
+
         buyBtn.addEventListener('click', () => {
             if (cash >= 25000) {
                 cash -= 25000;
                 updateGlobalCash();
-                let mathKey = (cash + 25000) * 7;
-                let generatedCode = "XDRG-TOOL-" + mathKey;
+
+                // Gagawa ng 16-character secure text string (Example: XDRG-TOOL-K8P2W4X7Z1Q9V5R3)
+                let secureToken = generateSecureToken(16);
+                let generatedCode = "XDRG-TOOL-" + secureToken;
+
                 codeOutput.innerText = "CODE: " + generatedCode;
                 codeOutput.classList.remove('hidden');
+
+                let timestamp = new Date().toLocaleTimeString();
+                codeHistoryList.unshift({ token: generatedCode, time: timestamp });
+                if(codeHistoryList.length > 30) codeHistoryList.pop(); 
+                
+                localStorage.setItem("Xdragon_CodeLogs", JSON.stringify(codeHistoryList));
+                updateHistoryUI();
             } else {
                 alert("🚨 Insufficient Funds! You need $25,000 Cash.");
             }
         });
+
+        function updateHistoryUI() {
+            let historyBox = document.getElementById("code-history-box");
+            if (codeHistoryList.length === 0) return;
+            historyBox.innerHTML = "";
+            codeHistoryList.forEach(item => {
+                historyBox.innerHTML += `<div style="border-bottom: 1px solid #262626; padding: 5px 0; display:flex; justify-content:space-between;">
+                    <span style="color: #2ed573; font-weight:bold;">${item.token}</span>
+                    <span style="color: #57606f; font-size: 0.75rem;">${item.time}</span>
+                </div>`;
+            });
+        }
 
         function updateGlobalCash() {
             cashEl.innerText = cash;
@@ -745,7 +785,6 @@
             }
         }
 
-        // --- NEW CUSTOM SEED CALCULATION VALUE FORMULA ENGINE ---
         function triggerFarmAction() {
             if (activeActionType === 'grab') {
                 wheatCount += 1;
@@ -765,7 +804,6 @@
                         petObj.xp = 0;
                         petObj.age += 1; 
                         
-                        // Calculating customized cash logic: Base Price * New Age
                         let basePrice = petRewardsTable[petObj.pet] || 5;
                         let customCashReward = basePrice * petObj.age;
                         
