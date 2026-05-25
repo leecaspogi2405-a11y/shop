@@ -187,10 +187,11 @@
     </div>
 
     <script>
-        // Game states configuration
-        let cash = 0; 
+        // Web Local Storage Data Saving Setup
+        let cash = parseInt(localStorage.getItem("Xdragon_WebCash")) || 0; 
         let distance = 0;
         let gameRunning = false;
+        localUpdateFrame = 0;
         let canvas, ctx, runner, obstacles;
 
         const cashEl = document.getElementById('cash-amount');
@@ -212,7 +213,8 @@
                 cash -= 10000;
                 cashEl.innerText = cash;
                 
-                // ENCRYPTION ALGORITHM: Secure key using remaining cash structure
+                localStorage.setItem("Xdragon_WebCash", cash);
+                
                 let mathKey = (cash + 10000) * 7;
                 let generatedCode = "XDRG-TOOL-" + mathKey;
 
@@ -229,17 +231,17 @@
             canvas = document.getElementById('runnerCanvas');
             ctx = canvas.getContext('2d');
             distance = 0;
+            localUpdateFrame = 0;
             gameRunning = true;
             obstacles = [];
 
             runner = {
                 x: canvas.width / 2 - 15,
                 y: canvas.height - 50,
-                w: 30, h: 30, speed: 7,
-                moveLeft: false, moveRight: false
+                w: 30, h: 30, 
+                speed: 5 // Smooth, manageable movement speed
             };
 
-            // Keyboard inputs
             window.onkeydown = (e) => {
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
@@ -249,7 +251,6 @@
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
             };
 
-            // Touch screen elements
             canvas.ontouchstart = (e) => {
                 let rect = canvas.getBoundingClientRect();
                 let touchX = e.touches[0].clientX - rect.left;
@@ -267,32 +268,35 @@
             if(!gameRunning) return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
-            // Distance engine calculations
-            distance += 1;
+            localUpdateFrame++;
+            
+            // Slower Distance Pacing: Increases by 1 point every 4 animation frames
+            if (localUpdateFrame % 4 === 0) {
+                distance += 1;
+            }
             distanceEl.innerText = String(distance).padStart(6, '0');
 
             if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
             if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
 
-            // Render Player Avatar
             ctx.fillStyle = '#00a8ff';
             ctx.beginPath();
             ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
             ctx.fill();
 
-            // Hardcore automated scaling difficulty factor
-            let spawnChance = 0.035 + (distance * 0.00004);
-            if(Math.random() < Math.min(spawnChance, 0.16)) {
+            // Balanced Laser Spawn Rates
+            let spawnChance = 0.012 + (distance * 0.000005);
+            if(Math.random() < Math.min(spawnChance, 0.06) && localUpdateFrame % 10 === 0) {
                 obstacles.push({
                     x: Math.random() * (canvas.width - 50),
                     y: -20,
-                    w: Math.random() * 65 + 35,
-                    h: 15,
-                    speed: 6.5 + (distance * 0.0012) + Math.random()*4
+                    w: Math.random() * 40 + 30,
+                    h: 12,
+                    // Slower falling speed so players can easily read and avoid obstacles
+                    speed: 2.2 + (distance * 0.0002) + Math.random() * 1.5 
                 });
             }
 
-            // Obstacle iteration loops
             for(let i = obstacles.length - 1; i >= 0; i--) {
                 let o = obstacles[i];
                 o.y += o.speed;
@@ -300,16 +304,21 @@
                 ctx.fillStyle = '#ff4757';
                 ctx.fillRect(o.x, o.y, o.w, o.h);
 
-                // Collision processing logic
                 if (o.x < runner.x + runner.w &&
                     o.x + o.w > runner.x &&
                     o.y < runner.y + runner.h &&
                     o.y + o.h > runner.y) {
                     
                     gameRunning = false;
-                    alert("💥 CRASHED! Distance Reached: " + distance + "\n\nConverted straight into +$" + distance + " Cash!");
                     
-                    cash += distance;
+                    // Strict 1:1 payout structure. Distance points = Cash earned.
+                    let earnedCash = distance; 
+                    cash += earnedCash;
+                    
+                    localStorage.setItem("Xdragon_WebCash", cash);
+                    
+                    alert("💥 CRASHED!\n\nDistance Reached: " + distance + "\nEarned: +$" + earnedCash + " Cash!");
+                    
                     cashEl.innerText = cash;
                     gameScreen.classList.add('hidden');
                     return;
