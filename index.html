@@ -342,18 +342,6 @@
             font-weight: bold;
         }
 
-        .history-card {
-            background-color: #1e1e1e;
-            width: 100%;
-            max-width: 420px;
-            margin-top: 20px;
-            border-radius: 15px;
-            padding: 15px 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            border: 1px solid #ff4757;
-            box-sizing: border-box;
-        }
-
         /* --- BURGER BOMB UI ELEMENTS --- */
         .burger-game-panel {
             width: 100%;
@@ -518,7 +506,7 @@
     <div class="header-board">
         <div class="shop-title-container">
             <span class="shop-title">🛠️ Xdragon Web Shop</span>
-            <button class="how-to-play-btn" id="how-to-play-btn">Paragraph Manual</button>
+            <button class="how-to-play-btn" id="how-to-play-btn">Gameplay Manual</button>
         </div>
         <span class="cash-display">💰 Cash: $<span id="cash-amount">0</span></span>
     </div>
@@ -574,13 +562,6 @@
         </div>
     </div>
 
-    <div class="history-card">
-        <h3 style="color: #ff4757; margin: 0 0 10px 0; font-size: 1.05rem; text-align: center;">📜 GLOBAL CODE GENERATION HISTORY</h3>
-        <div id="code-history-box" style="max-height: 140px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; text-align: left; padding: 5px; color: #a4b0be;">
-            <div style="border-bottom: 1px solid #333; padding: 4px 0; color: gray;">[System Log]: No tokens generated yet.</div>
-        </div>
-    </div>
-
     <div class="modal-overlay hidden" id="tutorial-modal">
         <div class="modal-content">
             <h3>🎮 GAMEPLAY MANUAL</h3>
@@ -588,9 +569,9 @@
                 <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
                 <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding the green <b>Bushes</b>. One hit makes the train chase you closely!</li>
                 <li><b>FARM GAME:</b> Click a fence plot to move the farmer. Buy pets to place inside unlocked fences. Age up rewards cash.</li>
-                <li><b>BURGER BOMB GAME:</b> Hulaan ang mga nakatagong bomba! 
-                    <br>• <b>Bot Mode:</b> Ikaw ang manu-manong magtatago ng 3 bomba mo, at magtatago rin ang Bot. May bayad na pusta ($500). Hint is $1500.
-                    <br>• <b>Multiplayer Mode:</b> Practice Room para sa 2 Players sa isang CP! Walang bayad/bawas sa Cash. Magtatago si P1 at P2 ng kani-kanilang bomba bago simulan ang laban.
+                <li><b>BURGER BOMB GAME:</b> Guess the hidden bombs in the grid!
+                    <br>• <b>Bot Mode:</b> Manually place your 3 bombs, and the Bot will hide theirs. Entry fee is $500. Hint costs $1500.
+                    <br>• <b>Multiplayer Mode:</b> A local 2-Player practice room on the same device! No Cash entry fees or losses. P1 and P2 set up their bombs separately before battle.
                 </li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
@@ -613,7 +594,7 @@
             </div>
 
             <div class="burger-instruction-banner" id="burger-instruction-text">
-                Setup Phase: I-click ang 3 Burger para itago ang mga Bomba mo!
+                Setup Phase: Click 3 Burgers to hide your bombs!
             </div>
 
             <div class="burger-status-header">
@@ -709,7 +690,6 @@
         ];
         
         let wheatField = { x: 140, y: 340, w: 80, h: 50 };
-        let codeHistoryList = JSON.parse(localStorage.getItem("Xdragon_CodeLogs")) || [];
 
         const cashEl = document.getElementById('cash-amount');
         const buyBtn = document.getElementById('buy-btn');
@@ -731,7 +711,6 @@
 
         cashEl.innerText = cash;
         loadFarmProgress(); 
-        initGlobalHistoryLogs(); 
 
         howToPlayBtn.addEventListener('click', () => tutorialModal.classList.remove('hidden'));
         closeModalBtn.addEventListener('click', () => tutorialModal.classList.add('hidden'));
@@ -789,7 +768,7 @@
             bubbleContainer.innerHTML = "";
             modeStatLabel.innerHTML = '<span style="color:#ff9f43;">🍔 Burger Bomb Arena</span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
             document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
-            controlHint.innerText = "Hulaan ang tamang burger at iwasan ang mga nakatagong bomba!";
+            controlHint.innerText = "Guess the correct burger and avoid hidden bombs!";
             gameScreen.classList.remove('hidden');
             initGame();
         });
@@ -811,60 +790,10 @@
                 let generatedCode = "XDRG-TOOL-" + secureToken;
                 codeOutput.innerText = "CODE: " + generatedCode;
                 codeOutput.classList.remove('hidden');
-                
-                let timestamp = new Date().toLocaleTimeString();
-                codeHistoryList.unshift({ user: "Christian Lee (You)", token: generatedCode, time: timestamp });
-                if(codeHistoryList.length > 35) codeHistoryList.pop(); 
-                localStorage.setItem("Xdragon_CodeLogs", JSON.stringify(codeHistoryList));
-                renderHistoryUI();
             } else {
                 alert("🚨 Insufficient Funds! You need $25,000 Cash.");
             }
         });
-
-        function initGlobalHistoryLogs() {
-            if(codeHistoryList.length === 0) {
-                const dummyNames = ["Noobini_Pizzalini", "Austroman", "Gangster_Footera", "Slayer99", "Robloxian_412", "BloxMaster"];
-                let baseTime = Date.now() - 3600000;
-                for(let i=0; i<8; i++) {
-                    let randName = dummyNames[Math.floor(Math.random() * dummyNames.length)];
-                    let fakeToken = "XDRG-TOOL-" + generateSecureToken(16);
-                    let fakeTimeStr = new Date(baseTime + (i * 400000)).toLocaleTimeString();
-                    codeHistoryList.push({ user: randName, token: fakeToken, time: fakeTimeStr });
-                }
-                localStorage.setItem("Xdragon_CodeLogs", JSON.stringify(codeHistoryList));
-            }
-            renderHistoryUI();
-            
-            setInterval(() => {
-                if(Math.random() < 0.25) { 
-                    const fakeUsers = ["Noobini_Pizzalini", "Austroman", "Gangster_Footera", "X_Gamer", "ProBuilder", "BloxSurv"];
-                    let randUser = fakeUsers[Math.floor(Math.random()*fakeUsers.length)];
-                    let fakeToken = "XDRG-TOOL-" + generateSecureToken(16);
-                    let currTimeStr = new Date().toLocaleTimeString();
-                    codeHistoryList.unshift({ user: randUser, token: fakeToken, time: currTimeStr });
-                    if(codeHistoryList.length > 35) codeHistoryList.pop();
-                    localStorage.setItem("Xdragon_CodeLogs", JSON.stringify(codeHistoryList));
-                    renderHistoryUI();
-                }
-            }, 12000);
-        }
-
-        function renderHistoryUI() {
-            let historyBox = document.getElementById("code-history-box");
-            if (!historyBox) return;
-            historyBox.innerHTML = "";
-            codeHistoryList.forEach(item => {
-                let userColor = item.user.includes("You") ? "#ff4757" : "#ffa502";
-                historyBox.innerHTML += `<div style="border-bottom: 1px solid #262626; padding: 5px 0; display:flex; flex-direction:column; gap:2px;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.75rem;">
-                        <span style="color: ${userColor}; font-weight:bold;">👤 ${item.user}</span>
-                        <span style="color: #57606f;">${item.time}</span>
-                    </div>
-                    <span style="color: #2ed573; font-weight:bold; font-size:0.85rem;">${item.token}</span>
-                </div>`;
-            });
-        }
 
         function updateGlobalCash() {
             cashEl.innerText = cash;
@@ -895,6 +824,13 @@
         document.getElementById('burger-mode-bot-btn').onclick = () => {
             if(burgerGameActive && (playerBombs.length > 0 || botBombs.length > 0)) return;
             burgerMatchMode = "bot";
+            document.getElementById('burger-mode-bot-btn').onclick = () => {
+                if(burgerGameActive && (playerBombs.length > 0 || botBombs.length > 0)) return;
+                burgerMatchMode = "bot";
+                document.getElementById('burger-mode-bot-btn').classList.add('active');
+                document.getElementById('burger-mode-mp-btn').classList.remove('active');
+                initBurgerGame();
+            };
             document.getElementById('burger-mode-bot-btn').classList.add('active');
             document.getElementById('burger-mode-mp-btn').classList.remove('active');
             initBurgerGame();
@@ -922,14 +858,14 @@
             if(burgerMatchMode === "bot") {
                 burgerPhase = "setup-player1";
                 document.getElementById('burger-side-a-label').innerHTML = "🤖 Bot: <span id=\"burger-bot-hearts\">❤️❤️❤️</span>";
-                document.getElementById('burger-side-b-label').innerHTML = "👨‍💼 Ikaw: <span id=\"burger-player-hearts\">❤️❤️❤️</span>";
-                document.getElementById('burger-instruction-text').innerText = "SETUP: I-click ang 3 Burger na gusto mong lagyan ng bomba mo!";
+                document.getElementById('burger-side-b-label').innerHTML = "👨‍💼 You: <span id=\"burger-player-hearts\">❤️❤️❤️</span>";
+                document.getElementById('burger-instruction-text').innerText = "SETUP: Click 3 Burgers to hide your bombs!";
                 document.getElementById('burger-hint-btn').classList.remove('hidden');
             } else {
                 burgerPhase = "setup-player1";
                 document.getElementById('burger-side-a-label').innerHTML = "👤 Player 1: <span id=\"burger-bot-hearts\">❤️❤️❤️</span>";
                 document.getElementById('burger-side-b-label').innerHTML = "👤 Player 2: <span id=\"burger-player-hearts\">❤️❤️❤️</span>";
-                document.getElementById('burger-instruction-text').innerText = "P1 SETUP: Iabot kay Player 1. Pumili ng 3 Burger para sa bomba mo!";
+                document.getElementById('burger-instruction-text').innerText = "P1 SETUP: Hand device to Player 1. Choose 3 Burgers to hide bombs!";
                 document.getElementById('burger-hint-btn').classList.add('hidden'); 
             }
 
@@ -1014,7 +950,7 @@
                     setTimeout(() => {
                         if(burgerMatchMode === "bot") {
                             if(cash < 500) {
-                                alert("🚨 Kulang ang iyong cash! Kailangan mo ng $500 pusta para makalaban sa Bot.");
+                                alert("🚨 Insufficient Cash! You need a $500 bet to play against the Bot.");
                                 handleExitToShop();
                                 return;
                             }
@@ -1023,13 +959,13 @@
                                 if(!botBombs.includes(randSlot)) botBombs.push(randSlot);
                             }
                             burgerPhase = "battle-p1-turn";
-                            document.getElementById('burger-instruction-text').innerText = "LABANAN: Hulaan ang Grid ng Bot! Pindutin ang burger.";
-                            alert("👍 Set na ang mga bomba mo! Ready na rin ang Bot. Simulan ang Hulaan!");
+                            document.getElementById('burger-instruction-text').innerText = "BATTLE: Guess the Bot's Grid! Click a burger.";
+                            alert("👍 Your bombs are locked! The Bot is ready. Let the guessing game begin!");
                             renderBurgerGrid();
                         } else {
                             burgerPhase = "setup-player2";
-                            document.getElementById('burger-instruction-text').innerText = "P2 SETUP: Iabot ang CP kay Player 2! (Bawal sumilip si P1)";
-                            alert("🔒 Bomba ni Player 1 Naitago na!\n\nIabot ang cell phone kay Player 2 para sa kanyang turn.");
+                            document.getElementById('burger-instruction-text').innerText = "P2 SETUP: Hand the device to Player 2! (No peeking, P1)";
+                            alert("🔒 Player 1's bombs are hidden!\n\nHand the device to Player 2 for their setup turn.");
                             renderBurgerGrid();
                         }
                     }, 500);
@@ -1048,8 +984,8 @@
                 if(botBombs.length === 3) {
                     setTimeout(() => {
                         burgerPhase = "battle-p1-turn";
-                        document.getElementById('burger-instruction-text').innerText = "TURN: Player 1 Hulaan ang Burger ni P2!";
-                        alert("⚔️ Kumpleto na ang setup ng dalawang panig! Simulan na ang Battle Royale!");
+                        document.getElementById('burger-instruction-text').innerText = "TURN: Player 1, guess P2's burger!";
+                        alert("⚔️ Both sides are fully set up! Let the Battle Royale begin!");
                         renderBurgerGrid();
                     }, 500);
                 }
@@ -1064,9 +1000,9 @@
                 if(botBombs.includes(index)) {
                     botHearts--;
                     updateBurgerHeartsUI();
-                    alert("💥 BOOM! Nakatama ng bomba!");
+                    alert("💥 BOOM! You hit a bomb!");
                 } else {
-                    alert("🍽️ Ligtas! Walang bomba ang burger na ito.");
+                    alert("🍽️ Safe! This burger is clear.");
                 }
 
                 if(checkBurgerGameEnd()) return;
@@ -1077,8 +1013,8 @@
                         executeBotAIAction();
                     } else {
                         burgerPhase = "battle-p2-turn";
-                        document.getElementById('burger-instruction-text').innerText = "TURN: Player 2 Hulaan ang Burger ni P1!";
-                        alert("🔄 Turn naman ni Player 2 ngayon!");
+                        document.getElementById('burger-instruction-text').innerText = "TURN: Player 2, guess P1's burger!";
+                        alert("🔄 It is now Player 2's turn!");
                         renderBurgerGrid();
                     }
                 }, 600);
@@ -1093,17 +1029,17 @@
                 if(playerBombs.includes(index)) {
                     playerHearts--;
                     updateBurgerHeartsUI();
-                    alert("💥 BOOM! Tinamaan mo ang bomba ni P1!");
+                    alert("💥 BOOM! You hit Player 1's bomb!");
                 } else {
-                    alert("🍽️ Ligtas! Walang bomba.");
+                    alert("🍽️ Safe! No bomb found.");
                 }
 
                 if(checkBurgerGameEnd()) return;
 
                 setTimeout(() => {
                     burgerPhase = "battle-p1-turn";
-                    document.getElementById('burger-instruction-text').innerText = "TURN: Player 1 Hulaan ang Burger ni P2!";
-                    alert("🔄 Balik kay Player 1!");
+                    document.getElementById('burger-instruction-text').innerText = "TURN: Player 1, guess P2's burger!";
+                    alert("🔄 Back to Player 1!");
                     renderBurgerGrid();
                 }, 600);
             }
@@ -1122,23 +1058,23 @@
                 if(playerBombs.includes(botChoice)) {
                     playerHearts--;
                     updateBurgerHeartsUI();
-                    alert("🤖 Bot Turn:\n\n💥 ARAY! Nahanap ng Bot ang bomba mo sa Burger #" + (botChoice+1) + "!");
+                    alert("🤖 Bot Turn:\n\n💥 OUCH! The bot found your bomb at Burger #" + (botChoice+1) + "!");
                 } else {
-                    alert("🤖 Bot Turn:\n\n🍽️ Ligtas ang Bot. Walang bomba sa pinili niyang Burger #" + (botChoice+1) + ".");
+                    alert("🤖 Bot Turn:\n\n🍽️ The bot is safe. No bomb inside chosen Burger #" + (botChoice+1) + ".");
                 }
                 
                 if(checkBurgerGameEnd()) return;
             }
 
             burgerPhase = "battle-p1-turn";
-            document.getElementById('burger-instruction-text').innerText = "LABANAN: Hulaan ang Grid ng Bot! Pindutin ang burger.";
+            document.getElementById('burger-instruction-text').innerText = "BATTLE: Guess the Bot's Grid! Click a burger.";
             renderBurgerGrid();
         }
 
         document.getElementById('burger-hint-btn').onclick = () => {
             if(!burgerGameActive || burgerPhase !== "battle-p1-turn") return;
             if(cash < 1500) {
-                alert("🚨 Kulang ang Cash mo! Kailangan mo ng $1,500 para sa hint.");
+                alert("🚨 Insufficient Cash! You need $1,500 to buy a hint.");
                 return;
             }
             
@@ -1153,10 +1089,10 @@
                 
                 botHearts--;
                 updateBurgerHeartsUI();
-                alert("🧐 Hint Activated (-$1500 Cash):\n\nIsang bomba ng bot ay pinasabog sa Grid #" + (randomSecretBomb+1) + "!");
+                alert("🧐 Hint Activated (-$1500 Cash):\n\nOne of the bot's bombs was detonated at Grid #" + (randomSecretBomb+1) + "!");
                 checkBurgerGameEnd();
             } else {
-                alert("Lahat ng bomba ng bot ay nadiskubre mo na!");
+                alert("You have already discovered all of the bot's bombs!");
             }
         };
 
@@ -1181,20 +1117,20 @@
             if(burgerMatchMode === "bot") {
                 if(isSideAWinner) {
                     cash += 500;
-                    title.innerText = "🏆 PANALO KA! (+$500 Cash)";
+                    title.innerText = "🏆 YOU WIN! (+$500 Cash)";
                     title.style.color = "#2ed573";
                 } else {
                     cash = Math.max(0, cash - 500);
-                    title.innerText = "💀 TALO KA! (-$500 Cash)";
+                    title.innerText = "💀 YOU LOSE! (-$500 Cash)";
                     title.style.color = "#ff4757";
                 }
                 updateGlobalCash();
             } else {
                 if(isSideAWinner) {
-                    title.innerText = "👑 PLAYER 1 WINS THE PRACTICE ROOM!";
+                    title.innerText = "👑 PLAYER 1 WINS THE PRACTICE MATCH!";
                     title.style.color = "#2ed573";
                 } else {
-                    title.innerText = "👑 PLAYER 2 WINS THE PRACTICE ROOM!";
+                    title.innerText = "👑 PLAYER 2 WINS THE PRACTICE MATCH!";
                     title.style.color = "#ffa502";
                 }
             }
@@ -1335,7 +1271,6 @@
             }
         }
 
-        // 🔥 MAAYOS NA NA FUNCTION (MAY BREAK NA AT SAFETY CHECK)
         function buyFarmPet(emoji, cost) {
             if (currentGameMode !== "farm") {
                 alert("You are outside the Farm mode! Enter the Farm Game first.");
@@ -1357,7 +1292,7 @@
                     saveFarmProgress();
                     slotFound = true;
                     alert(`Pet successfully placed ${emoji} inside Fence Plot #${i+1}!`);
-                    break; // Huminto na rito para hindi masira ang looping system
+                    break;
                 }
             }
             if (!slotFound) {
