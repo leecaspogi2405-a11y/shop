@@ -172,17 +172,19 @@
             z-index: 100;
         }
 
-        canvas {
-            background-color: #1e1e1e;
-            border: 3px solid #ff4757;
-            border-radius: 10px;
-        }
-
         .game-stats {
             font-size: 1.3rem;
             font-weight: bold;
             margin-bottom: 10px;
             color: #ff4757;
+            display: flex;
+            gap: 15px;
+        }
+
+        canvas {
+            background-color: #1e1e1e;
+            border: 3px solid #ff4757;
+            border-radius: 10px;
         }
 
         .hidden { display: none !important; }
@@ -313,17 +315,20 @@
         <div class="modal-content">
             <h3>🎮 GAMEPLAY MANUAL</h3>
             <ol>
-                <li><b>LASER GAME:</b> Dodge the falling red lasers. Points turn into cash.</li>
-                <li><b>TRAIN GAME:</b> Gold coins drop from the top. Grab them for <b>+$5 Cash</b>!</li>
-                <li>Watch out! The train spawns safely at the bottom and tracks you upwards. Run left and right to survive!</li>
-                <li>Controls: Use <b>A / D</b> or <b>Left / Right arrow keys</b>. On mobile, tap the left or right side of the screen.</li>
+                <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
+                <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding the green <b>Bushes</b>.</li>
+                <li>If you hit a Bush, you stumble! The train will instantly **speed up right behind you**!</li>
+                <li>You have a 5-second window to survive. If you hit another Bush while the train is close... you get caught!</li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
     </div>
 
     <div id="game-screen" class="hidden">
-        <div class="game-stats" id="mode-stat-label">Distance: <span id="distance-val">000000</span></div>
+        <div class="game-stats" id="mode-stat-label">
+            <div>Score: <span id="distance-val">0</span></div>
+            <div id="alert-timer-label" style="color: #ffa502;"></div>
+        </div>
         <canvas id="runnerCanvas" width="360" height="500"></canvas>
         <p id="control-hint" style="color: #747d8c; font-size: 0.85rem; margin-top: 10px;">Use Arrow keys or tap sides of screen to move.</p>
     </div>
@@ -333,15 +338,18 @@
         let distance = 0;
         let gameRunning = false;
         let currentGameMode = "laser"; 
-        let canvas, ctx, runner, obstacles, activeCoins;
+        let canvas, ctx, runner, obstacles, activeCoins, activeBushes;
+
+        let isTrainAlertActive = false;
+        let alertEndTime = 0;
 
         const cashEl = document.getElementById('cash-amount');
         const buyBtn = document.getElementById('buy-btn');
         const codeOutput = document.getElementById('code-output');
         const gameScreen = document.getElementById('game-screen');
-        const distanceEl = document.getElementById('distance-val');
         const modeStatLabel = document.getElementById('mode-stat-label');
         const controlHint = document.getElementById('control-hint');
+        const alertTimerLabel = document.getElementById('alert-timer-label');
         
         const launchLaserBtn = document.getElementById('launch-laser-btn');
         const launchTrainBtn = document.getElementById('launch-train-btn');
@@ -356,6 +364,7 @@
 
         launchLaserBtn.addEventListener('click', () => {
             currentGameMode = "laser";
+            alertTimerLabel.innerText = "";
             modeStatLabel.innerHTML = 'Distance: <span id="distance-val">000000</span>';
             controlHint.innerText = "Tap Left / Right sides to steer horizontally.";
             gameScreen.classList.remove('hidden');
@@ -364,8 +373,9 @@
 
         launchTrainBtn.addEventListener('click', () => {
             currentGameMode = "train";
-            modeStatLabel.innerHTML = 'Coins Collected: <span id="distance-val">0</span>';
-            controlHint.innerText = "Run Left & Right! Avoid the train emerging from the bottom.";
+            alertTimerLabel.innerText = "";
+            modeStatLabel.innerHTML = 'Coins: <span id="distance-val">0</span> <span id="alert-timer-label" style="color:#ffa502; margin-left:15px;"></span>';
+            controlHint.innerText = "Dodge bushes! One hit makes the train chase you closely!";
             gameScreen.classList.remove('hidden');
             initGame();
         });
@@ -391,24 +401,24 @@
             gameRunning = true;
             obstacles = [];
             activeCoins = [];
+            activeBushes = [];
+            isTrainAlertActive = false;
+            alertEndTime = 0;
 
-            // FIX 1: Ang player ay nasa LIGTAS na distansya (Taas ng screen) sa simula
             runner = {
                 x: canvas.width / 2 - 15,
-                y: 80, 
+                y: canvas.height - 140, 
                 w: 30, h: 30, 
-                speed: 8.5, // Mabilis na takbo para makaiwas ka agad
+                speed: 8.5,
                 moveLeft: false, moveRight: false
             };
 
-            // FIX 2: Ang tren ay magsisimula sa pinaka-ilalim/labas ng screen
             if(currentGameMode === "train") {
                 obstacles.push({
                     x: canvas.width / 2 - 40,
-                    y: canvas.height + 150, 
-                    w: 80,
-                    h: 55,
-                    speed: 1.5 // Balanseng bilis para may habol ang player
+                    y: canvas.height + 120, 
+                    w: 80, h: 65,
+                    targetY: canvas.height + 120 
                 });
             }
 
@@ -483,39 +493,60 @@
                 }
             } 
             
-            // ==================== MODE 2: TRAIN CHASE ENGINE ====================
+            // ==================== MODE 2: SUBWAY TRAIN & BUSH ENGINE ====================
             else if(currentGameMode === "train") {
                 let train = obstacles[0];
-                
-                // Humahabol sa X position ng player habang umaakyat
-                if(train.x + train.w/2 < runner.x + 15) {
-                    train.x += train.speed;
+                let currentTime = Date.now();
+
+                // 5-Second Stumble Tracking Window
+                if (isTrainAlertActive) {
+                    let remaining = Math.ceil((alertEndTime - currentTime) / 1000);
+                    if (remaining > 0) {
+                        document.getElementById('alert-timer-label').innerText = "⚠️ Train Close! " + remaining + "s";
+                        train.targetY = runner.y + 35; 
+                    } else {
+                        isTrainAlertActive = false;
+                        document.getElementById('alert-timer-label').innerText = "";
+                        train.targetY = canvas.height + 120;
+                    }
                 } else {
-                    train.x -= train.speed;
+                    train.targetY = canvas.height + 120; 
                 }
-                
-                // FIX 3: Umaakyat nang dahan-dahan ang tren mula sa ibaba papunta sa player
-                train.y -= 0.65; 
+
+                train.y += (train.targetY - train.y) * 0.1;
+
+                if(train.x + train.w/2 < runner.x + 15) {
+                    train.x += 3.5;
+                } else {
+                    train.x -= 3.5;
+                }
 
                 // DRAW THE TRAIN
                 ctx.fillStyle = '#4b4b4b';
                 ctx.fillRect(train.x, train.y, train.w, train.h);
-                ctx.fillStyle = '#2f3542';
-                ctx.fillRect(train.x - 2, train.y, train.w + 4, 8);
+                ctx.fillStyle = '#ff4757'; 
+                ctx.fillRect(train.x - 2, train.y, train.w + 4, 10);
                 ctx.fillStyle = '#ff9f43'; 
-                ctx.fillRect(train.x + 8, train.y + 12, 14, 10);
-                ctx.fillRect(train.x + train.w - 22, train.y + 12, 14, 10);
+                ctx.fillRect(train.x + 10, train.y + 15, 12, 10);
+                ctx.fillRect(train.x + train.w - 22, train.y + 15, 12, 10);
 
-                // COINS DROPPING SYSTEM (Nahuhulog galing sa taas)
+                // SPAWN COINS
                 if(Math.random() < 0.025 && activeCoins.length < 4) {
                     activeCoins.push({
                         x: Math.random() * (canvas.width - 40) + 20,
-                        y: -10,
-                        r: 8,
-                        speed: 2.8
+                        y: -10, r: 8, speed: 3
                     });
                 }
 
+                // SPAWN BUSHES
+                if(Math.random() < 0.015 && activeBushes.length < 3) {
+                    activeBushes.push({
+                        x: Math.random() * (canvas.width - 45) + 10,
+                        y: -20, w: 35, h: 25, speed: 3.5
+                    });
+                }
+
+                // COINS RENDER
                 for(let c = activeCoins.length - 1; c >= 0; c--) {
                     let coin = activeCoins[c];
                     coin.y += coin.speed;
@@ -535,24 +566,47 @@
                         document.getElementById('distance-val').innerText = distance;
                         continue;
                     }
-
-                    if(coin.y > canvas.height) {
-                        activeCoins.splice(c, 1);
-                    }
+                    if(coin.y > canvas.height) activeCoins.splice(c, 1);
                 }
 
-                // CRASH HITBOX DETECTION
-                if (train.x < runner.x + runner.w && train.x + train.w > runner.x && train.y < runner.y + runner.h && train.y + train.h > runner.y) {
+                // BUSHES RENDER
+                for(let b = activeBushes.length - 1; b >= 0; b--) {
+                    let bush = activeBushes[b];
+                    bush.y += bush.speed;
+
+                    ctx.fillStyle = '#2ed573';
+                    ctx.beginPath();
+                    ctx.arc(bush.x + 10, bush.y + 12, 12, 0, Math.PI*2);
+                    ctx.arc(bush.x + 25, bush.y + 12, 12, 0, Math.PI*2);
+                    ctx.arc(bush.x + 17, bush.y + 6, 12, 0, Math.PI*2);
+                    ctx.fill();
+
+                    // Collision Check
+                    if (bush.x < runner.x + runner.w && bush.x + bush.w > runner.x && bush.y < runner.y + runner.h && bush.y + bush.h > runner.y) {
+                        activeBushes.splice(b, 1); 
+                        
+                        if (!isTrainAlertActive) {
+                            // FIRST STRIKE: Player stumbles, train snaps close behind
+                            isTrainAlertActive = true;
+                            alertEndTime = Date.now() + 5000; 
+                        } else {
+                            // SECOND STRIKE: Hit a bush while train is still caught up
+                            gameRunning = false;
+                            alert("🚂 GAME OVER!\n\nYou stumbled twice on the bushes and the train caught you!\n\nCoins Collected: " + distance + " (+$" + (distance * 5) + " Cash)");
+                            gameScreen.classList.add('hidden');
+                            return;
+                        }
+                        continue;
+                    }
+                    if(bush.y > canvas.height) activeBushes.splice(b, 1);
+                }
+
+                // Direct Train Hitbox Collision Terminal
+                if (train.y <= runner.y + runner.h && train.y + train.h >= runner.y && train.x < runner.x + runner.w && train.x + train.w > runner.x) {
                     gameRunning = false;
-                    alert("🚂 GAME OVER!\n\nNaabutan ka ng tren mula sa ibaba!\n\nCoins Collected: " + distance + " (+$" + (distance * 5) + " Cash Added)");
+                    alert("🚂 CAUGHT!\n\nYou were run over or caught by the train on the tracks!\n\nCoins Collected: " + distance);
                     gameScreen.classList.add('hidden');
                     return;
-                }
-
-                // Loop reset kapag lumagpas ang tren sa tuktok ng screen
-                if(train.y + train.h < 0) {
-                    train.y = canvas.height + 150; 
-                    train.speed += 0.15; // Bahagyang bibilis sa susunod na ikot
                 }
             }
 
