@@ -215,6 +215,7 @@
         .modal-content {
             background-color: #1e1e1e;
             border: 2px solid #ff4757;
+            border-radius: 166px;
             border-radius: 16px;
             width: 90%;
             max-width: 360px;
@@ -313,10 +314,10 @@
         <div class="modal-content">
             <h3>🎮 GAMEPLAY MANUAL</h3>
             <ol>
-                <li><b>LASER GAME:</b> Move left/right to dodge falling lasers. Survival scores turn 1:1 into Cash.</li>
-                <li><b>TRAIN GAME:</b> You can now move in <b>all 4 directions (Up, Down, Left, Right)</b>! Collect coins to gain +$5 each.</li>
-                <li>Watch out! The heavy tracking train will emerge from the <b>bottom</b> and follow you upwards to intercept you.</li>
-                <li>Controls: Use <b>W / A / S / D</b> or <b>Arrow Keys</b>. On mobile, tap anywhere relative to the screen quadrants to steer.</li>
+                <li><b>LASER GAME:</b> Dodge the falling red lasers. Points turn into cash.</li>
+                <li><b>TRAIN GAME:</b> Gold coins will drop from above. Grab them for <b>+$5 Cash</b> each!</li>
+                <li>Watch out! The train spawns from the <b>bottom</b> and charges <b>upward</b> directly to follow and catch you!</li>
+                <li>Controls: Use <b>A / D</b> or <b>Left / Right arrow keys</b>. On mobile, tap the left or right side of the screen.</li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
@@ -325,7 +326,7 @@
     <div id="game-screen" class="hidden">
         <div class="game-stats" id="mode-stat-label">Distance: <span id="distance-val">000000</span></div>
         <canvas id="runnerCanvas" width="360" height="500"></canvas>
-        <p id="control-hint" style="color: #747d8c; font-size: 0.85rem; margin-top: 10px;">Move using WASD or Arrow Keys.</p>
+        <p id="control-hint" style="color: #747d8c; font-size: 0.85rem; margin-top: 10px;">Use Arrow keys or tap sides of screen to move.</p>
     </div>
 
     <script>
@@ -365,7 +366,7 @@
         launchTrainBtn.addEventListener('click', () => {
             currentGameMode = "train";
             modeStatLabel.innerHTML = 'Coins Collected: <span id="distance-val">0</span>';
-            controlHint.innerText = "Tap top/bottom/left/right areas of the screen to move freely!";
+            controlHint.innerText = "Move Left & Right at the bottom to catch dropping coins!";
             gameScreen.classList.remove('hidden');
             initGame();
         });
@@ -394,87 +395,52 @@
 
             runner = {
                 x: canvas.width / 2 - 15,
-                y: canvas.height - 80,
-                w: 30, h: 30, speed: 5.5,
-                moveLeft: false, moveRight: false,
-                moveUp: false, moveDown: false
+                y: canvas.height - 50, // Stationary bottom line placement
+                w: 30, h: 30, speed: 6.5,
+                moveLeft: false, moveRight: false
             };
 
-            // TRAIN: Spawn from the bottom of the canvas
+            // TRAIN: Spawns from the bottom boundary line
             if(currentGameMode === "train") {
                 obstacles.push({
                     x: canvas.width / 2 - 40,
-                    y: canvas.height - 20, 
+                    y: canvas.height + 10, 
                     w: 80,
                     h: 55,
-                    speed: 2.2
+                    speed: 1.8
                 });
-                
-                // Spawn initial batch of coins immediately
-                for(let i=0; i<3; i++) {
-                    generateSafeCoin();
-                }
             }
 
             window.onkeydown = (e) => {
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
-                if(e.key === 'w' || e.key === 'ArrowUp') runner.moveUp = true;
-                if(e.key === 's' || e.key === 'ArrowDown') runner.moveDown = true;
             };
             window.onkeyup = (e) => {
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
-                if(e.key === 'w' || e.key === 'ArrowUp') runner.moveUp = false;
-                if(e.key === 's' || e.key === 'ArrowDown') runner.moveDown = false;
             };
 
-            // Advanced Mobile Touch Screen Quadrant Navigation Engine
             canvas.ontouchstart = (e) => {
                 let rect = canvas.getBoundingClientRect();
                 let touchX = e.touches[0].clientX - rect.left;
-                let touchY = e.touches[0].clientY - rect.top;
-
-                if (currentGameMode === "laser") {
-                    if(touchX < canvas.width / 2) runner.moveLeft = true;
-                    else runner.moveRight = true;
-                } else {
-                    // Train Mode 4-Way Controls
-                    if(touchX < canvas.width * 0.35) runner.moveLeft = true;
-                    if(touchX > canvas.width * 0.65) runner.moveRight = true;
-                    if(touchY < canvas.height * 0.4) runner.moveUp = true;
-                    if(touchY > canvas.height * 0.6) runner.moveDown = true;
-                }
+                if(touchX < canvas.width / 2) runner.moveLeft = true;
+                else runner.moveRight = true;
             };
             canvas.ontouchend = () => {
                 runner.moveLeft = false; runner.moveRight = false;
-                runner.moveUp = false; runner.moveDown = false;
             };
 
             gameLoop();
-        }
-
-        function generateSafeCoin() {
-            activeCoins.push({
-                x: Math.random() * (canvas.width - 40) + 20,
-                y: Math.random() * (canvas.height - 120) + 40,
-                r: 8
-            });
         }
 
         function gameLoop() {
             if(!gameRunning) return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
-            // 4-Way Navigation Execution Checks
             if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
             if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
-            if(currentGameMode === "train") {
-                if(runner.moveUp && runner.y > 0) runner.y -= runner.speed;
-                if(runner.moveDown && runner.y < canvas.height - runner.h) runner.y += runner.speed;
-            }
 
-            // DRAW PLAYER
+            // RENDER PLAYER (Blue Circle)
             ctx.fillStyle = '#00a8ff';
             ctx.beginPath();
             ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
@@ -516,24 +482,23 @@
                 }
             } 
             
-            // ==================== MODE 2: TRAIN CHASE (FROM BOTTOM) ====================
+            // ==================== MODE 2: TRAIN CHASE ENGINE ====================
             else if(currentGameMode === "train") {
                 let train = obstacles[0];
                 
-                // Track Player Position
+                // TRAIN TRACKING AI: Follows the player's X coordinate while pushing UPWARD
                 if(train.x + train.w/2 < runner.x + 15) {
                     train.x += train.speed;
                 } else {
                     train.x -= train.speed;
                 }
                 
-                // The train moves UPWARDS from the bottom to chase the player
-                train.y -= 0.45; 
+                // Move train UPWARDS towards the player line
+                train.y -= 0.65; 
 
-                // DRAW THE TRAIN
+                // DRAW THE TRAIN (Dark grey engine room chassis)
                 ctx.fillStyle = '#4b4b4b';
                 ctx.fillRect(train.x, train.y, train.w, train.h);
-                // Top border/roof plating
                 ctx.fillStyle = '#2f3542';
                 ctx.fillRect(train.x - 2, train.y, train.w + 4, 8);
                 // Headlights facing upward
@@ -541,41 +506,56 @@
                 ctx.fillRect(train.x + 8, train.y + 12, 14, 10);
                 ctx.fillRect(train.x + train.w - 22, train.y + 12, 14, 10);
 
-                // Coin management loops
-                if(Math.random() < 0.015 && activeCoins.length < 5) {
-                    generateSafeCoin();
+                // COINS DROPPING SYSTEM
+                if(Math.random() < 0.02 && activeCoins.length < 4) {
+                    activeCoins.push({
+                        x: Math.random() * (canvas.width - 40) + 20,
+                        y: -10, // Spawns cleanly at top
+                        r: 8,
+                        speed: 2.5 + Math.random() * 2
+                    });
                 }
 
+                // Update and render dropping coins
                 for(let c = activeCoins.length - 1; c >= 0; c--) {
                     let coin = activeCoins[c];
+                    coin.y += coin.speed; // Coin falling velocity
+
                     ctx.fillStyle = '#ffd32a';
                     ctx.beginPath();
                     ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI*2);
                     ctx.fill();
 
+                    // Player coin collision collection check
                     let vectorDist = Math.hypot((runner.x + 15) - coin.x, (runner.y + 15) - coin.y);
                     if(vectorDist < 15 + coin.r) {
                         activeCoins.splice(c, 1);
                         distance += 1; 
-                        cash += 5; 
+                        cash += 5; // Direct +$5 calculation formula modification
                         cashEl.innerText = cash;
                         localStorage.setItem("Xdragon_WebCash", cash);
                         document.getElementById('distance-val').innerText = distance;
+                        continue;
+                    }
+
+                    // Remove out of bounds coin
+                    if(coin.y > canvas.height) {
+                        activeCoins.splice(c, 1);
                     }
                 }
 
-                // Crash conditions
+                // TRAIN CRASH INTERSECTION TERMINAL
                 if (train.x < runner.x + runner.w && train.x + train.w > runner.x && train.y < runner.y + runner.h && train.y + train.h > runner.y) {
                     gameRunning = false;
-                    alert("🚂 GAME OVER!\n\nThe train caught you from below!\n\nCoins Collected: " + distance + " (+$" + (distance * 5) + " Cash Added)");
+                    alert("🚂 CRASHED!\n\nThe train caught you from below!\n\nCoins Collected: " + distance + " (+$" + (distance * 5) + " Cash Added)");
                     gameScreen.classList.add('hidden');
                     return;
                 }
 
-                // Reset train if it leaves the top of screen to relaunch attack
+                // Relaunch train attack loop if it completely leaves the upper frame
                 if(train.y + train.h < 0) {
                     train.y = canvas.height + 20;
-                    train.speed += 0.3; // Make it a little bit faster each time it loops!
+                    train.speed += 0.25; // Speed ramps up slightly per loop challenge
                 }
             }
 
