@@ -342,10 +342,10 @@
             font-weight: bold;
         }
 
-        /* --- BURGER BOMB UI ELEMENTS --- */
+        /* --- BURGER BOMB BATTLE ARENA RAMP --- */
         .burger-game-panel {
             width: 100%;
-            max-width: 360px;
+            max-width: 400px;
             background-color: #1e1e1e;
             border-radius: 12px;
             padding: 15px;
@@ -366,14 +366,14 @@
 
         .mode-tab-btn {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             background-color: #2f3542;
-            color: #747d8c;
+            color: #ffffff;
             border: 2px solid #3f4452;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 1rem;
         }
 
         .mode-tab-btn.active {
@@ -388,43 +388,58 @@
             width: 100%;
             padding: 8px;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             text-align: center;
             margin-bottom: 10px;
             font-weight: bold;
             box-sizing: border-box;
         }
 
-        .burger-status-header {
+        .battle-grids-wrapper {
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .grid-section-box {
+            width: 100%;
+            background: #151515;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            box-sizing: border-box;
+        }
+
+        .grid-header-status {
             display: flex;
             justify-content: space-between;
             font-size: 0.95rem;
             font-weight: bold;
-            margin-bottom: 12px;
-            color: #ff9f43;
-            border-bottom: 1px solid #333;
-            padding-bottom: 6px;
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px dashed #444;
         }
 
         .burger-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 15px;
+            gap: 8px;
+            justify-items: center;
         }
 
         .burger-tile {
-            width: 85px;
-            height: 85px;
+            width: 75px;
+            height: 75px;
             background-color: #2f3542;
             border: 3px solid #747d8c;
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             cursor: pointer;
             transition: all 0.15s ease;
             position: relative;
@@ -438,14 +453,13 @@
 
         .burger-tile.revealed {
             background-color: #121212;
-            border-color: #ff4757;
             cursor: not-allowed;
         }
 
         .tile-marker-label {
             position: absolute;
             bottom: 2px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #ffa502;
             font-weight: bold;
         }
@@ -454,13 +468,14 @@
             background-color: #ffa502;
             color: #121212;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: 8px;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            width: 100%;
         }
 
         .burger-hint-btn:hover {
@@ -475,10 +490,11 @@
             text-align: center;
             width: 100%;
             box-sizing: border-box;
+            margin-top: 10px;
         }
 
         .burger-end-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
             margin-bottom: 15px;
         }
@@ -567,11 +583,11 @@
             <h3>🎮 GAMEPLAY MANUAL</h3>
             <ol>
                 <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
-                <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding the green <b>Bushes</b>. One hit makes the train chase you closely!</li>
-                <li><b>FARM GAME:</b> Click a fence plot to move the farmer. Buy pets to place inside unlocked fences. Age up rewards cash.</li>
-                <li><b>BURGER BOMB GAME:</b> Guess the hidden bombs in the grid!
-                    <br>• <b>Bot Mode:</b> Manually place your 3 bombs, and the Bot will hide theirs. Entry fee is $500. Hint costs $1500.
-                    <br>• <b>Multiplayer Mode:</b> A local 2-Player practice room on the same device! No Cash entry fees or losses. P1 and P2 set up their bombs separately before battle.
+                <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding green bushes. One hit forces a train chase!</li>
+                <li><b>FARM GAME:</b> Click fence plots to harvest wheat or breed pets to age them up for money rewards.</li>
+                <li><b>BURGER BOMB BATTLE:</b> Tactical deduction field arena!
+                    <br>• <b>Setup Phase:</b> Select 3 separate burgers to plant your bombs.
+                    <br>• <b>Battle Loop:</b> You guess on the Opponent's Grid. The enemy shoots back at your Grid. Landing on an active enemy bomb deducts life from the attacker!
                 </li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
@@ -589,28 +605,39 @@
         
         <div class="burger-game-panel hidden" id="burger-game-panel">
             <div class="burger-mode-select">
-                <button class="mode-tab-btn active" id="burger-mode-bot-btn">🤖 BOT MODE</button>
-                <button class="mode-tab-btn" id="burger-mode-mp-btn">👥 MULTIPLAYER</button>
+                <button class="mode-tab-btn active" id="burger-mode-bot-btn">🤖 BOT MATCH</button>
+                <button class="mode-tab-btn" id="burger-mode-mp-btn">👥 LOCAL PVP</button>
             </div>
 
             <div class="burger-instruction-banner" id="burger-instruction-text">
-                Setup Phase: Click 3 Burgers to hide your bombs!
+                Setup: Select 3 Burgers to hide your bombs!
             </div>
 
-            <div class="burger-status-header">
-                <div id="burger-side-a-label">🤖 Bot: <span id="burger-bot-hearts">❤️❤️❤️</span></div>
-                <div id="burger-side-b-label">👨‍💼 Player: <span id="burger-player-hearts">❤️❤️❤️</span></div>
+            <button class="burger-hint-btn" id="burger-hint-btn">🧐 Buy Intel Radar (-$1500 Cash)</button>
+
+            <div class="battle-grids-wrapper">
+                <div class="grid-section-box" id="zone-enemy-container">
+                    <div class="grid-header-status">
+                        <span id="label-enemy-team">🤖 Bot:</span>
+                        <span id="burger-bot-hearts" style="color: #ff4757;">❤️❤️❤️</span>
+                    </div>
+                    <div class="burger-grid" id="burger-grid-enemy"></div>
+                </div>
+
+                <div class="grid-section-box" id="zone-player-container">
+                    <div class="grid-header-status">
+                        <span id="label-player-team">👨‍💼 You:</span>
+                        <span id="burger-player-hearts" style="color: #2ed573;">❤️❤️❤️</span>
+                    </div>
+                    <div class="burger-grid" id="burger-grid-player"></div>
+                </div>
             </div>
-            
-            <button class="burger-hint-btn" id="burger-hint-btn">🧐 Buy Hint (-$1500 Cash)</button>
-            
-            <div class="burger-grid" id="burger-grid-container"></div>
 
             <div class="burger-end-overlay hidden" id="burger-end-overlay">
-                <div class="burger-end-title" id="burger-end-title">YOU WIN!</div>
+                <div class="burger-end-title" id="burger-end-title">MATCH FINISHED!</div>
                 <div class="burger-end-buttons">
-                    <button class="burger-action-btn" style="background-color: #2ed573; color: white;" id="burger-retry-btn">Retry</button>
-                    <button class="burger-action-btn" style="background-color: #ff4757; color: white;" id="burger-exit-btn">Exit</button>
+                    <button class="burger-action-btn" style="background-color: #2ed573; color: white;" id="burger-retry-btn">Rematch</button>
+                    <button class="burger-action-btn" style="background-color: #ff4757; color: white;" id="burger-exit-btn">Leave</button>
                 </div>
             </div>
         </div>
@@ -667,12 +694,13 @@
         // --- BURGER BOMB CONFIGS ---
         let burgerMatchMode = "bot"; 
         let burgerPhase = "setup-player1"; 
-        let botHearts = 3;
+        let enemyHearts = 3;
         let playerHearts = 3; 
-        let botBombs = []; 
+        let enemyBombs = []; 
         let playerBombs = []; 
-        let revealedBotTiles = []; 
+        let revealedEnemyTiles = []; 
         let revealedPlayerTiles = []; 
+        let radarClueTiles = []; // Clues found by Radar Intel
         let burgerGameActive = false;
         
         const petRewardsTable = { '🐈': 5, '🐕': 5, '🐖': 10, '🐑': 15, '🐅': 20, '🐍': 20, '🐄': 30, '🐊': 30, '🐢': 50 };
@@ -757,7 +785,7 @@
             bubbleContainer.innerHTML = "";
             modeStatLabel.innerHTML = '🌾 Inventory: <span id="distance-val">0</span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
             document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
-            controlHint.innerText = "Click inside any fence or the 🌾 crops at the bottom to send the farmer 👨‍🌾 over!";
+            controlHint.innerText = "Click inside any fence or the crops at the bottom to send the farmer over!";
             gameScreen.classList.remove('hidden');
             initGame();
         });
@@ -768,7 +796,7 @@
             bubbleContainer.innerHTML = "";
             modeStatLabel.innerHTML = '<span style="color:#ff9f43;">🍔 Burger Bomb Arena</span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
             document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
-            controlHint.innerText = "Guess the correct burger and avoid hidden bombs!";
+            controlHint.innerText = "Locate enemy safe tiles and avoid triggering landmines!";
             gameScreen.classList.remove('hidden');
             initGame();
         });
@@ -820,24 +848,17 @@
             }
         }
 
-        // --- BURGER BOMB SYSTEM ENGINES ---
+        // --- FIXED BURGER BOMB GAME LOGIC ---
         document.getElementById('burger-mode-bot-btn').onclick = () => {
-            if(burgerGameActive && (playerBombs.length > 0 || botBombs.length > 0)) return;
+            if(burgerGameActive && (playerBombs.length > 0 || enemyBombs.length > 0)) return;
             burgerMatchMode = "bot";
-            document.getElementById('burger-mode-bot-btn').onclick = () => {
-                if(burgerGameActive && (playerBombs.length > 0 || botBombs.length > 0)) return;
-                burgerMatchMode = "bot";
-                document.getElementById('burger-mode-bot-btn').classList.add('active');
-                document.getElementById('burger-mode-mp-btn').classList.remove('active');
-                initBurgerGame();
-            };
             document.getElementById('burger-mode-bot-btn').classList.add('active');
             document.getElementById('burger-mode-mp-btn').classList.remove('active');
             initBurgerGame();
         };
 
         document.getElementById('burger-mode-mp-btn').onclick = () => {
-            if(burgerGameActive && (playerBombs.length > 0 || botBombs.length > 0)) return;
+            if(burgerGameActive && (playerBombs.length > 0 || enemyBombs.length > 0)) return;
             burgerMatchMode = "multiplayer";
             document.getElementById('burger-mode-mp-btn').classList.add('active');
             document.getElementById('burger-mode-bot-btn').classList.remove('active');
@@ -845,43 +866,50 @@
         };
 
         function initBurgerGame() {
-            botHearts = 3;
+            enemyHearts = 3;
             playerHearts = 3;
-            revealedBotTiles = [];
+            revealedEnemyTiles = [];
             revealedPlayerTiles = [];
+            radarClueTiles = [];
             playerBombs = [];
-            botBombs = [];
+            enemyBombs = [];
             burgerGameActive = true;
 
             document.getElementById('burger-end-overlay').classList.add('hidden');
+            document.getElementById('zone-enemy-container').style.opacity = "1";
+            document.getElementById('zone-player-container').style.opacity = "1";
             
             if(burgerMatchMode === "bot") {
                 burgerPhase = "setup-player1";
-                document.getElementById('burger-side-a-label').innerHTML = "🤖 Bot: <span id=\"burger-bot-hearts\">❤️❤️❤️</span>";
-                document.getElementById('burger-side-b-label').innerHTML = "👨‍💼 You: <span id=\"burger-player-hearts\">❤️❤️❤️</span>";
-                document.getElementById('burger-instruction-text').innerText = "SETUP: Click 3 Burgers to hide your bombs!";
+                document.getElementById('label-enemy-team').innerText = "🤖 Bot:";
+                document.getElementById('label-player-team').innerText = "👨‍💼 You:";
+                document.getElementById('burger-instruction-text').innerText = "Choose 3 Burgers to plant your bombs!";
                 document.getElementById('burger-hint-btn').classList.remove('hidden');
             } else {
                 burgerPhase = "setup-player1";
-                document.getElementById('burger-side-a-label').innerHTML = "👤 Player 1: <span id=\"burger-bot-hearts\">❤️❤️❤️</span>";
-                document.getElementById('burger-side-b-label').innerHTML = "👤 Player 2: <span id=\"burger-player-hearts\">❤️❤️❤️</span>";
-                document.getElementById('burger-instruction-text').innerText = "P1 SETUP: Hand device to Player 1. Choose 3 Burgers to hide bombs!";
+                document.getElementById('label-enemy-team').innerText = "👤 Player 2:";
+                document.getElementById('label-player-team').innerText = "👤 Player 1:";
+                document.getElementById('burger-instruction-text').innerText = "Player 1 Turn: Choose 3 Burgers for your bombs!";
                 document.getElementById('burger-hint-btn').classList.add('hidden'); 
             }
 
             updateBurgerHeartsUI();
-            renderBurgerGrid();
+            renderDualBurgerGrids();
         }
 
         function updateBurgerHeartsUI() {
-            document.getElementById('burger-bot-hearts').innerText = "❤️".repeat(Math.max(0, botHearts)) || "💀";
+            document.getElementById('burger-bot-hearts').innerText = "❤️".repeat(Math.max(0, enemyHearts)) || "💀";
             document.getElementById('burger-player-hearts').innerText = "❤️".repeat(Math.max(0, playerHearts)) || "💀";
         }
 
-        function renderBurgerGrid() {
-            const container = document.getElementById('burger-grid-container');
-            container.innerHTML = "";
+        function renderDualBurgerGrids() {
+            const enemyGridContainer = document.getElementById('burger-grid-enemy');
+            const playerGridContainer = document.getElementById('burger-grid-player');
             
+            enemyGridContainer.innerHTML = "";
+            playerGridContainer.innerHTML = "";
+
+            // --- BUILD GRID A: ENEMY ZONE ---
             for(let i = 0; i < 9; i++) {
                 let tile = document.createElement('div');
                 tile.className = "burger-tile";
@@ -892,24 +920,55 @@
                 marker.className = "tile-marker-label";
                 marker.innerText = "#" + (i + 1);
                 tile.appendChild(marker);
-                
-                if(burgerPhase === "setup-player1") {
-                    if(playerBombs.includes(i)) {
+
+                if (burgerPhase === "setup-player2") {
+                    if (enemyBombs.includes(i)) {
                         tile.innerText = "💣";
                         tile.style.backgroundColor = "#ff9f43";
                     }
-                } 
-                else if(burgerPhase === "setup-player2") {
-                    if(botBombs.includes(i)) {
-                        tile.innerText = "💣";
-                        tile.style.backgroundColor = "#ff9f43";
+                } else if (burgerPhase.startsWith("battle")) {
+                    if (revealedEnemyTiles.includes(i)) {
+                        tile.classList.add('revealed');
+                        if (enemyBombs.includes(i)) {
+                            tile.innerText = "💥";
+                            tile.style.backgroundColor = "#ff4757";
+                        } else {
+                            tile.innerText = "🍽️";
+                            tile.style.backgroundColor = "#2c3e50";
+                        }
+                    } else if (radarClueTiles.includes(i)) {
+                        tile.innerText = "⚠️";
+                        tile.style.backgroundColor = "#ffd32a";
                     }
                 }
-                else if(burgerPhase === "battle-p1-turn") {
-                    if(revealedBotTiles.includes(i)) {
+
+                tile.onclick = () => handleEnemyGridClick(i);
+                enemyGridContainer.appendChild(tile);
+            }
+
+            // --- BUILD GRID B: PLAYER ZONE ---
+            for(let i = 0; i < 9; i++) {
+                let tile = document.createElement('div');
+                tile.className = "burger-tile";
+                tile.dataset.index = i;
+                tile.innerText = "🍔";
+
+                let marker = document.createElement('span');
+                marker.className = "tile-marker-label";
+                marker.innerText = "#" + (i + 1);
+                tile.appendChild(marker);
+
+                if (playerBombs.includes(i)) {
+                    tile.innerText = "💣";
+                    tile.style.backgroundColor = "#2f3542";
+                    tile.style.border = "3px dashed #ffa502";
+                }
+
+                if (burgerPhase.startsWith("battle") || burgerPhase === "setup-player2") {
+                    if (revealedPlayerTiles.includes(i)) {
                         tile.classList.add('revealed');
-                        if(botBombs.includes(i)) {
-                            tile.innerText = "💣";
+                        if (playerBombs.includes(i)) {
+                            tile.innerText = "💥";
                             tile.style.backgroundColor = "#ff4757";
                         } else {
                             tile.innerText = "🍽️";
@@ -917,187 +976,192 @@
                         }
                     }
                 }
-                else if(burgerPhase === "battle-p2-turn") {
-                    if(revealedPlayerTiles.includes(i)) {
-                        tile.classList.add('revealed');
-                        if(playerBombs.includes(i)) {
-                            tile.innerText = "💣";
-                            tile.style.backgroundColor = "#ff4757";
-                        } else {
-                            tile.innerText = "🍽️";
-                            tile.style.backgroundColor = "#2c3e50";
-                        }
-                    }
-                }
-                
-                tile.onclick = () => handleBurgerTileInteraction(i);
-                container.appendChild(tile);
+
+                tile.onclick = () => handlePlayerGridClick(i);
+                playerGridContainer.appendChild(tile);
             }
         }
 
-        function handleBurgerTileInteraction(index) {
-            if(!burgerGameActive) return;
+        function handlePlayerGridClick(index) {
+            if (!burgerGameActive) return;
 
-            if(burgerPhase === "setup-player1") {
-                if(playerBombs.includes(index)) {
+            if (burgerPhase === "setup-player1") {
+                if (playerBombs.includes(index)) {
                     playerBombs = playerBombs.filter(b => b !== index);
-                } else if(playerBombs.length < 3) {
+                } else if (playerBombs.length < 3) {
                     playerBombs.push(index);
                 }
-                renderBurgerGrid();
+                renderDualBurgerGrids();
 
-                if(playerBombs.length === 3) {
+                if (playerBombs.length === 3) {
                     setTimeout(() => {
-                        if(burgerMatchMode === "bot") {
-                            if(cash < 500) {
-                                alert("🚨 Insufficient Cash! You need a $500 bet to play against the Bot.");
+                        if (burgerMatchMode === "bot") {
+                            if (cash < 500) {
+                                alert("🚨 You need a $500 entrance fee to battle the Bot!");
                                 handleExitToShop();
                                 return;
                             }
-                            while(botBombs.length < 3) {
+                            while (enemyBombs.length < 3) {
                                 let randSlot = Math.floor(Math.random() * 9);
-                                if(!botBombs.includes(randSlot)) botBombs.push(randSlot);
+                                if (!enemyBombs.includes(randSlot)) enemyBombs.push(randSlot);
                             }
-                            burgerPhase = "battle-p1-turn";
-                            document.getElementById('burger-instruction-text').innerText = "BATTLE: Guess the Bot's Grid! Click a burger.";
-                            alert("👍 Your bombs are locked! The Bot is ready. Let the guessing game begin!");
-                            renderBurgerGrid();
+                            burgerPhase = "battle-player1-turn";
+                            document.getElementById('burger-instruction-text').innerText = "BATTLE! Pick a target on the Bot's grid!";
+                            alert("Bombs planted! It's your turn to attack.");
+                            renderDualBurgerGrids();
                         } else {
                             burgerPhase = "setup-player2";
-                            document.getElementById('burger-instruction-text').innerText = "P2 SETUP: Hand the device to Player 2! (No peeking, P1)";
-                            alert("🔒 Player 1's bombs are hidden!\n\nHand the device to Player 2 for their setup turn.");
-                            renderBurgerGrid();
+                            document.getElementById('burger-instruction-text').innerText = "Player 2 Turn: Choose 3 Burgers on the top grid!";
+                            alert("Player 1 has planted! Pass the phone to Player 2.");
+                            renderDualBurgerGrids();
                         }
-                    }, 500);
+                    }, 400);
                 }
-                return;
-            }
-
-            if(burgerPhase === "setup-player2") {
-                if(botBombs.includes(index)) {
-                    botBombs = botBombs.filter(b => b !== index);
-                } else if(botBombs.length < 3) {
-                    botBombs.push(index);
-                }
-                renderBurgerGrid();
-
-                if(botBombs.length === 3) {
-                    setTimeout(() => {
-                        burgerPhase = "battle-p1-turn";
-                        document.getElementById('burger-instruction-text').innerText = "TURN: Player 1, guess P2's burger!";
-                        alert("⚔️ Both sides are fully set up! Let the Battle Royale begin!");
-                        renderBurgerGrid();
-                    }, 500);
-                }
-                return;
-            }
-
-            if(burgerPhase === "battle-p1-turn") {
-                if(revealedBotTiles.includes(index)) return;
-                revealedBotTiles.push(index);
-                renderBurgerGrid();
-
-                if(botBombs.includes(index)) {
-                    botHearts--;
-                    updateBurgerHeartsUI();
-                    alert("💥 BOOM! You hit a bomb!");
-                } else {
-                    alert("🍽️ Safe! This burger is clear.");
-                }
-
-                if(checkBurgerGameEnd()) return;
-
-                setTimeout(() => {
-                    if(burgerMatchMode === "bot") {
-                        burgerPhase = "battle-p2-turn"; 
-                        executeBotAIAction();
-                    } else {
-                        burgerPhase = "battle-p2-turn";
-                        document.getElementById('burger-instruction-text').innerText = "TURN: Player 2, guess P1's burger!";
-                        alert("🔄 It is now Player 2's turn!");
-                        renderBurgerGrid();
-                    }
-                }, 600);
-                return;
-            }
-
-            if(burgerPhase === "battle-p2-turn" && burgerMatchMode === "multiplayer") {
-                if(revealedPlayerTiles.includes(index)) return;
-                revealedPlayerTiles.push(index);
-                renderBurgerGrid();
-
-                if(playerBombs.includes(index)) {
-                    playerHearts--;
-                    updateBurgerHeartsUI();
-                    alert("💥 BOOM! You hit Player 1's bomb!");
-                } else {
-                    alert("🍽️ Safe! No bomb found.");
-                }
-
-                if(checkBurgerGameEnd()) return;
-
-                setTimeout(() => {
-                    burgerPhase = "battle-p1-turn";
-                    document.getElementById('burger-instruction-text').innerText = "TURN: Player 1, guess P2's burger!";
-                    alert("🔄 Back to Player 1!");
-                    renderBurgerGrid();
-                }, 600);
             }
         }
 
-        function executeBotAIAction() {
-            let availableSlots = [];
-            for(let i = 0; i < 9; i++) {
-                if(!revealedPlayerTiles.includes(i)) availableSlots.push(i);
-            }
-            
-            if(availableSlots.length > 0) {
-                let botChoice = availableSlots[Math.floor(Math.random() * availableSlots.length)];
-                revealedPlayerTiles.push(botChoice);
-                
-                if(playerBombs.includes(botChoice)) {
-                    playerHearts--;
-                    updateBurgerHeartsUI();
-                    alert("🤖 Bot Turn:\n\n💥 OUCH! The bot found your bomb at Burger #" + (botChoice+1) + "!");
-                } else {
-                    alert("🤖 Bot Turn:\n\n🍽️ The bot is safe. No bomb inside chosen Burger #" + (botChoice+1) + ".");
+        function handleEnemyGridClick(index) {
+            if (!burgerGameActive) return;
+
+            if (burgerPhase === "setup-player2") {
+                if (enemyBombs.includes(index)) {
+                    enemyBombs = enemyBombs.filter(b => b !== index);
+                } else if (enemyBombs.length < 3) {
+                    enemyBombs.push(index);
                 }
-                
-                if(checkBurgerGameEnd()) return;
+                renderDualBurgerGrids();
+
+                if (enemyBombs.length === 3) {
+                    setTimeout(() => {
+                        burgerPhase = "battle-player1-turn";
+                        document.getElementById('burger-instruction-text').innerText = "Player 1's Turn: Select a burger from the top grid!";
+                        alert("Everyone is ready! Let the match begin!");
+                        renderDualBurgerGrids();
+                    }, 400);
+                }
+                return;
             }
 
-            burgerPhase = "battle-p1-turn";
-            document.getElementById('burger-instruction-text').innerText = "BATTLE: Guess the Bot's Grid! Click a burger.";
-            renderBurgerGrid();
+            if (burgerPhase === "battle-player1-turn") {
+                if (revealedEnemyTiles.includes(index)) return;
+                revealedEnemyTiles.push(index);
+                
+                radarClueTiles = radarClueTiles.filter(t => t !== index);
+
+                if (enemyBombs.includes(index)) {
+                    enemyHearts--;
+                    updateBurgerHeartsUI();
+                    alert("💥 BOOM! There was a bomb there! The enemy loses a life!");
+                } else {
+                    alert("🍽️ Safe! No bomb found under this burger.");
+                }
+
+                if (checkBurgerGameEnd()) return;
+
+                renderDualBurgerGrids();
+
+                setTimeout(() => {
+                    if (burgerMatchMode === "bot") {
+                        burgerPhase = "battle-player2-turn";
+                        document.getElementById('burger-instruction-text').innerText = "🤖 Bot is attacking...";
+                        executeBotAIAction();
+                    } else {
+                        burgerPhase = "battle-player2-turn";
+                        document.getElementById('burger-instruction-text').innerText = "Player 2's Turn: Click a burger on the bottom grid!";
+                        alert("Player 2's turn! Pass the phone back.");
+                        renderDualBurgerGrids();
+                    }
+                }, 800);
+            }
+            else if (burgerPhase === "battle-player2-turn" && burgerMatchMode === "multiplayer") {
+                alert("Click your target on Player 1's grid (at the bottom)!");
+            }
+        }
+
+        document.getElementById('burger-grid-player').addEventListener('click', function(e) {
+            if (!burgerGameActive || burgerPhase !== "battle-player2-turn" || burgerMatchMode !== "multiplayer") return;
+            
+            let clickedTile = e.target.closest('.burger-tile');
+            if (!clickedTile) return;
+            
+            let index = parseInt(clickedTile.dataset.index);
+            if (revealedPlayerTiles.includes(index)) return;
+            
+            revealedPlayerTiles.push(index);
+            
+            if (playerBombs.includes(index)) {
+                playerHearts--;
+                updateBurgerHeartsUI();
+                alert("💥 BOOM! Player 2 hit your bomb! You lose 1 life.");
+            } else {
+                alert("🍽️ Safe! Player 2 hit an empty spot.");
+            }
+            
+            if (checkBurgerGameEnd()) return;
+            
+            renderDualBurgerGrids();
+            
+            setTimeout(() => {
+                burgerPhase = "battle-player1-turn";
+                document.getElementById('burger-instruction-text').innerText = "Player 1's Turn: Choose a tile on top!";
+                alert("Your turn again, Player 1!");
+                renderDualBurgerGrids();
+            }, 600);
+        });
+
+        function executeBotAIAction() {
+            setTimeout(() => {
+                let availableSlots = [];
+                for(let i = 0; i < 9; i++) {
+                    if(!revealedPlayerTiles.includes(i)) availableSlots.push(i);
+                }
+                
+                if(availableSlots.length > 0) {
+                    let botChoice = availableSlots[Math.floor(Math.random() * availableSlots.length)];
+                    revealedPlayerTiles.push(botChoice);
+                    
+                    if(playerBombs.includes(botChoice)) {
+                        playerHearts--;
+                        updateBurgerHeartsUI();
+                        alert("💥 Direct Hit! The Bot successfully hit your bomb at Slot #" + (botChoice+1) + "!");
+                    } else {
+                        alert("🍽️ Safe! The Bot attacked Slot #" + (botChoice+1) + " but found no bomb.");
+                    }
+                    
+                    if(checkBurgerGameEnd()) return;
+                }
+
+                burgerPhase = "battle-player1-turn";
+                document.getElementById('burger-instruction-text').innerText = "Your Turn! Pick a target on the Bot's grid!";
+                renderDualBurgerGrids();
+            }, 600);
         }
 
         document.getElementById('burger-hint-btn').onclick = () => {
-            if(!burgerGameActive || burgerPhase !== "battle-p1-turn") return;
+            if(!burgerGameActive || burgerPhase !== "battle-player1-turn") return;
             if(cash < 1500) {
-                alert("🚨 Insufficient Cash! You need $1,500 to buy a hint.");
+                alert("🚨 Insufficient funds! The Clue Radar costs $1,500.");
                 return;
             }
             
-            let hiddenBombs = botBombs.filter(b => !revealedBotTiles.includes(b));
-            if(hiddenBombs.length > 0) {
+            let unrevealedBombs = enemyBombs.filter(b => !revealedEnemyTiles.includes(b) && !radarClueTiles.includes(b));
+            
+            if(unrevealedBombs.length > 0) {
                 cash -= 1500;
                 updateGlobalCash();
-                let randomSecretBomb = hiddenBombs[Math.floor(Math.random() * hiddenBombs.length)];
+                let chosenSecretBomb = unrevealedBombs[Math.floor(Math.random() * unrevealedBombs.length)];
                 
-                revealedBotTiles.push(randomSecretBomb);
-                renderBurgerGrid();
+                radarClueTiles.push(chosenSecretBomb);
+                renderDualBurgerGrids();
                 
-                botHearts--;
-                updateBurgerHeartsUI();
-                alert("🧐 Hint Activated (-$1500 Cash):\n\nOne of the bot's bombs was detonated at Grid #" + (randomSecretBomb+1) + "!");
-                checkBurgerGameEnd();
+                alert("🧐 Radar Scan Success (-$1500):\n\nA bomb has been detected! Check the Yellow (⚠️) indicator on the enemy's map.");
             } else {
-                alert("You have already discovered all of the bot's bombs!");
+                alert("You already know the location of all enemy bombs!");
             }
         };
 
         function checkBurgerGameEnd() {
-            if(botHearts <= 0) {
+            if(enemyHearts <= 0) {
                 endBurgerMatch(true);
                 return true;
             }
@@ -1108,29 +1172,29 @@
             return false;
         }
 
-        function endBurgerMatch(isSideAWinner) {
+        function endBurgerMatch(isPlayer1Winner) {
             burgerGameActive = false;
             const overlay = document.getElementById('burger-end-overlay');
             const title = document.getElementById('burger-end-title');
             overlay.classList.remove('hidden');
             
             if(burgerMatchMode === "bot") {
-                if(isSideAWinner) {
+                if(isPlayer1Winner) {
                     cash += 500;
-                    title.innerText = "🏆 YOU WIN! (+$500 Cash)";
+                    title.innerText = "🏆 YOU WIN! (+$500 Reward)";
                     title.style.color = "#2ed573";
                 } else {
                     cash = Math.max(0, cash - 500);
-                    title.innerText = "💀 YOU LOSE! (-$500 Cash)";
+                    title.innerText = "💀 YOU LOSE! (-$500 Penalty)";
                     title.style.color = "#ff4757";
                 }
                 updateGlobalCash();
             } else {
-                if(isSideAWinner) {
-                    title.innerText = "👑 PLAYER 1 WINS THE PRACTICE MATCH!";
+                if(isPlayer1Winner) {
+                    title.innerText = "👑 PLAYER 1 WINS!";
                     title.style.color = "#2ed573";
                 } else {
-                    title.innerText = "👑 PLAYER 2 WINS THE PRACTICE MATCH!";
+                    title.innerText = "👑 PLAYER 2 WINS!";
                     title.style.color = "#ffa502";
                 }
             }
@@ -1296,7 +1360,7 @@
                 }
             }
             if (!slotFound) {
-                alert("🚧 No empty fence slots available! Unlock or purchase spaces first.");
+                alert("🚧 No empty fence slots available! Unlock spaces first.");
             }
         }
 
@@ -1333,7 +1397,7 @@
                     activeActionType = null;
                     saveFarmProgress();
                 } else {
-                    alert("🌾 You are out of wheat crops! Harvest from the crops below.");
+                    alert("🌾 You are out of crops! Harvest crops from the bottom field patch.");
                 }
             }
         }
@@ -1552,7 +1616,7 @@
 
                 if (train.y <= runner.y + runner.h && train.y + train.h >= runner.y && train.x < runner.x + runner.w && train.x + train.w > runner.x) {
                     gameRunning = false;
-                    alert("🚂 CAUGHT!\n\nYou were run over or caught by the train on the tracks!\n\nCoins Collected: " + distance);
+                    alert("🚂 CAUGHT!\n\nYou were caught by the train on the tracks!\n\nCoins Collected: " + distance);
                     gameScreen.classList.add('hidden');
                     return;
                 }
