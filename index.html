@@ -314,8 +314,8 @@
             <h3>🎮 GAMEPLAY MANUAL</h3>
             <ol>
                 <li><b>LASER GAME:</b> Dodge the falling red lasers. Points turn into cash.</li>
-                <li><b>TRAIN GAME:</b> Gold coins will drop from above. Grab them for <b>+$5 Cash</b> each!</li>
-                <li>Watch out! The train spawns from way below and moves up slowly to track you down. Run fast!</li>
+                <li><b>TRAIN GAME:</b> Gold coins drop from the top. Grab them for <b>+$5 Cash</b>!</li>
+                <li>Watch out! The train spawns safely at the bottom and tracks you upwards. Run left and right to survive!</li>
                 <li>Controls: Use <b>A / D</b> or <b>Left / Right arrow keys</b>. On mobile, tap the left or right side of the screen.</li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
@@ -365,7 +365,7 @@
         launchTrainBtn.addEventListener('click', () => {
             currentGameMode = "train";
             modeStatLabel.innerHTML = 'Coins Collected: <span id="distance-val">0</span>';
-            controlHint.innerText = "You are now faster! Dodge the slow train coming from below.";
+            controlHint.innerText = "Run Left & Right! Avoid the train emerging from the bottom.";
             gameScreen.classList.remove('hidden');
             initGame();
         });
@@ -392,22 +392,23 @@
             obstacles = [];
             activeCoins = [];
 
+            // FIX 1: Ang player ay nasa LIGTAS na distansya (Taas ng screen) sa simula
             runner = {
                 x: canvas.width / 2 - 15,
-                y: canvas.height - 120, // Iniangat nang kaunti ang player
+                y: 80, 
                 w: 30, h: 30, 
-                speed: 9.5, // Gawa nating mas mabilis ang player para makatakbo!
+                speed: 8.5, // Mabilis na takbo para makaiwas ka agad
                 moveLeft: false, moveRight: false
             };
 
-            // TRAIN: Spawn malayo sa player (sa ilalim ng screen) para may gap
+            // FIX 2: Ang tren ay magsisimula sa pinaka-ilalim/labas ng screen
             if(currentGameMode === "train") {
                 obstacles.push({
                     x: canvas.width / 2 - 40,
-                    y: canvas.height + 100, // Malayo sa simula
+                    y: canvas.height + 150, 
                     w: 80,
                     h: 55,
-                    speed: 1.2 // Mas mabagal ang hila para may laban ang player
+                    speed: 1.5 // Balanseng bilis para may habol ang player
                 });
             }
 
@@ -486,14 +487,15 @@
             else if(currentGameMode === "train") {
                 let train = obstacles[0];
                 
-                // Mas mabagal na tracking at pag-akyat para makalayo ang player
+                // Humahabol sa X position ng player habang umaakyat
                 if(train.x + train.w/2 < runner.x + 15) {
                     train.x += train.speed;
                 } else {
                     train.x -= train.speed;
                 }
                 
-                train.y -= 0.4; // Katamtamang bilis lang ng pag-akyat pataas
+                // FIX 3: Umaakyat nang dahan-dahan ang tren mula sa ibaba papunta sa player
+                train.y -= 0.65; 
 
                 // DRAW THE TRAIN
                 ctx.fillStyle = '#4b4b4b';
@@ -504,13 +506,13 @@
                 ctx.fillRect(train.x + 8, train.y + 12, 14, 10);
                 ctx.fillRect(train.x + train.w - 22, train.y + 12, 14, 10);
 
-                // COINS DROPPING SYSTEM
-                if(Math.random() < 0.02 && activeCoins.length < 4) {
+                // COINS DROPPING SYSTEM (Nahuhulog galing sa taas)
+                if(Math.random() < 0.025 && activeCoins.length < 4) {
                     activeCoins.push({
                         x: Math.random() * (canvas.width - 40) + 20,
                         y: -10,
                         r: 8,
-                        speed: 3
+                        speed: 2.8
                     });
                 }
 
@@ -539,18 +541,18 @@
                     }
                 }
 
-                // TRAIN CRASH INTERSECTION TERMINAL
+                // CRASH HITBOX DETECTION
                 if (train.x < runner.x + runner.w && train.x + train.w > runner.x && train.y < runner.y + runner.h && train.y + train.h > runner.y) {
                     gameRunning = false;
-                    alert("🚂 GAME OVER!\n\nNaabutan ka ng tren!\n\nCoins Collected: " + distance + " (+$" + (distance * 5) + " Cash Added)");
+                    alert("🚂 GAME OVER!\n\nNaabutan ka ng tren mula sa ibaba!\n\nCoins Collected: " + distance + " (+$" + (distance * 5) + " Cash Added)");
                     gameScreen.classList.add('hidden');
                     return;
                 }
 
-                // Reset train sa ilalim kapag lumagpas sa taas
+                // Loop reset kapag lumagpas ang tren sa tuktok ng screen
                 if(train.y + train.h < 0) {
-                    train.y = canvas.height + 150; // May bwelo ulit bago umakyat
-                    train.speed += 0.15; 
+                    train.y = canvas.height + 150; 
+                    train.speed += 0.15; // Bahagyang bibilis sa susunod na ikot
                 }
             }
 
