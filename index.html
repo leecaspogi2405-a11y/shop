@@ -3,155 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Xdragon - Strawberry Elephant Shop</title>
+    <title>Xdragon Web Shop</title>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #121214;
-            color: #ffffff;
             margin: 0;
-            padding: 20px;
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px;
+            user-select: none;
         }
 
-        .shop-header {
+        .header-board {
             width: 100%;
             max-width: 400px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #1a1a1e;
-            padding: 15px 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            margin-bottom: 25px;
+            background-color: #1e1e1e;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             box-sizing: border-box;
-            border: 1px solid #29292e;
         }
 
-        .shop-header h2 { margin: 0; font-size: 16px; color: #ff4d6d; }
-        .currency-display { background-color: #ff4d6d; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+        .shop-title {
+            font-weight: bold;
+            color: #ff4757;
+            font-size: 1.1rem;
+        }
 
-        .shop-container { width: 100%; max-width: 400px; }
+        .cash-display {
+            background-color: #ff4757;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
 
-        .shop-item {
-            background-color: #1a1a1e;
-            border-radius: 15px;
-            padding: 25px;
+        .card {
+            background-color: #1e1e1e;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 25px;
+            border-radius: 20px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            box-sizing: border-box;
+        }
+
+        .emoji-container {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .product-title {
+            color: #ff4757;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .description {
+            color: #a4b0be;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            border: 1px solid #29292e;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
         }
 
-        .item-icon { font-size: 60px; margin-bottom: 10px; }
-        .shop-item h3 { margin: 10px 0 5px 0; font-size: 22px; color: #ff4d6d; }
-        .item-desc { font-size: 13px; color: #a0a0a5; margin-bottom: 20px; line-height: 1.4; }
-        .price { font-weight: bold; color: #00ffcc; margin-bottom: 20px; font-size: 20px; }
+        .price-tag {
+            color: #2ed573;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
 
-        .buy-btn {
-            background-color: #ff4d6d;
+        .btn {
+            background-color: #ff4757;
             color: white;
             border: none;
-            padding: 14px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
             width: 100%;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: background 0.2s;
-        }
-        .buy-btn:active { background-color: #cc3b54; }
-
-        .notification-box {
-            position: fixed;
-            top: -140px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #1c1c24;
-            color: #ffffff;
-            padding: 15px 20px;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
             border-radius: 12px;
-            width: 85%;
-            max-width: 360px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            border-left: 5px solid #ff4d6d;
-            z-index: 9999;
-            transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-sizing: border-box;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
-        .notification-box.show { top: 20px; }
-        .notification-box p { margin: 0; font-size: 13px; line-height: 1.5; }
-        .code-highlight { background: #2a2a35; padding: 4px 8px; border-radius: 4px; color: #00ffcc; font-family: monospace; font-weight: bold; font-size: 15px; display: inline-block; margin-top: 5px; border: 1px dashed #00ffcc; }
+        .btn:hover {
+            background-color: #ff6b81;
+            transform: scale(1.02);
+        }
+
+        .play-trigger {
+            margin-top: 40px;
+            color: #ff4757;
+            font-size: 2rem;
+            font-weight: 900;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        #game-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #121212;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        canvas {
+            background-color: #1e1e1e;
+            border: 3px solid #ff4757;
+            border-radius: 10px;
+        }
+
+        .game-stats {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ff4757;
+        }
+
+        .hidden { display: none !important; }
+
+        .popup-box {
+            background-color: #2f3542;
+            border: 2px dashed #2ed573;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-family: monospace;
+            color: #2ed573;
+            margin-top: 15px;
+            text-align: center;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
 
-    <div class="shop-header">
-        <h2>🛠️ Xdragon Web Shop</h2>
-        <div class="currency-display">💰 Cash: $<span id="player-cash">500</span></div>
+    <div class="header-board">
+        <span class="shop-title">🛠️ Xdragon Web Shop</span>
+        <span class="cash-display">💰 Cash: $<span id="cash-amount">0</span></span>
     </div>
 
-    <div class="shop-container">
-        <div class="shop-item">
-            <div class="item-icon">🐘🍓</div>
-            <h3>Strawberry Elephant</h3>
-            <p class="item-desc">A super rare and limited mutation for your game! Buy now while codes last.</p>
-            <div class="price">💰 $100</div>
-            <button class="buy-btn" onclick="buyProduct()">Buy Product</button>
+    <div class="card">
+        <div class="emoji-container">🐘🍓</div>
+        <div class="product-title">Strawberry Elephant</div>
+        <div class="description">
+            A super rare tool for your game inventory!<br>Survive the lasers to earn cash.
         </div>
+        <div class="price-tag">💰 $10,000</div>
+        <button class="btn" id="buy-btn">BUY PRODUCT</button>
+        <div id="code-output" class="popup-box hidden"></div>
     </div>
 
-    <div id="app-notification" class="notification-box">
-        <p id="notification-text"></p>
+    <div class="play-trigger" id="play-btn">
+        PLAY<br><span style="font-size: 1.5rem;">👇</span>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <div class="game-stats">Distance: <span id="distance-val">000000</span></div>
+        <canvas id="runnerCanvas" width="360" height="500"></canvas>
+        <p style="color: #747d8c; font-size: 0.85rem; margin-top: 10px;">Tap the Left or Right side of the screen to move the player.</p>
     </div>
 
     <script>
-        let currentCash = 500;
-        let availableCodes = [];
+        // Game states configuration
+        let cash = 0; 
+        let distance = 0;
+        let gameRunning = false;
+        let canvas, ctx, runner, obstacles;
 
-        // Generates STRAWBERRY001 to STRAWBERRY1000 automatically on page load
-        for (let i = 1; i <= 1000; i++) {
-            let paddedNumber = String(i).padStart(3, '0');
-            availableCodes.push("STRAWBERRY" + paddedNumber);
+        const cashEl = document.getElementById('cash-amount');
+        const playBtn = document.getElementById('play-btn');
+        const gameScreen = document.getElementById('game-screen');
+        const distanceEl = document.getElementById('distance-val');
+        const buyBtn = document.getElementById('buy-btn');
+        const codeOutput = document.getElementById('code-output');
+
+        cashEl.innerText = cash;
+
+        playBtn.addEventListener('click', () => {
+            gameScreen.classList.remove('hidden');
+            initGame();
+        });
+
+        buyBtn.addEventListener('click', () => {
+            if (cash >= 10000) {
+                cash -= 10000;
+                cashEl.innerText = cash;
+                
+                // ENCRYPTION ALGORITHM: Secure key using remaining cash structure
+                let mathKey = (cash + 10000) * 7;
+                let generatedCode = "XDRG-TOOL-" + mathKey;
+
+                codeOutput.innerText = "CODE: " + generatedCode;
+                codeOutput.classList.remove('hidden');
+                buyBtn.disabled = true;
+                buyBtn.style.backgroundColor = "#747d8c";
+            } else {
+                alert("🚨 Insufficient Cash! You need $10,000. Play the game below to grind your distance points!");
+            }
+        });
+
+        function initGame() {
+            canvas = document.getElementById('runnerCanvas');
+            ctx = canvas.getContext('2d');
+            distance = 0;
+            gameRunning = true;
+            obstacles = [];
+
+            runner = {
+                x: canvas.width / 2 - 15,
+                y: canvas.height - 50,
+                w: 30, h: 30, speed: 7,
+                moveLeft: false, moveRight: false
+            };
+
+            // Keyboard inputs
+            window.onkeydown = (e) => {
+                if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
+                if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
+            };
+            window.onkeyup = (e) => {
+                if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
+                if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
+            };
+
+            // Touch screen elements
+            canvas.ontouchstart = (e) => {
+                let rect = canvas.getBoundingClientRect();
+                let touchX = e.touches[0].clientX - rect.left;
+                if(touchX < canvas.width/2) runner.moveLeft = true;
+                else runner.moveRight = true;
+            };
+            canvas.ontouchend = () => {
+                runner.moveLeft = false; runner.moveRight = false;
+            };
+
+            gameLoop();
         }
 
-        function buyProduct() {
-            const cashDisplay = document.getElementById('player-cash');
-            const itemPrice = 100;
+        function gameLoop() {
+            if(!gameRunning) return;
+            ctx.clearRect(0,0, canvas.width, canvas.height);
 
-            if (currentCash < itemPrice) {
-                alert("❌ You don't have enough Cash to buy this!");
-                return;
+            // Distance engine calculations
+            distance += 1;
+            distanceEl.innerText = String(distance).padStart(6, '0');
+
+            if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
+            if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
+
+            // Render Player Avatar
+            ctx.fillStyle = '#00a8ff';
+            ctx.beginPath();
+            ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
+            ctx.fill();
+
+            // Hardcore automated scaling difficulty factor
+            let spawnChance = 0.035 + (distance * 0.00004);
+            if(Math.random() < Math.min(spawnChance, 0.16)) {
+                obstacles.push({
+                    x: Math.random() * (canvas.width - 50),
+                    y: -20,
+                    w: Math.random() * 65 + 35,
+                    h: 15,
+                    speed: 6.5 + (distance * 0.0012) + Math.random()*4
+                });
             }
 
-            if (availableCodes.length === 0) {
-                alert("❌ Out of stock!");
-                return;
+            // Obstacle iteration loops
+            for(let i = obstacles.length - 1; i >= 0; i--) {
+                let o = obstacles[i];
+                o.y += o.speed;
+
+                ctx.fillStyle = '#ff4757';
+                ctx.fillRect(o.x, o.y, o.w, o.h);
+
+                // Collision processing logic
+                if (o.x < runner.x + runner.w &&
+                    o.x + o.w > runner.x &&
+                    o.y < runner.y + runner.h &&
+                    o.y + o.h > runner.y) {
+                    
+                    gameRunning = false;
+                    alert("💥 CRASHED! Distance Reached: " + distance + "\n\nConverted straight into +$" + distance + " Cash!");
+                    
+                    cash += distance;
+                    cashEl.innerText = cash;
+                    gameScreen.classList.add('hidden');
+                    return;
+                }
+
+                if(o.y > canvas.height) obstacles.splice(i, 1);
             }
 
-            let highQualityCode = availableCodes.shift();
-            currentCash -= itemPrice;
-            cashDisplay.textContent = currentCash;
-
-            triggerNotification(highQualityCode);
-        }
-
-        function triggerNotification(code) {
-            const notification = document.getElementById('app-notification');
-            const notifText = document.getElementById('notification-text');
-
-            notifText.innerHTML = `<strong>Dev Xdragon:</strong> You have been received a Code, thanks for buying this product! Don't show this code: <br><span class="code-highlight">${code}</span>`;
-
-            notification.classList.add('show');
-
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 12000);
+            requestAnimationFrame(gameLoop);
         }
     </script>
 </body>
