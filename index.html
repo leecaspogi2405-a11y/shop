@@ -14,7 +14,12 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            /* Prevents standard text selection */
             user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            /* Disables the mobile blue tap highlight overlay color */
+            -webkit-tap-highlight-color: transparent;
         }
 
         .header-board {
@@ -52,6 +57,7 @@
             padding: 0;
             text-align: left;
             text-decoration: underline;
+            outline: none;
         }
 
         .cash-display {
@@ -117,6 +123,7 @@
             border-radius: 12px;
             cursor: pointer;
             transition: transform 0.2s, background-color 0.2s;
+            outline: none;
         }
 
         .btn:hover {
@@ -165,6 +172,7 @@
             border: none;
             transition: transform 0.15s;
             padding: 0;
+            outline: none;
         }
 
         .play-trigger-btn:hover {
@@ -203,6 +211,8 @@
             border: 3px solid #ff4757;
             border-radius: 10px;
             cursor: pointer;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .hidden { display: none !important; }
@@ -273,6 +283,7 @@
             border-radius: 8px;
             cursor: pointer;
             margin-top: 15px;
+            outline: none;
         }
 
         .farm-action-bubble {
@@ -285,6 +296,8 @@
             border: 2px solid #ffa502;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .farm-shop-container {
@@ -322,6 +335,8 @@
             padding: 4px;
             cursor: pointer;
             font-size: 0.8rem;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .farm-shop-item:hover {
             border-color: #ff4757;
@@ -340,6 +355,7 @@
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: bold;
+            outline: none;
         }
 
         /* --- BURGER BOMB BATTLE ARENA RAMP --- */
@@ -374,6 +390,8 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 1rem;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .mode-tab-btn.active {
@@ -443,6 +461,8 @@
             cursor: pointer;
             transition: all 0.15s ease;
             position: relative;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .burger-tile:hover {
@@ -476,6 +496,8 @@
             margin-bottom: 12px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             width: 100%;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .burger-hint-btn:hover {
@@ -514,6 +536,8 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 1rem;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
     </style>
 </head>
@@ -875,7 +899,7 @@
             document.getElementById('unified-grid-container').style.opacity = "1";
             
             if(burgerMatchMode === "bot") {
-                document.getElementById('burger-instruction-text').innerText = "Setup: Select 3 Burgers to plant your bombs!";
+                document.getElementById('burger-instruction-text').innerText = "Setup: Select 3 Burgers to hide your bombs!";
                 document.getElementById('burger-hint-btn').classList.remove('hidden');
             } else {
                 document.getElementById('burger-instruction-text').innerText = "Player 1 Setup: Select 3 Burgers for your bombs!";
