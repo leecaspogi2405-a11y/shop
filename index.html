@@ -215,7 +215,6 @@
         .modal-content {
             background-color: #1e1e1e;
             border: 2px solid #ff4757;
-            border-radius: 166px;
             border-radius: 16px;
             width: 90%;
             max-width: 360px;
@@ -316,7 +315,7 @@
             <ol>
                 <li><b>LASER GAME:</b> Dodge the falling red lasers. Points turn into cash.</li>
                 <li><b>TRAIN GAME:</b> Gold coins will drop from above. Grab them for <b>+$5 Cash</b> each!</li>
-                <li>Watch out! The train spawns from the <b>bottom</b> and charges <b>upward</b> directly to follow and catch you!</li>
+                <li>Watch out! The train spawns from way below and moves up slowly to track you down. Run fast!</li>
                 <li>Controls: Use <b>A / D</b> or <b>Left / Right arrow keys</b>. On mobile, tap the left or right side of the screen.</li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
@@ -366,7 +365,7 @@
         launchTrainBtn.addEventListener('click', () => {
             currentGameMode = "train";
             modeStatLabel.innerHTML = 'Coins Collected: <span id="distance-val">0</span>';
-            controlHint.innerText = "Move Left & Right at the bottom to catch dropping coins!";
+            controlHint.innerText = "You are now faster! Dodge the slow train coming from below.";
             gameScreen.classList.remove('hidden');
             initGame();
         });
@@ -395,19 +394,20 @@
 
             runner = {
                 x: canvas.width / 2 - 15,
-                y: canvas.height - 50, // Stationary bottom line placement
-                w: 30, h: 30, speed: 6.5,
+                y: canvas.height - 120, // Iniangat nang kaunti ang player
+                w: 30, h: 30, 
+                speed: 9.5, // Gawa nating mas mabilis ang player para makatakbo!
                 moveLeft: false, moveRight: false
             };
 
-            // TRAIN: Spawns from the bottom boundary line
+            // TRAIN: Spawn malayo sa player (sa ilalim ng screen) para may gap
             if(currentGameMode === "train") {
                 obstacles.push({
                     x: canvas.width / 2 - 40,
-                    y: canvas.height + 10, 
+                    y: canvas.height + 100, // Malayo sa simula
                     w: 80,
                     h: 55,
-                    speed: 1.8
+                    speed: 1.2 // Mas mabagal ang hila para may laban ang player
                 });
             }
 
@@ -440,7 +440,7 @@
             if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
             if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
 
-            // RENDER PLAYER (Blue Circle)
+            // DRAW PLAYER (Blue Circle)
             ctx.fillStyle = '#00a8ff';
             ctx.beginPath();
             ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
@@ -486,22 +486,20 @@
             else if(currentGameMode === "train") {
                 let train = obstacles[0];
                 
-                // TRAIN TRACKING AI: Follows the player's X coordinate while pushing UPWARD
+                // Mas mabagal na tracking at pag-akyat para makalayo ang player
                 if(train.x + train.w/2 < runner.x + 15) {
                     train.x += train.speed;
                 } else {
                     train.x -= train.speed;
                 }
                 
-                // Move train UPWARDS towards the player line
-                train.y -= 0.65; 
+                train.y -= 0.4; // Katamtamang bilis lang ng pag-akyat pataas
 
-                // DRAW THE TRAIN (Dark grey engine room chassis)
+                // DRAW THE TRAIN
                 ctx.fillStyle = '#4b4b4b';
                 ctx.fillRect(train.x, train.y, train.w, train.h);
                 ctx.fillStyle = '#2f3542';
                 ctx.fillRect(train.x - 2, train.y, train.w + 4, 8);
-                // Headlights facing upward
                 ctx.fillStyle = '#ff9f43'; 
                 ctx.fillRect(train.x + 8, train.y + 12, 14, 10);
                 ctx.fillRect(train.x + train.w - 22, train.y + 12, 14, 10);
@@ -510,35 +508,32 @@
                 if(Math.random() < 0.02 && activeCoins.length < 4) {
                     activeCoins.push({
                         x: Math.random() * (canvas.width - 40) + 20,
-                        y: -10, // Spawns cleanly at top
+                        y: -10,
                         r: 8,
-                        speed: 2.5 + Math.random() * 2
+                        speed: 3
                     });
                 }
 
-                // Update and render dropping coins
                 for(let c = activeCoins.length - 1; c >= 0; c--) {
                     let coin = activeCoins[c];
-                    coin.y += coin.speed; // Coin falling velocity
+                    coin.y += coin.speed;
 
                     ctx.fillStyle = '#ffd32a';
                     ctx.beginPath();
                     ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI*2);
                     ctx.fill();
 
-                    // Player coin collision collection check
                     let vectorDist = Math.hypot((runner.x + 15) - coin.x, (runner.y + 15) - coin.y);
                     if(vectorDist < 15 + coin.r) {
                         activeCoins.splice(c, 1);
                         distance += 1; 
-                        cash += 5; // Direct +$5 calculation formula modification
+                        cash += 5; 
                         cashEl.innerText = cash;
                         localStorage.setItem("Xdragon_WebCash", cash);
                         document.getElementById('distance-val').innerText = distance;
                         continue;
                     }
 
-                    // Remove out of bounds coin
                     if(coin.y > canvas.height) {
                         activeCoins.splice(c, 1);
                     }
@@ -547,15 +542,15 @@
                 // TRAIN CRASH INTERSECTION TERMINAL
                 if (train.x < runner.x + runner.w && train.x + train.w > runner.x && train.y < runner.y + runner.h && train.y + train.h > runner.y) {
                     gameRunning = false;
-                    alert("🚂 CRASHED!\n\nThe train caught you from below!\n\nCoins Collected: " + distance + " (+$" + (distance * 5) + " Cash Added)");
+                    alert("🚂 GAME OVER!\n\nNaabutan ka ng tren!\n\nCoins Collected: " + distance + " (+$" + (distance * 5) + " Cash Added)");
                     gameScreen.classList.add('hidden');
                     return;
                 }
 
-                // Relaunch train attack loop if it completely leaves the upper frame
+                // Reset train sa ilalim kapag lumagpas sa taas
                 if(train.y + train.h < 0) {
-                    train.y = canvas.height + 20;
-                    train.speed += 0.25; // Speed ramps up slightly per loop challenge
+                    train.y = canvas.height + 150; // May bwelo ulit bago umakyat
+                    train.speed += 0.15; 
                 }
             }
 
