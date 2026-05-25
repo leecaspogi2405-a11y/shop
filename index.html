@@ -30,10 +30,28 @@
             box-sizing: border-box;
         }
 
+        .shop-title-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
         .shop-title {
             font-weight: bold;
             color: #ff4757;
             font-size: 1.1rem;
+        }
+
+        .how-to-play-btn {
+            background: none;
+            border: none;
+            color: #2ed573;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 0;
+            text-align: left;
+            text-decoration: underline;
         }
 
         .cash-display {
@@ -156,12 +174,69 @@
             box-sizing: border-box;
             word-wrap: break-word;
         }
+
+        /* Modal Tutorial Box Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-content {
+            background-color: #1e1e1e;
+            border: 2px solid #ff4757;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 360px;
+            padding: 25px;
+            box-sizing: border-box;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-content h3 {
+            color: #ff4757;
+            margin-top: 0;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+
+        .modal-content ol {
+            color: #ffffff;
+            padding-left: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .modal-content ol li {
+            margin-bottom: 10px;
+        }
+
+        .close-modal-btn {
+            background-color: #2ed573;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
 
     <div class="header-board">
-        <span class="shop-title">🛠️ Xdragon Web Shop</span>
+        <div class="shop-title-container">
+            <span class="shop-title">🛠️ Xdragon Web Shop</span>
+            <button class="how-to-play-btn" id="how-to-play-btn">❔ How to play</button>
+        </div>
         <span class="cash-display">💰 Cash: $<span id="cash-amount">0</span></span>
     </div>
 
@@ -180,6 +255,20 @@
         PLAY<br><span style="font-size: 1.5rem;">👇</span>
     </div>
 
+    <div class="modal-overlay hidden" id="tutorial-modal">
+        <div class="modal-content">
+            <h3>🎮 HOW TO PLAY</h3>
+            <ol>
+                <li>Click or tap the big <b>PLAY</b> button below to launch the minigame screen.</li>
+                <li>Control your avatar circle by pressing <b>A / D</b> or <b>Left / Right arrow keys</b> on your keyboard. If you are on a phone, simply tap the <b>Left or Right side</b> of the screen.</li>
+                <li>Dodge the falling red laser beams. Every second you stay alive, your score distance ticks up.</li>
+                <li>When you crash into a laser, your accumulated distance points convert <b>1:1 straight into Cash</b>!</li>
+                <li>Grind your way up to <b>$100,000 Cash</b> to unlock the exclusive Strawberry Elephant code item!</li>
+            </ol>
+            <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
+        </div>
+    </div>
+
     <div id="game-screen" class="hidden">
         <div class="game-stats">Distance: <span id="distance-val">000000</span></div>
         <canvas id="runnerCanvas" width="360" height="500"></canvas>
@@ -187,11 +276,10 @@
     </div>
 
     <script>
-        // Fixed LocalStorage handling to safely keep data stored when leaving the site
+        // Web Local Storage Setup - Default starts at 0 if no local account data history is found
         let cash = parseInt(localStorage.getItem("Xdragon_WebCash")) || 0; 
         let distance = 0;
         let gameRunning = false;
-        let localUpdateFrame = 0;
         let canvas, ctx, runner, obstacles;
 
         const cashEl = document.getElementById('cash-amount');
@@ -200,8 +288,21 @@
         const distanceEl = document.getElementById('distance-val');
         const buyBtn = document.getElementById('buy-btn');
         const codeOutput = document.getElementById('code-output');
+        
+        // Tutorial Modal elements
+        const howToPlayBtn = document.getElementById('how-to-play-btn');
+        const tutorialModal = document.getElementById('tutorial-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
 
         cashEl.innerText = cash;
+
+        // Tutorial Modal Control Listeners
+        howToPlayBtn.addEventListener('click', () => {
+            tutorialModal.classList.remove('hidden');
+        });
+        closeModalBtn.addEventListener('click', () => {
+            tutorialModal.classList.add('hidden');
+        });
 
         playBtn.addEventListener('click', () => {
             gameScreen.classList.remove('hidden');
@@ -216,7 +317,7 @@
                 localStorage.setItem("Xdragon_WebCash", cash);
                 
                 let mathKey = (cash + 100000) * 7;
-                let generatedCode = "XDRG-TOOL-" + mathKey; // FIXED: Removed broken text error line here
+                let generatedCode = "XDRG-TOOL-" + mathKey;
 
                 codeOutput.innerText = "CODE: " + generatedCode;
                 codeOutput.classList.remove('hidden');
@@ -231,15 +332,14 @@
             canvas = document.getElementById('runnerCanvas');
             ctx = canvas.getContext('2d');
             distance = 0;
-            localUpdateFrame = 0;
             gameRunning = true;
             obstacles = [];
 
             runner = {
                 x: canvas.width / 2 - 15,
                 y: canvas.height - 50,
-                w: 30, h: 30, 
-                speed: 3 // Perfectly slow, chill control handling
+                w: 30, h: 30, speed: 7, // Restored responsive snappy handling speed
+                moveLeft: false, moveRight: false
             };
 
             window.onkeydown = (e) => {
@@ -268,12 +368,8 @@
             if(!gameRunning) return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
-            localUpdateFrame++;
-            
-            -- NERFED COUNTER SPEED: Score now only increases once every 18 frames! Super chill grind.
-            if (localUpdateFrame % 18 === 0) {
-                distance += 1;
-            }
+            // Restored standard original Distance engine tracking mechanics
+            distance += 1;
             distanceEl.innerText = String(distance).padStart(6, '0');
 
             if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
@@ -284,16 +380,15 @@
             ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
             ctx.fill();
 
-            // NERFED SPAWN ENGINE: Massive timing gaps between lasers
-            let spawnChance = 0.005 + (distance * 0.000001);
-            if(Math.random() < Math.min(spawnChance, 0.03) && localUpdateFrame % 35 === 0) {
+            // Restored original challenging progressive obstacle scaling factor loops
+            let spawnChance = 0.035 + (distance * 0.00004);
+            if(Math.random() < Math.min(spawnChance, 0.16)) {
                 obstacles.push({
                     x: Math.random() * (canvas.width - 50),
                     y: -20,
-                    w: Math.random() * 30 + 25, 
-                    h: 10,
-                    // CHILL DROP SPEED: Slow drifting lasers
-                    speed: 1.0 + (distance * 0.0001) + Math.random() * 0.5 
+                    w: Math.random() * 65 + 35, 
+                    h: 15,
+                    speed: 6.5 + (distance * 0.0012) + Math.random() * 4 // Restored original fast laser drop execution values
                 });
             }
 
@@ -314,10 +409,9 @@
                     let earnedCash = distance; 
                     cash += earnedCash;
                     
-                    // Securely saves cash directly into local Web Storage
                     localStorage.setItem("Xdragon_WebCash", cash);
                     
-                    alert("💥 CRASHED!\n\nDistance Reached: " + distance + "\nEarned: +$" + earnedCash + " Cash!");
+                    alert("💥 CRASHED! Distance Reached: " + distance + "\n\nConverted straight into +$" + earnedCash + " Cash!");
                     
                     cashEl.innerText = cash;
                     gameScreen.classList.add('hidden');
