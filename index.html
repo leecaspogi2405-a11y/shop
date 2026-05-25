@@ -3,611 +3,1007 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xdragon Web Shop & Mini-Games</title>
+    <title>Xdragon Web Shop</title>
     <style>
-        :root {
-            --bg-color: #121212;
-            --card-color: #1e1e1e;
-            --primary-red: #ff4d4d;
-            --accent-orange: #ffa500;
-            --text-white: #ffffff;
-            --text-gray: #aaaaaa;
-        }
-
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-white);
+            background-color: #121212;
+            color: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            padding: 20px;
+            user-select: none;
         }
 
-        #game-wrapper {
+        .header-board {
             width: 100%;
             max-width: 420px;
-            height: 90vh;
-            background-color: #000000;
-            border: 2px solid var(--primary-red);
-            border-radius: 16px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        }
-
-        /* Header Styles */
-        .game-header {
-            background-color: var(--card-color);
-            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #2d2d2d;
+            background-color: #1e1e1e;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-sizing: border-box;
+        }
+
+        .shop-title-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .shop-title {
-            font-size: 16px;
             font-weight: bold;
-            color: var(--primary-red);
+            color: #ff4757;
+            font-size: 1.1rem;
         }
 
-        .cash-badge {
-            background-color: var(--primary-red);
-            padding: 6px 14px;
+        .how-to-play-btn {
+            background: none;
+            border: none;
+            color: #2ed573;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 0;
+            text-align: left;
+            text-decoration: underline;
+        }
+
+        .cash-display {
+            background-color: #ff4757;
+            color: white;
+            padding: 6px 15px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 1rem;
         }
 
-        /* Screen Containers */
-        .screen {
+        .card {
+            background-color: #1e1e1e;
             width: 100%;
-            height: calc(100% - 55px);
+            max-width: 420px;
+            margin-top: 25px;
+            border-radius: 20px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             box-sizing: border-box;
-            padding: 16px;
-            overflow-y: auto;
-            display: none;
         }
 
-        .active-screen {
-            display: block;
+        .icon-art-container {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            margin-bottom: 15px;
         }
 
-        /* Shop Cards */
-        .product-card {
-            background-color: var(--card-color);
-            border-radius: 12px;
-            padding: 20px;
+        .product-title {
+            color: #ff4757;
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .description {
+            color: #a4b0be;
             text-align: center;
+            font-size: 0.95rem;
+            line-height: 1.4;
             margin-bottom: 20px;
         }
 
-        .product-icons {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .product-name {
-            font-size: 20px;
+        .price-tag {
+            color: #2ed573;
+            font-size: 1.8rem;
             font-weight: bold;
-            color: var(--primary-red);
-            margin-bottom: 6px;
-        }
-
-        .product-desc {
-            font-size: 12px;
-            color: var(--text-gray);
-            margin-bottom: 15px;
-        }
-
-        .product-price {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2ecc71;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .btn {
-            background-color: var(--primary-red);
+            background-color: #ff4757;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
             width: 100%;
-            font-size: 16px;
-            text-transform: uppercase;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
         .btn:hover {
-            opacity: 0.9;
+            background-color: #ff6b81;
+            transform: scale(1.02);
         }
 
-        /* Menu Navigation Buttons */
-        .nav-section {
+        .game-menu-container {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .game-column {
+            text-align: center;
+            background-color: #1e1e1e;
+            padding: 10px 15px;
+            border-radius: 10px;
+            min-width: 100px;
+        }
+
+        .game-section-title {
+            color: #ffa502;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 5px 0;
+        }
+
+        .play-trigger-btn {
+            color: #ff4757;
+            font-size: 1.8rem;
+            font-weight: 900;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-align: center;
+            background: none;
+            border: none;
+            transition: transform 0.15s;
+            padding: 0;
+        }
+
+        .play-trigger-btn:hover {
+            transform: scale(1.1);
+        }
+
+        #game-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #121212;
             display: flex;
             flex-direction: column;
-            gap: 12px;
             align-items: center;
-            margin-top: 10px;
+            justify-content: flex-start;
+            z-index: 100;
+            overflow-y: auto;
+            padding: 15px 0;
+            box-sizing: border-box;
         }
 
-        .nav-group {
-            text-align: center;
-            width: 80%;
-        }
-
-        .nav-label {
-            color: var(--accent-orange);
-            font-size: 12px;
+        .game-stats {
+            font-size: 1.2rem;
             font-weight: bold;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-
-        .btn-nav {
-            background-color: var(--card-color);
-            border: 1px solid #333;
-            padding: 10px;
-        }
-
-        /* Mini-Games General Layout */
-        .game-canvas-area {
+            margin-bottom: 5px;
+            color: #ff4757;
+            display: flex;
+            gap: 15px;
             width: 100%;
-            height: 70%;
-            background-color: #151515;
-            border: 2px solid var(--primary-red);
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .game-controls {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-exit {
-            background-color: #555;
-            margin-top: 10px;
-        }
-
-        /* Canvas Entities Elements */
-        .player-node {
-            width: 30px;
-            height: 30px;
-            background-color: #00a8ff;
-            border-radius: 50%;
-            position: absolute;
-            bottom: 10px;
-            left: calc(50% - 15px);
-            transition: left 0.1s ease-out;
-        }
-
-        .coin-node {
-            width: 15px;
-            height: 15px;
-            background-color: #f1c40f;
-            border-radius: 50%;
-            position: absolute;
-        }
-
-        .danger-node {
-            position: absolute;
-            background-color: var(--primary-red);
-        }
-
-        /* Farm Game Layout */
-        .farm-header-row {
-            display: flex;
+            max-width: 380px;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
         }
 
-        .farm-inventory-text {
-            color: var(--primary-red);
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .farm-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .farm-plot {
-            background-color: #26b263;
-            border: 3px solid #8c5832;
-            border-radius: 4px;
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+        canvas {
+            background-color: #1e1e1e;
+            border: 3px solid #ff4757;
+            border-radius: 10px;
             cursor: pointer;
         }
 
-        .plot-emoji {
-            font-size: 28px;
-        }
+        .hidden { display: none !important; }
 
-        .plot-info {
-            position: absolute;
-            bottom: 2px;
-            left: 0;
-            width: 100%;
+        .popup-box {
+            background-color: #2f3542;
+            border: 2px dashed #2ed573;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-family: monospace;
+            color: #2ed573;
+            margin-top: 15px;
             text-align: center;
-            font-size: 10px;
-            background-color: rgba(0,0,0,0.6);
-            color: white;
-            padding: 1px 0;
-        }
-
-        /* Market Section Styles */
-        .market-section {
-            margin-top: 20px;
-            border: 2px solid var(--accent-orange);
             border-radius: 8px;
-            padding: 10px;
-            background-color: #1a1e24;
+            width: 100%;
+            box-sizing: border-box;
+            word-wrap: break-word;
         }
 
-        .market-title {
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-content {
+            background-color: #1e1e1e;
+            border: 2px solid #ff4757;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 360px;
+            padding: 25px;
+            box-sizing: border-box;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-content h3 {
+            color: #ff4757;
+            margin-top: 0;
+            font-size: 1.4rem;
             text-align: center;
-            color: var(--accent-orange);
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 8px;
         }
 
-        .market-grid {
+        .modal-content ol {
+            color: #ffffff;
+            padding-left: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .modal-content ol li {
+            margin-bottom: 10px;
+        }
+
+        .close-modal-btn {
+            background-color: #2ed573;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .farm-action-bubble {
+            background-color: #ffffa0;
+            color: #121212;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border: 2px solid #ffa502;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .farm-shop-container {
+            background-color: #1e1e1e;
+            width: 100%;
+            max-width: 360px;
+            border: 2px solid #ffa502;
+            border-radius: 12px;
+            margin-top: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .farm-shop-title {
+            color: #ffa502;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 0 0 8px 0;
+        }
+
+        .farm-shop-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 6px;
         }
 
-        .market-item {
-            background-color: #272d37;
-            border: 1px solid #3a414c;
-            border-radius: 6px;
-            padding: 6px;
-            text-align: center;
+        .farm-shop-item {
+            background-color: #2f3542;
+            border: 1px solid #747d8c;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .farm-shop-item:hover {
+            border-color: #ff4757;
+            background-color: #3f4452;
+        }
+        .farm-shop-emoji {
+            font-size: 1.3rem;
         }
 
-        .market-item-emoji {
-            font-size: 22px;
-        }
-
-        .market-item-price {
-            font-size: 11px;
+        .exit-btn {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
             font-weight: bold;
-            color: #ffa500;
-            margin-top: 2px;
         }
     </style>
 </head>
 <body>
 
-    <div id="game-wrapper">
-        <div class="game-header">
+    <div class="header-board">
+        <div class="shop-title-container">
             <span class="shop-title">🛠️ Xdragon Web Shop</span>
-            <div class="cash-badge" id="global-cash-display">Cash: $13,030</div>
+            <button class="how-to-play-btn" id="how-to-play-btn">❔ How to play</button>
         </div>
+        <span class="cash-display">💰 Cash: $<span id="cash-amount">0</span></span>
+    </div>
 
-        <div id="main-shop-screen" class="screen active-screen">
-            <div class="product-card">
-                <div class="product-icons">🐘🍓</div>
-                <div class="product-name">Strawberry Elephant</div>
-                <div class="product-desc">A super rare tool for your game inventory! Survive lasers or outrun trains to stack cash.</div>
-                <div class="product-price">$25,000</div>
-                <button class="btn" onclick="buyStrawberryElephant()">Buy Product</button>
-            </div>
-
-            <div class="nav-section">
-                <div class="nav-group">
-                    <div class="nav-label">LASER GAME</div>
-                    <button class="btn btn-nav" onclick="launchGame('laser')">PLAY</button>
-                </div>
-                <div class="nav-group">
-                    <div class="nav-label">TRAIN GAME</div>
-                    <button class="btn btn-nav" onclick="launchGame('train')">PLAY</button>
-                </div>
-                <div class="nav-group">
-                    <div class="nav-label">FARM GAME</div>
-                    <button class="btn btn-nav" onclick="launchGame('farm')">🌾 PLAY</button>
-                </div>
-            </div>
+    <div class="card">
+        <div class="icon-art-container">
+            <svg viewBox="0 0 500 500" style="width:100%; height:100%;">
+                <path d="M 320,320 L 350,320 L 350,450 L 310,450 Z" fill="#b82e3d"/>
+                <path d="M 220,320 L 250,320 L 250,430 L 215,430 Z" fill="#b82e3d"/>
+                <path d="M 180,180 C 130,180 120,240 140,300 C 150,330 170,450 200,450 C 230,450 230,350 260,350 C 290,350 290,450 320,450 C 350,450 370,380 380,320 C 400,240 370,160 300,160 C 240,160 200,180 180,180 Z" fill="#e63946"/>
+                <path d="M 140,280 C 120,320 120,380 150,450 C 165,450 175,430 165,380 C 155,340 160,310 175,290 Z" fill="#d92b3a"/>
+                <path d="M 280,180 C 340,180 360,260 320,300 C 280,340 260,260 280,180 Z" fill="#ff4d6d"/>
+                <circle cx="210" cy="240" r="10" fill="#1a1a1a"/>
+                <circle cx="213" cy="237" r="4" fill="#ffffff"/>
+                <g fill="#ffb703">
+                    <ellipse cx="220" cy="280" rx="3" ry="5" transform="rotate(15 220 280)"/>
+                    <ellipse cx="260" cy="250" rx="3" ry="5" transform="rotate(-10 260 250)"/>
+                    <ellipse cx="300" cy="220" rx="3" ry="5" transform="rotate(20 300 220)"/>
+                    <ellipse cx="340" cy="260" rx="3" ry="5" transform="rotate(5 340 260)"/>
+                </g>
+                <g fill="#70e000">
+                    <path d="M 240,110 C 245,130 255,130 260,165 C 245,165 240,140 240,110 Z"/>
+                    <path d="M 250,160 C 210,130 160,140 130,160 C 170,170 210,170 250,160 Z"/>
+                    <path d="M 250,160 C 280,120 330,120 370,135 C 330,155 290,160 250,160 Z"/>
+                </g>
+            </svg>
         </div>
-
-        <div id="laser-game-container" class="screen">
-            <h3>Laser Field Survival</h3>
-            <div style="margin-bottom: 5px;">Score: <span id="laser-score">0</span></div>
-            <div class="game-canvas-area" id="laser-canvas"></div>
-            <div class="game-controls">
-                <button class="btn" onclick="movePlayerLeft()">◀ Left</button>
-                <button class="btn" onclick="movePlayerRight()">Right ▶</button>
-            </div>
-            <button class="btn btn-exit back-to-menu-btn">EXIT TO SHOP</button>
+        <div class="product-title">Strawberry Elephant</div>
+        <div class="description">
+            A super rare tool for your game inventory!<br>Survive lasers or outrun trains to stack cash.
         </div>
+        <div class="price-tag">💰 $25,000</div>
+        <button class="btn" id="buy-btn">BUY PRODUCT</button>
+        <div id="code-output" class="popup-box hidden"></div>
+    </div>
 
-        <div id="train-game-container" class="screen">
-            <h3>Train Evaded Tracker</h3>
-            <div style="margin-bottom: 5px;">Coins Collected: <span id="train-score">0</span></div>
-            <div class="game-canvas-area" id="train-canvas"></div>
-            <div class="game-controls">
-                <button class="btn" onclick="movePlayerLeft()">◀ Left</button>
-                <button class="btn" onclick="movePlayerRight()">Right ▶</button>
-            </div>
-            <button class="btn btn-exit back-to-menu-btn">EXIT TO SHOP</button>
+    <div class="game-menu-container">
+        <div class="game-column">
+            <p class="game-section-title">LASER GAME</p>
+            <button class="play-trigger-btn" id="launch-laser-btn">PLAY</button>
         </div>
-
-        <div id="farm-game-container" class="screen">
-            <div class="farm-header-row">
-                <div class="farm-inventory-text">🌾 Inventory: 0</div>
-                <button class="btn back-to-menu-btn" style="background-color: var(--primary-red); padding: 4px 12px; font-size: 14px; width: auto; margin: 0;">EXIT</button>
-            </div>
-            
-            <div class="farm-grid" id="farm-plots-grid"></div>
-
-            <div class="market-section">
-                <div class="market-title">🚜 PET & EXPANSION MARKET</div>
-                <div class="market-grid" id="market-items-grid"></div>
-            </div>
+        <div class="game-column">
+            <p class="game-section-title">TRAIN GAME</p>
+            <button class="play-trigger-btn" id="launch-train-btn">PLAY</button>
+        </div>
+        <div class="game-column">
+            <p class="game-section-title">FARM GAME</p>
+            <button class="play-trigger-btn" id="launch-farm-btn">🌾 PLAY</button>
         </div>
     </div>
 
-    <script>
-        // --- GAME BALANCING STATE ---
-        let playerCash = 13030;
-        let playerPositionX = 50; 
-        let activeGameInterval = null;
-        let gameScore = 0;
-        let activeGameType = "";
+    <div class="modal-overlay hidden" id="tutorial-modal">
+        <div class="modal-content">
+            <h3>🎮 GAMEPLAY MANUAL</h3>
+            <ol>
+                <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
+                <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding the green <b>Bushes</b>. One hit makes the train chase you closely!</li>
+                <li><b>FARM GAME:</b> Click a fence plot to move the farmer. Buy pets to place inside unlocked fences.</li>
+                <li>Click <b>🌾 Wheat</b> and press <b>"Grab?"</b> to harvest food. Click a pet and hit <b>"Eat?"</b> to feed it! Every age up awards <b>Cash based on Pet Base Price × New Age</b>! Locked plots cost $150. Progress saves automatically.</li>
+            </ol>
+            <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
+        </div>
+    </div>
 
-        // --- FIXED ANIMAL BASE VALUES ---
-        const animalConfig = {
-            "🐅": { name: "Tiger",     baseValue: 20 },
-            "🐕": { name: "Dog",       baseValue: 5  },
-            "🐑": { name: "Sheep",     baseValue: 15 },
-            "🐖": { name: "Pig",       baseValue: 10 },
-            "🐄": { name: "Cow",       baseValue: 30 },
-            "🐢": { name: "Turtle",    baseValue: 50 },
-            "🐍": { name: "Snake",     baseValue: 20 },
-            "🐊": { name: "Crocodile", baseValue: 30 }
+    <div id="game-screen" class="hidden">
+        <div class="game-stats" id="mode-stat-label">
+            <div>Score: <span id="distance-val">0</span></div>
+            <div id="inner-stats-overlay"></div>
+            <button class="exit-btn" id="exit-game-btn">EXIT</button>
+        </div>
+        
+        <canvas id="runnerCanvas" width="360" height="420"></canvas>
+        
+        <div id="farm-ui-bubble-container" style="margin-top: 8px; min-height: 40px; display: flex; gap: 10px; align-items: center;"></div>
+        
+        <div class="farm-shop-container hidden" id="farm-shop-panel">
+            <div class="farm-shop-title">🚜 PET & EXPANSION MARKET</div>
+            <div class="farm-shop-grid">
+                <div class="farm-shop-item" onclick="buyFarmPet('🐕', 5)">
+                    <span class="farm-shop-emoji">🐕</span><span>$5</span>
+                </div>
+                <div class="farm-shop-item" onclick="buyFarmPet('🐖', 10)">
+                    <span class="farm-shop-emoji">🐖</span><span>$10</span>
+                </div>
+                <div class="farm-shop-item" onclick="buyFarmPet('🐑', 15)">
+                    <span class="farm-shop-emoji">🐑</span><span>$15</span>
+                </div>
+                <div class="farm-shop-item" onclick="buyFarmPet('🐅', 20)">
+                    <span class="farm-shop-emoji">🐅</span><span>$20</span>
+                </div>
+                <div class="farm-shop-item" onclick="buyFarmPet('🐍', 20)">
+                    <span class="farm-shop-emoji">🐍</span><span>$20</span>
+                </div>
+                <div class="farm-shop-item" onclick="buyFarmPet('🐄', 30)">
+                    <span class="farm-shop-emoji">🐄</span><span>$30</span>
+                </div>
+                <div class="farm-shop-item" onclick="buyFarmPet('🐊', 30)">
+                    <span class="farm-shop-emoji">🐊</span><span>$30</span>
+                </div>
+                <div class="farm-shop-item" onclick="buyFarmPet('🐢', 50)">
+                    <span class="farm-shop-emoji">🐢</span><span>$50</span>
+                </div>
+            </div>
+        </div>
+
+        <p id="control-hint" style="color: #747d8c; font-size: 0.85rem; margin-top: 5px; text-align:center; max-width:340px;"></p>
+    </div>
+
+    <script>
+        let cash = parseInt(localStorage.getItem("Xdragon_WebCash")) || 0; 
+        let distance = 0;
+        let gameRunning = false;
+        let currentGameMode = "laser"; 
+        let canvas, ctx, runner, obstacles, activeCoins, activeBushes;
+
+        let isTrainAlertActive = false;
+        let alertEndTime = 0;
+
+        // --- FARM CORE ENGINE DATA MODULES ---
+        let wheatCount = parseInt(localStorage.getItem("Xdragon_WheatCount")) || 0;
+        let selectedTargetIndex = null; 
+        let activeActionType = null; 
+        
+        // Custom dynamic age calculations parameters table setup matching your prices structure
+        const petRewardsTable = {
+            '🐈': 5,  // Default starting pet base valuation
+            '🐕': 5,
+            '🐖': 10,
+            '🐑': 15,
+            '🐅': 20,
+            '🐍': 20,
+            '🐄': 30,
+            '🐊': 30,
+            '🐢': 50
         };
 
-        // Active items in player inventory fences
-        let playerFarmInventory = [
-            { id: 0, emoji: "🐕", age: 15, currentExp: 0 },
-            { id: 1, emoji: "🐕", age: 16, currentExp: 50 },
-            { id: 2, emoji: "🐕", age: 1,  currentExp: 0 }
+        let fences = [
+            { id: 0, x: 30,  y: 30,  w: 80, h: 80, locked: false, pet: '🐈', age: 1, xp: 0 },
+            { id: 1, x: 140, y: 30,  w: 80, h: 80, locked: false, pet: null, age: 1, xp: 0 },
+            { id: 2, x: 250, y: 30,  w: 80, h: 80, locked: true,  pet: null, age: 1, xp: 0 },
+            { id: 3, x: 30,  y: 130, w: 80, h: 80, locked: true,  pet: null, age: 1, xp: 0 },
+            { id: 4, x: 140, y: 130, w: 80, h: 80, locked: true,  pet: null, age: 1, xp: 0 },
+            { id: 5, x: 250, y: 130, w: 80, h: 80, locked: true,  pet: null, age: 1, xp: 0 },
+            { id: 6, x: 30,  y: 230, w: 80, h: 80, locked: true,  pet: null, age: 1, xp: 0 },
+            { id: 7, x: 140, y: 230, w: 80, h: 80, locked: true,  pet: null, age: 1, xp: 0 },
+            { id: 8, x: 250, y: 230, w: 80, h: 80, locked: true,  pet: null, age: 1, xp: 0 }
         ];
+        
+        let wheatField = { x: 140, y: 340, w: 80, h: 50 };
 
-        // --- FIXED NAVIGATION FUNCTION (GOTO MAIN) ---
-        function showMainMenu() {
-            // Safely stop running game timers
-            clearInterval(activeGameInterval);
-            activeGameInterval = null;
-            activeGameType = "";
+        const cashEl = document.getElementById('cash-amount');
+        const buyBtn = document.getElementById('buy-btn');
+        const codeOutput = document.getElementById('code-output');
+        const gameScreen = document.getElementById('game-screen');
+        const modeStatLabel = document.getElementById('mode-stat-label');
+        const controlHint = document.getElementById('control-hint');
+        const bubbleContainer = document.getElementById('farm-ui-bubble-container');
+        const farmShopPanel = document.getElementById('farm-shop-panel');
+        
+        const launchLaserBtn = document.getElementById('launch-laser-btn');
+        const launchTrainBtn = document.getElementById('launch-train-btn');
+        const launchFarmBtn = document.getElementById('launch-farm-btn');
+        const howToPlayBtn = document.getElementById('how-to-play-btn');
+        const tutorialModal = document.getElementById('tutorial-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
 
-            // Hide all subgame view windows
-            document.getElementById("laser-game-container").style.display = "none";
-            document.getElementById("train-game-container").style.display = "none";
-            document.getElementById("farm-game-container").style.display = "none";
-            
-            // Re-display main menu dashboard interface
-            document.getElementById("main-shop-screen").style.display = "block";
-            updateUI();
+        cashEl.innerText = cash;
+        loadFarmProgress(); 
+
+        howToPlayBtn.addEventListener('click', () => tutorialModal.classList.remove('hidden'));
+        closeModalBtn.addEventListener('click', () => tutorialModal.classList.add('hidden'));
+
+        // --- GLOBAL CENTRALIZED EXIT CONTROLLER FUNCTION ---
+        function handleExitToShop() {
+            gameRunning = false;
+            gameScreen.classList.add('hidden');
+            farmShopPanel.classList.add('hidden');
+            bubbleContainer.innerHTML = "";
+            saveFarmProgress(); 
+            updateGlobalCash();
         }
 
-        // Attach function to all standard back/exit buttons cleanly
-        document.querySelectorAll(".back-to-menu-btn").forEach(button => {
-            button.addEventListener("click", showMainMenu);
+        launchLaserBtn.addEventListener('click', () => {
+            currentGameMode = "laser";
+            farmShopPanel.classList.add('hidden');
+            bubbleContainer.innerHTML = "";
+            modeStatLabel.innerHTML = 'Distance: <span id="distance-val">000000</span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
+            document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
+            controlHint.innerText = "Tap Left / Right sides to steer horizontally.";
+            gameScreen.classList.remove('hidden');
+            initGame();
         });
 
-        function updateUI() {
-            document.getElementById("global-cash-display").innerText = `Cash: $${playerCash}`;
-        }
+        launchTrainBtn.addEventListener('click', () => {
+            currentGameMode = "train";
+            farmShopPanel.classList.add('hidden');
+            bubbleContainer.innerHTML = "";
+            modeStatLabel.innerHTML = 'Coins: <span id="distance-val">0</span> <span id="alert-timer-label" style="color:#ffa502; margin-left:15px;"></span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
+            document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
+            controlHint.innerText = "Dodge bushes! One hit makes the train chase you closely!";
+            gameScreen.classList.remove('hidden');
+            initGame();
+        });
 
-        // --- PURCHASE SYSTEM ---
-        function buyStrawberryElephant() {
-            if (playerCash >= 25000) {
-                playerCash -= 25000;
-                alert("🎉 Successfully unlocked Strawberry Elephant!");
-                updateUI();
+        launchFarmBtn.addEventListener('click', () => {
+            currentGameMode = "farm";
+            farmShopPanel.classList.remove('hidden');
+            bubbleContainer.innerHTML = "";
+            modeStatLabel.innerHTML = '🌾 Inventory: <span id="distance-val">0</span> <button class="exit-btn" id="exit-game-btn">EXIT</button>';
+            document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
+            controlHint.innerText = "Click inside any fence or the 🌾 crops at the bottom to send the farmer 👨‍🌾 over!";
+            gameScreen.classList.remove('hidden');
+            initGame();
+        });
+
+        buyBtn.addEventListener('click', () => {
+            if (cash >= 25000) {
+                cash -= 25000;
+                updateGlobalCash();
+                let mathKey = (cash + 25000) * 7;
+                let generatedCode = "XDRG-TOOL-" + mathKey;
+                codeOutput.innerText = "CODE: " + generatedCode;
+                codeOutput.classList.remove('hidden');
             } else {
-                alert("❌ Insufficient funds!");
+                alert("🚨 Insufficient Funds! You need $25,000 Cash.");
+            }
+        });
+
+        function updateGlobalCash() {
+            cashEl.innerText = cash;
+            localStorage.setItem("Xdragon_WebCash", cash);
+        }
+
+        function saveFarmProgress() {
+            localStorage.setItem("Xdragon_WheatCount", wheatCount);
+            localStorage.setItem("Xdragon_FencesData", JSON.stringify(fences));
+        }
+
+        function loadFarmProgress() {
+            let savedFences = localStorage.getItem("Xdragon_FencesData");
+            if(savedFences) {
+                let parsedFences = JSON.parse(savedFences);
+                parsedFences.forEach((savedFence, idx) => {
+                    if (fences[idx]) {
+                        fences[idx].locked = savedFence.locked;
+                        fences[idx].pet = savedFence.pet;
+                        fences[idx].age = savedFence.age;
+                        fences[idx].xp = savedFence.xp;
+                    }
+                });
             }
         }
 
-        // --- CALCULATE CASH PER AGE FORMULA ---
-        function calculateAnimalValue(emoji, age) {
-            if (animalConfig[emoji]) {
-                // Cash given is Base Price * Animal Age
-                return animalConfig[emoji].baseValue * age;
+        function initGame() {
+            canvas = document.getElementById('runnerCanvas');
+            ctx = canvas.getContext('2d');
+            distance = 0;
+            gameRunning = true;
+            obstacles = [];
+            activeCoins = [];
+            activeBushes = [];
+            isTrainAlertActive = false;
+            alertEndTime = 0;
+            selectedTargetIndex = null;
+            activeActionType = null;
+
+            runner = {
+                x: canvas.width / 2 - 15,
+                y: canvas.height - 140, 
+                w: 30, h: 30, 
+                speed: 8.5,
+                targetX: canvas.width / 2 - 15,
+                targetY: canvas.height - 140,
+                moveLeft: false, moveRight: false
+            };
+
+            if (currentGameMode === "farm") {
+                runner.x = 165;
+                runner.y = 300;
+                runner.targetX = 165;
+                runner.targetY = 300;
+                runner.speed = 4; 
+                document.getElementById('distance-val').innerText = wheatCount;
+                canvas.onclick = processFarmCanvasClick;
+            } else {
+                canvas.onclick = null;
             }
-            return 0;
+
+            if(currentGameMode === "train") {
+                obstacles.push({
+                    x: canvas.width / 2 - 40,
+                    y: canvas.height + 120, 
+                    w: 80, h: 65,
+                    targetY: canvas.height + 120 
+                });
+            }
+
+            window.onkeydown = (e) => {
+                if(currentGameMode === "farm") return;
+                if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
+                if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
+            };
+            window.onkeyup = (e) => {
+                if(currentGameMode === "farm") return;
+                if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
+                if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
+            };
+
+            canvas.ontouchstart = (e) => {
+                if(currentGameMode === "farm") return;
+                let rect = canvas.getBoundingClientRect();
+                let touchX = e.touches[0].clientX - rect.left;
+                if(touchX < canvas.width / 2) runner.moveLeft = true;
+                else runner.moveRight = true;
+            };
+            canvas.ontouchend = () => {
+                if(currentGameMode === "farm") return;
+                runner.moveLeft = false; runner.moveRight = false;
+            };
+
+            gameLoop();
         }
 
-        // --- RENDER FARM & MARKET PANELS ---
-        function renderFarmGrid() {
-            const grid = document.getElementById("farm-plots-grid");
-            grid.innerHTML = ""; 
+        function processFarmCanvasClick(e) {
+            let rect = canvas.getBoundingClientRect();
+            let clickX = e.clientX - rect.left;
+            let clickY = e.clientY - rect.top;
 
-            playerFarmInventory.forEach(item => {
-                const plot = document.createElement("div");
-                plot.className = "farm-plot";
-                plot.setAttribute("onclick", `processFarmClick(${item.id})`);
-                plot.innerHTML = `
-                    <div class="plot-emoji">${item.emoji}</div>
-                    <div class="plot-info">Lv.${item.age} (${item.currentExp}%)</div>
-                `;
-                grid.appendChild(plot);
-            });
-        }
+            bubbleContainer.innerHTML = "";
+            activeActionType = null;
 
-        function renderMarketGrid() {
-            const marketGrid = document.getElementById("market-items-grid");
-            marketGrid.innerHTML = "";
-
-            Object.keys(animalConfig).forEach(emoji => {
-                const item = animalConfig[emoji];
-                const card = document.createElement("div");
-                card.className = "market-item";
-                card.innerHTML = `
-                    <div class="market-item-emoji">${emoji}</div>
-                    <div class="market-item-price">$${item.baseValue}</div>
-                `;
-                marketGrid.appendChild(card);
-            });
-        }
-
-        // --- PROCESS FARM HARVEST & +1 AGE EXPERIENCE ---
-        function processFarmClick(slotId) {
-            let animal = playerFarmInventory.find(x => x.id === slotId);
-            if (animal) {
-                // Give player cash based on the current age calculation
-                let cashToGive = calculateAnimalValue(animal.emoji, animal.age);
-                playerCash += cashToGive;
-
-                // Advance Experience and Age (+1 Level setup matching your cycle layout)
-                animal.currentExp += 50;
-                if (animal.currentExp >= 100) {
-                    animal.age += 1;
-                    animal.currentExp = 0;
-                }
+            if (clickX >= wheatField.x && clickX <= wheatField.x + wheatField.w &&
+                clickY >= wheatField.y && clickY <= wheatField.y + wheatField.w) {
                 
-                updateUI();
-                renderFarmGrid();
+                selectedTargetIndex = 999; 
+                runner.targetX = wheatField.x + wheatField.w/2 - 15;
+                runner.targetY = wheatField.y - 35;
+                return;
+            }
+
+            for (let i = 0; i < fences.length; i++) {
+                let f = fences[i];
+                if (clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
+                    selectedTargetIndex = i;
+                    
+                    if (f.locked) {
+                        bubbleContainer.innerHTML = `<button class="farm-action-bubble" onclick="unlockPlot(${i})">Unlock Fence? ($150)</button>`;
+                    } else {
+                        runner.targetX = f.x + f.w/2 - 15;
+                        runner.targetY = f.y + f.h/2 - 15;
+                    }
+                    return;
+                }
             }
         }
 
-        // --- ACTION SYSTEM CONTROLLER ---
-        function launchGame(gameType) {
-            document.getElementById("main-shop-screen").style.display = "none";
-            playerPositionX = 50;
-            gameScore = 0;
-            activeGameType = gameType;
-
-            if (gameType === "laser") {
-                document.getElementById("laser-game-container").style.display = "block";
-                document.getElementById("laser-score").innerText = "0";
-                startLaserEngine();
-            } else if (gameType === "train") {
-                document.getElementById("train-game-container").style.display = "block";
-                document.getElementById("train-score").innerText = "0";
-                startTrainEngine();
-            } else if (gameType === "farm") {
-                document.getElementById("farm-game-container").style.display = "block";
-                renderFarmGrid();
-                renderMarketGrid();
+        function unlockPlot(index) {
+            if (cash >= 150) {
+                cash -= 150;
+                fences[index].locked = false;
+                updateGlobalCash();
+                saveFarmProgress();
+                bubbleContainer.innerHTML = "";
+                alert("🚧 Fence Plot successfully built and opened!");
+            } else {
+                alert("🚨 Insufficient funds! You need $150 Cash for this expansion.");
             }
         }
 
-        // --- ARCADE ENGINES (UNALTERED MINIGAME CODE) ---
-        function movePlayerLeft() { if (playerPositionX > 5) playerPositionX -= 15; updateActivePlayerNode(); }
-        function movePlayerRight() { if (playerPositionX < 95) playerPositionX += 15; updateActivePlayerNode(); }
-        function updateActivePlayerNode() {
-            const node = document.querySelector(`#${activeGameType}-game-container .player-node`);
-            if (node) node.style.left = `calc(${playerPositionX}% - 15px)`;
+        function buyFarmPet(emoji, cost) {
+            if (currentGameMode !== "farm") {
+                alert("You are outside the Farm mode! Enter the Farm Game first.");
+                return;
+            }
+            if (cash < cost) {
+                alert("🚨 Insufficient funds to buy this pet!");
+                return;
+            }
+
+            let slotFound = false;
+            for (let i = 0; i < fences.length; i++) {
+                if (!fences[i].locked && fences[i].pet === null) {
+                    cash -= cost;
+                    fences[i].pet = emoji;
+                    fences[i].age = 1;
+                    fences[i].xp = 0;
+                    updateGlobalCash();
+                    saveFarmProgress();
+                    slotFound = true;
+                    alert(`Pet successfully placed ${emoji} inside Fence Plot #${i+1}!`);
+                    break;
+                }
+            }
+            if (!slotFound) {
+                alert("🚧 No empty fence slots available! Unlock or purchase spaces first.");
+            }
         }
 
-        function startLaserEngine() {
-            const container = document.getElementById("laser-canvas");
-            container.innerHTML = '<div class="player-node"></div>';
-            updateActivePlayerNode();
-            let laserTick = 0;
-            activeGameInterval = setInterval(() => {
-                laserTick++;
-                if (laserTick % 10 === 0) {
-                    gameScore += 10;
-                    document.getElementById("laser-score").innerText = gameScore;
-                    playerCash += 5;
-                    updateUI();
+        // --- NEW CUSTOM SEED CALCULATION VALUE FORMULA ENGINE ---
+        function triggerFarmAction() {
+            if (activeActionType === 'grab') {
+                wheatCount += 1;
+                document.getElementById('distance-val').innerText = wheatCount;
+                bubbleContainer.innerHTML = "";
+                activeActionType = null;
+                saveFarmProgress();
+            } else if (activeActionType === 'eat') {
+                if (wheatCount > 0) {
+                    wheatCount--;
+                    document.getElementById('distance-val').innerText = wheatCount;
+                    
+                    let petObj = fences[selectedTargetIndex];
+                    petObj.xp += 50;
+                    
+                    if (petObj.xp >= 100) {
+                        petObj.xp = 0;
+                        petObj.age += 1; 
+                        
+                        // Calculating customized cash logic: Base Price * New Age
+                        let basePrice = petRewardsTable[petObj.pet] || 5;
+                        let customCashReward = basePrice * petObj.age;
+                        
+                        cash += customCashReward; 
+                        updateGlobalCash();
+                        alert(`🎉 Age Up! ${petObj.pet} reached Level ${petObj.age}! Earned +$${customCashReward} Cash!`);
+                    }
+                    
+                    bubbleContainer.innerHTML = "";
+                    activeActionType = null;
+                    saveFarmProgress();
+                } else {
+                    alert("🌾 You are out of wheat crops! Harvest from the crops below.");
                 }
-                if (laserTick % 15 === 0) {
-                    const laser = document.createElement("div");
-                    laser.className = "danger-node";
-                    laser.style.cssText = "width:100%; height:6px; top:0px; left:0px;";
-                    container.appendChild(laser);
-                    let laserPos = 0;
-                    let laserInterval = setInterval(() => {
-                        laserPos += 5;
-                        laser.style.top = laserPos + "px";
-                        if (laserPos > 240 && laserPos < 270) {
-                            clearInterval(laserInterval);
-                            handleCrashGame("Laser structural integrity compromised!");
+            }
+        }
+
+        function gameLoop() {
+            if(!gameRunning) return;
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+
+            if (currentGameMode === "farm") {
+                ctx.fillStyle = '#f1c40f';
+                ctx.fillRect(wheatField.x, wheatField.y, wheatField.w, wheatField.h);
+                ctx.fillStyle = '#27ae60';
+                ctx.fillRect(wheatField.x - 4, wheatField.y + wheatField.h - 6, wheatField.w + 8, 8);
+                
+                ctx.font = "20px Arial";
+                ctx.fillText("🌾 🌾 🌾", wheatField.x + 6, wheatField.y + 32);
+
+                fences.forEach((f, idx) => {
+                    if (f.locked) {
+                        ctx.fillStyle = 'rgba(139, 69, 19, 0.4)';
+                        ctx.fillRect(f.x, f.y, f.w, f.h);
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = '#d63031';
+                        ctx.strokeRect(f.x, f.y, f.w, f.h);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = "12px sans-serif";
+                        ctx.fillText("🔒 $150", f.x + 18, f.y + 45);
+                    } else {
+                        ctx.fillStyle = '#2ed573';
+                        ctx.fillRect(f.x + 3, f.y + 3, f.w - 6, f.h - 6);
+                        
+                        ctx.lineWidth = 4;
+                        ctx.strokeStyle = '#8b4513';
+                        ctx.strokeRect(f.x, f.y, f.w, f.h);
+
+                        if (f.pet) {
+                            ctx.font = "24px Arial";
+                            ctx.fillText(f.pet, f.x + f.w/2 - 12, f.y + f.h/2 + 2);
+                            
+                            ctx.fillStyle = '#121212';
+                            ctx.font = "bold 10px Arial";
+                            ctx.fillText(`Lv.${f.age} (${f.xp}%)`, f.x + 8, f.y + f.h - 8);
+                        } else {
+                            ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                            ctx.font = "10px sans-serif";
+                            ctx.fillText("Empty Plot", f.x + 15, f.y + 45);
                         }
-                        if (laserPos > 320) { clearInterval(laserInterval); laser.remove(); }
-                    }, 30);
-                }
-            }, 100);
-        }
+                    }
+                });
 
-        function startTrainEngine() {
-            const container = document.getElementById("train-canvas");
-            container.innerHTML = '<div class="player-node"></div>';
-            updateActivePlayerNode();
-            let tick = 0;
-            activeGameInterval = setInterval(() => {
-                tick++;
-                if (tick % 20 === 0) {
-                    const coin = document.createElement("div");
-                    coin.className = "coin-node";
-                    coin.style.left = Math.floor(Math.random() * 90) + "%";
-                    coin.style.top = "0px";
-                    container.appendChild(coin);
-                    let coinPos = 0;
-                    let coinInterval = setInterval(() => {
-                        coinPos += 4;
-                        coin.style.top = coinPos + "px";
-                        if (coinPos > 250 && coinPos < 290) {
-                            gameScore += 1;
-                            document.getElementById("train-score").innerText = gameScore;
-                            playerCash += 50;
-                            updateUI();
-                            clearInterval(coinInterval);
-                            coin.remove();
+                let dx = runner.targetX - runner.x;
+                let dy = runner.targetY - runner.y;
+                let distVec = Math.hypot(dx, dy);
+
+                if (distVec > 3) {
+                    runner.x += (dx / distVec) * runner.speed;
+                    runner.y += (dy / distVec) * runner.speed;
+                } else {
+                    if (selectedTargetIndex === 999 && activeActionType === null) {
+                        activeActionType = 'grab';
+                        bubbleContainer.innerHTML = `<button class="farm-action-bubble" onclick="triggerFarmAction()">Grab 🌾?</button>`;
+                    } else if (selectedTargetIndex !== null && selectedTargetIndex !== 999 && activeActionType === null) {
+                        let targetFence = fences[selectedTargetIndex];
+                        if (!targetFence.locked && targetFence.pet) {
+                            activeActionType = 'eat';
+                            bubbleContainer.innerHTML = `<button class="farm-action-bubble" onclick="triggerFarmAction()">Feed 🌾 to ${targetFence.pet}?</button>`;
                         }
-                        if (coinPos > 310) { clearInterval(coinInterval); coin.remove(); }
-                    }, 40);
+                    }
                 }
-                if (tick % 45 === 0) {
-                    const trainObstacle = document.createElement("div");
-                    trainObstacle.className = "danger-node";
-                    trainObstacle.style.cssText = "width:40px; height:50px; bottom:0px;";
-                    let spawnLane = Math.random() > 0.5 ? 20 : 70;
-                    trainObstacle.style.left = spawnLane + "%";
-                    container.appendChild(trainObstacle);
-                    let trainPos = 0;
-                    let trainInterval = setInterval(() => {
-                        trainPos += 6;
-                        trainObstacle.style.bottom = trainPos + "px";
-                        if (trainPos > 220 && Math.abs(playerPositionX - spawnLane) < 25) {
-                            clearInterval(trainInterval);
-                            handleCrashGame("CRASHED! The train caught you from below!");
+
+                ctx.font = "26px Arial";
+                ctx.fillText("👨‍🌾", runner.x, runner.y + 22);
+
+                requestAnimationFrame(gameLoop);
+                return;
+            }
+
+            if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
+            if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
+
+            ctx.fillStyle = '#00a8ff';
+            ctx.beginPath();
+            ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
+            ctx.fill();
+
+            if(currentGameMode === "laser") {
+                distance += 1;
+                document.getElementById('distance-val').innerText = String(distance).padStart(6, '0');
+
+                let spawnChance = 0.035 + (distance * 0.00004);
+                if(Math.random() < Math.min(spawnChance, 0.15)) {
+                    obstacles.push({
+                        x: Math.random() * (canvas.width - 50),
+                        y: -20,
+                        w: Math.random() * 60 + 30, 
+                        h: 14,
+                        speed: 5.5 + (distance * 0.001) + Math.random() * 3.5
+                    });
+                }
+
+                for(let i = obstacles.length - 1; i >= 0; i--) {
+                    let o = obstacles[i];
+                    o.y += o.speed;
+
+                    ctx.fillStyle = '#ff4757';
+                    ctx.fillRect(o.x, o.y, o.w, o.h);
+
+                    if (o.x < runner.x + runner.w && o.x + o.w > runner.x && o.y < runner.y + runner.h && o.y + o.h > runner.y) {
+                        gameRunning = false;
+                        cash += distance;
+                        updateGlobalCash();
+                        alert("💥 CRASHED!\n\nDistance Cleared: " + distance + "\nEarned: +$" + distance + " Cash!");
+                        gameScreen.classList.add('hidden');
+                        return;
+                    }
+                    if(o.y > canvas.height) obstacles.splice(i, 1);
+                }
+            } 
+            else if(currentGameMode === "train") {
+                let train = obstacles[0];
+                let currentTime = Date.now();
+
+                if (isTrainAlertActive) {
+                    let remaining = Math.ceil((alertEndTime - currentTime) / 1000);
+                    if (remaining > 0) {
+                        document.getElementById('alert-timer-label').innerText = "⚠️ Train Close! " + remaining + "s";
+                        train.targetY = runner.y + 35; 
+                    } else {
+                        isTrainAlertActive = false;
+                        document.getElementById('alert-timer-label').innerText = "";
+                        train.targetY = canvas.height + 120;
+                    }
+                } else {
+                    train.targetY = canvas.height + 120; 
+                }
+
+                train.y += (train.targetY - train.y) * 0.1;
+
+                if(train.x + train.w/2 < runner.x + 15) {
+                    train.x += 3.5;
+                } else {
+                    train.x -= 3.5;
+                }
+
+                ctx.fillStyle = '#4b4b4b';
+                ctx.fillRect(train.x, train.y, train.w, train.h);
+                ctx.fillStyle = '#ff4757'; 
+                ctx.fillRect(train.x - 2, train.y, train.w + 4, 10);
+                ctx.fillStyle = '#ff9f43'; 
+                ctx.fillRect(train.x + 10, train.y + 15, 12, 10);
+                ctx.fillRect(train.x + train.w - 22, train.y + 15, 12, 10);
+
+                if(Math.random() < 0.025 && activeCoins.length < 4) {
+                    activeCoins.push({
+                        x: Math.random() * (canvas.width - 40) + 20,
+                        y: -10, r: 8, speed: 3
+                    });
+                }
+
+                if(Math.random() < 0.015 && activeBushes.length < 3) {
+                    activeBushes.push({
+                        x: Math.random() * (canvas.width - 45) + 10,
+                        y: -20, w: 35, h: 25, speed: 3.5
+                    });
+                }
+
+                for(let c = activeCoins.length - 1; c >= 0; c--) {
+                    let coin = activeCoins[c];
+                    coin.y += coin.speed;
+
+                    ctx.fillStyle = '#ffd32a';
+                    ctx.beginPath();
+                    ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI*2);
+                    ctx.fill();
+
+                    let vectorDist = Math.hypot((runner.x + 15) - coin.x, (runner.y + 15) - coin.y);
+                    if(vectorDist < 15 + coin.r) {
+                        activeCoins.splice(c, 1);
+                        distance += 1; 
+                        cash += 5; 
+                        updateGlobalCash();
+                        document.getElementById('distance-val').innerText = distance;
+                        continue;
+                    }
+                    if(coin.y > canvas.height) activeCoins.splice(c, 1);
+                }
+
+                for(let b = activeBushes.length - 1; b >= 0; b--) {
+                    let bush = activeBushes[b];
+                    bush.y += bush.speed;
+
+                    ctx.fillStyle = '#2ed573';
+                    ctx.beginPath();
+                    ctx.arc(bush.x + 10, bush.y + 12, 12, 0, Math.PI*2);
+                    ctx.arc(bush.x + 25, bush.y + 12, 12, 0, Math.PI*2);
+                    ctx.arc(bush.x + 17, bush.y + 6, 12, 0, Math.PI*2);
+                    ctx.fill();
+
+                    if (bush.x < runner.x + runner.w && bush.x + bush.w > runner.x && bush.y < runner.y + runner.h && bush.y + bush.h > runner.y) {
+                        activeBushes.splice(b, 1); 
+                        
+                        if (!isTrainAlertActive) {
+                            isTrainAlertActive = true;
+                            alertEndTime = Date.now() + 5000; 
+                        } else {
+                            gameRunning = false;
+                            alert("🚂 GAME OVER!\n\nYou stumbled twice on the bushes and the train caught you!\n\nCoins Collected: " + distance + " (+$" + (distance * 5) + " Cash)");
+                            gameScreen.classList.add('hidden');
+                            return;
                         }
-                        if (trainPos > 355) { clearInterval(trainInterval); trainObstacle.remove(); }
-                    }, 30);
+                        continue;
+                    }
+                    if(bush.y > canvas.height) activeBushes.splice(b, 1);
                 }
-            }, 100);
-        }
 
-        function handleCrashGame(reasonMessage) {
-            clearInterval(activeGameInterval);
-            alert(`🚂 GAME OVER\n\n${reasonMessage}`);
-            showMainMenu();
-        }
+                if (train.y <= runner.y + runner.h && train.y + train.h >= runner.y && train.x < runner.x + runner.w && train.x + train.w > runner.x) {
+                    gameRunning = false;
+                    alert("🚂 CAUGHT!\n\nYou were run over or caught by the train on the tracks!\n\nCoins Collected: " + distance);
+                    gameScreen.classList.add('hidden');
+                    return;
+                }
+            }
 
-        updateUI();
+            requestAnimationFrame(gameLoop);
+        }
     </script>
 </body>
 </html>
