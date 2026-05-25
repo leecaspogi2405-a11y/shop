@@ -77,11 +77,12 @@
             box-sizing: border-box;
         }
 
-        .emoji-container {
-            font-size: 4rem;
-            margin-bottom: 10px;
-            display: flex;
-            gap: 10px;
+        /* CUSTOM VECTOR STRAWBERRY ELEPHANT ICON */
+        .icon-art-container {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            margin-bottom: 15px;
         }
 
         .product-title {
@@ -124,14 +125,42 @@
             transform: scale(1.02);
         }
 
-        .play-trigger {
-            margin-top: 40px;
+        /* DUAL GAME HUB INTERFACE */
+        .game-menu-container {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .game-section-title {
+            color: #ffa502;
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .play-trigger-btn {
             color: #ff4757;
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 900;
             cursor: pointer;
             letter-spacing: 2px;
             text-align: center;
+            background: none;
+            border: none;
+            transition: transform 0.15s;
+            padding: 0;
+            margin-top: -2px;
+        }
+
+        .play-trigger-btn:hover {
+            transform: scale(1.1);
         }
 
         #game-screen {
@@ -240,67 +269,102 @@
     </div>
 
     <div class="card">
-        <div class="emoji-container">🐘🍓</div>
+        <div class="icon-art-container">
+            <svg viewBox="0 0 500 500" style="width:100%; height:100%;">
+                <path d="M 320,320 L 350,320 L 350,450 L 310,450 Z" fill="#b82e3d"/>
+                <path d="M 220,320 L 250,320 L 250,430 L 215,430 Z" fill="#b82e3d"/>
+                <path d="M 180,180 C 130,180 120,240 140,300 C 150,330 170,450 200,450 C 230,450 230,350 260,350 C 290,350 290,450 320,450 C 350,450 370,380 380,320 C 400,240 370,160 300,160 C 240,160 200,180 180,180 Z" fill="#e63946"/>
+                <path d="M 140,280 C 120,320 120,380 150,450 C 165,450 175,430 165,380 C 155,340 160,310 175,290 Z" fill="#d92b3a"/>
+                <path d="M 280,180 C 340,180 360,260 320,300 C 280,340 260,260 280,180 Z" fill="#ff4d6d"/>
+                <circle cx="210" cy="240" r="10" fill="#1a1a1a"/>
+                <circle cx="213" cy="237" r="4" fill="#ffffff"/>
+                <g fill="#ffb703">
+                    <ellipse cx="220" cy="280" rx="3" ry="5" transform="rotate(15 220 280)"/>
+                    <ellipse cx="260" cy="250" rx="3" ry="5" transform="rotate(-10 260 250)"/>
+                    <ellipse cx="300" cy="220" rx="3" ry="5" transform="rotate(20 300 220)"/>
+                    <ellipse cx="340" cy="260" rx="3" ry="5" transform="rotate(5 340 260)"/>
+                </g>
+                <g fill="#70e000">
+                    <path d="M 240,110 C 245,130 255,130 260,165 C 245,165 240,140 240,110 Z"/>
+                    <path d="M 250,160 C 210,130 160,140 130,160 C 170,170 210,170 250,160 Z"/>
+                    <path d="M 250,160 C 280,120 330,120 370,135 C 330,155 290,160 250,160 Z"/>
+                </g>
+            </svg>
+        </div>
         <div class="product-title">Strawberry Elephant</div>
         <div class="description">
-            A super rare tool for your game inventory!<br>Survive the lasers to earn cash.
+            A super rare tool for your game inventory!<br>Survive lasers or outrun trains to stack cash.
         </div>
         <div class="price-tag">💰 $25,000</div>
         <button class="btn" id="buy-btn">BUY PRODUCT</button>
         <div id="code-output" class="popup-box hidden"></div>
     </div>
 
-    <div class="play-trigger" id="play-btn">
-        PLAY<br><span style="font-size: 1.5rem;">👇</span>
+    <div class="game-menu-container">
+        <div style="text-align: center;">
+            <p class="game-section-title">LASER GAME</p>
+            <button class="play-trigger-btn" id="launch-laser-btn">PLAY</button>
+        </div>
+        <div style="text-align: center;">
+            <p class="game-section-title">TRAIN GAME</p>
+            <button class="play-trigger-btn" id="launch-train-btn">PLAY</button>
+        </div>
     </div>
 
     <div class="modal-overlay hidden" id="tutorial-modal">
         <div class="modal-content">
-            <h3>🎮 HOW TO PLAY</h3>
+            <h3>🎮 GAMEPLAY MANUAL</h3>
             <ol>
-                <li>Click or tap the big <b>PLAY</b> button below to launch the minigame screen.</li>
-                <li>Control your avatar circle by pressing <b>A / D</b> or <b>Left / Right arrow keys</b> on your keyboard. If you are on a phone, simply tap the <b>Left or Right side</b> of the screen.</li>
-                <li>Dodge the falling red laser beams. Every second you stay alive, your score distance ticks up.</li>
-                <li>When you crash into a laser, your accumulated distance points convert <b>1:1 straight into Cash</b>!</li>
-                <li>Grind your way up to <b>$25,000 Cash</b> to unlock the exclusive Strawberry Elephant code item!</li>
+                <li><b>LASER GAME:</b> Dodge the falling red lasers. Your accumulated survival distance points convert 1:1 into Cash upon elimination!</li>
+                <li><b>TRAIN GAME:</b> A relentless train down from the top will follow your movements side-to-side! Dodge it while sweeping for gold coins.</li>
+                <li>Every Gold Coin collected in the Train Game instantly awards you <b>+$5 Cash</b> straight to your balance. Touching the train causes an instant crash!</li>
+                <li>Control inputs: Use <b>A / D keys</b> or <b>Left / Right Arrows</b> on PC. Tap the <b>Left or Right sides</b> of the viewport on Mobile to move.</li>
             </ol>
-            <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
+            <button class="close-modal-btn" id="close-modal-btn">LOG IN!</button>
         </div>
     </div>
 
     <div id="game-screen" class="hidden">
-        <div class="game-stats">Distance: <span id="distance-val">000000</span></div>
+        <div class="game-stats" id="mode-stat-label">Distance: <span id="distance-val">000000</span></div>
         <canvas id="runnerCanvas" width="360" height="500"></canvas>
-        <p style="color: #747d8c; font-size: 0.85rem; margin-top: 10px;">Tap the Left or Right side of the screen to move the player.</p>
+        <p style="color: #747d8c; font-size: 0.85rem; margin-top: 10px;">Tap Left / Right sides to steer your player avatar.</p>
     </div>
 
     <script>
         let cash = parseInt(localStorage.getItem("Xdragon_WebCash")) || 0; 
         let distance = 0;
         let gameRunning = false;
-        let canvas, ctx, runner, obstacles;
+        let currentGameMode = "laser"; 
+        let canvas, ctx, runner, obstacles, activeCoins;
 
         const cashEl = document.getElementById('cash-amount');
-        const playBtn = document.getElementById('play-btn');
-        const gameScreen = document.getElementById('game-screen');
-        const distanceEl = document.getElementById('distance-val');
         const buyBtn = document.getElementById('buy-btn');
         const codeOutput = document.getElementById('code-output');
+        const gameScreen = document.getElementById('game-screen');
+        const distanceEl = document.getElementById('distance-val');
+        const modeStatLabel = document.getElementById('mode-stat-label');
         
+        const launchLaserBtn = document.getElementById('launch-laser-btn');
+        const launchTrainBtn = document.getElementById('launch-train-btn');
         const howToPlayBtn = document.getElementById('how-to-play-btn');
         const tutorialModal = document.getElementById('tutorial-modal');
         const closeModalBtn = document.getElementById('close-modal-btn');
 
         cashEl.innerText = cash;
 
-        howToPlayBtn.addEventListener('click', () => {
-            tutorialModal.classList.remove('hidden');
-        });
-        closeModalBtn.addEventListener('click', () => {
-            tutorialModal.classList.add('hidden');
+        howToPlayBtn.addEventListener('click', () => tutorialModal.classList.remove('hidden'));
+        closeModalBtn.addEventListener('click', () => tutorialModal.classList.add('hidden'));
+
+        launchLaserBtn.addEventListener('click', () => {
+            currentGameMode = "laser";
+            modeStatLabel.innerHTML = 'Distance: <span id="distance-val">000000</span>';
+            gameScreen.classList.remove('hidden');
+            initGame();
         });
 
-        playBtn.addEventListener('click', () => {
+        launchTrainBtn.addEventListener('click', () => {
+            currentGameMode = "train";
+            modeStatLabel.innerHTML = 'Coins Collected: <span id="distance-val">0</span>';
             gameScreen.classList.remove('hidden');
             initGame();
         });
@@ -309,18 +373,13 @@
             if (cash >= 25000) {
                 cash -= 25000;
                 cashEl.innerText = cash;
-                
                 localStorage.setItem("Xdragon_WebCash", cash);
-                
                 let mathKey = (cash + 25000) * 7;
                 let generatedCode = "XDRG-TOOL-" + mathKey;
-
                 codeOutput.innerText = "CODE: " + generatedCode;
                 codeOutput.classList.remove('hidden');
-                
-                // INFINITY BUY FIX: Hindi na ididisable ang button para makabili ulit kung may sapat na cash!
             } else {
-                alert("🚨 Insufficient Cash! You need $25,000. Play the game below to grind your distance points safely!");
+                alert("🚨 Insufficient Funds! You need $25,000 Cash to purchase this item. Play the minigames to accumulate coins!");
             }
         });
 
@@ -330,6 +389,7 @@
             distance = 0;
             gameRunning = true;
             obstacles = [];
+            activeCoins = [];
 
             runner = {
                 x: canvas.width / 2 - 15,
@@ -337,6 +397,17 @@
                 w: 30, h: 30, speed: 6.5,
                 moveLeft: false, moveRight: false
             };
+
+            // Instantiate Train Object if Mode is Selected
+            if(currentGameMode === "train") {
+                obstacles.push({
+                    x: canvas.width / 2 - 40,
+                    y: 20,
+                    w: 80,
+                    h: 55,
+                    speed: 3.8
+                });
+            }
 
             window.onkeydown = (e) => {
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
@@ -364,55 +435,110 @@
             if(!gameRunning) return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
-            distance += 1;
-            distanceEl.innerText = String(distance).padStart(6, '0');
-
             if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
             if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
 
+            // RENDER PLAYER ENGINE
             ctx.fillStyle = '#00a8ff';
             ctx.beginPath();
             ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2);
             ctx.fill();
 
-            let spawnChance = 0.035 + (distance * 0.00004);
-            if(Math.random() < Math.min(spawnChance, 0.15)) {
-                obstacles.push({
-                    x: Math.random() * (canvas.width - 50),
-                    y: -20,
-                    w: Math.random() * 60 + 30, 
-                    h: 14,
-                    speed: 5.5 + (distance * 0.001) + Math.random() * 3.5
-                });
-            }
+            // ==================== CONTEXT 1: LASER RUNNER RUN ====================
+            if(currentGameMode === "laser") {
+                distance += 1;
+                document.getElementById('distance-val').innerText = String(distance).padStart(6, '0');
 
-            for(let i = obstacles.length - 1; i >= 0; i--) {
-                let o = obstacles[i];
-                o.y += o.speed;
+                let spawnChance = 0.035 + (distance * 0.00004);
+                if(Math.random() < Math.min(spawnChance, 0.15)) {
+                    obstacles.push({
+                        x: Math.random() * (canvas.width - 50),
+                        y: -20,
+                        w: Math.random() * 60 + 30, 
+                        h: 14,
+                        speed: 5.5 + (distance * 0.001) + Math.random() * 3.5
+                    });
+                }
 
-                ctx.fillStyle = '#ff4757';
-                ctx.fillRect(o.x, o.y, o.w, o.h);
+                for(let i = obstacles.length - 1; i >= 0; i--) {
+                    let o = obstacles[i];
+                    o.y += o.speed;
 
-                if (o.x < runner.x + runner.w &&
-                    o.x + o.w > runner.x &&
-                    o.y < runner.y + runner.h &&
-                    o.y + o.h > runner.y) {
-                    
+                    ctx.fillStyle = '#ff4757';
+                    ctx.fillRect(o.x, o.y, o.w, o.h);
+
+                    if (o.x < runner.x + runner.w && o.x + o.w > runner.x && o.y < runner.y + runner.h && o.y + o.h > runner.y) {
+                        gameRunning = false;
+                        cash += distance;
+                        localStorage.setItem("Xdragon_WebCash", cash);
+                        alert("💥 CRASHED!\n\nDistance Cleared: " + distance + "\nEarned: +$" + distance + " Cash!");
+                        cashEl.innerText = cash;
+                        gameScreen.classList.add('hidden');
+                        return;
+                    }
+                    if(o.y > canvas.height) obstacles.splice(i, 1);
+                }
+            } 
+            
+            // ==================== CONTEXT 2: TRAIN PURSUIT SIMULATION ====================
+            else if(currentGameMode === "train") {
+                let train = obstacles[0];
+                
+                // Intelligent Tracking AI Engine Configuration
+                if(train.x + train.w/2 < runner.x + 15) {
+                    train.x += train.speed;
+                } else {
+                    train.x -= train.speed;
+                }
+                train.y += 0.35; // Continuous downward compression vector force
+
+                // DRAW THE TRAIN COMPONENT (Mechanized Cabin Unit)
+                ctx.fillStyle = '#4b4b4b';
+                ctx.fillRect(train.x, train.y, train.w, train.h);
+                // Roof plating
+                ctx.fillStyle = '#2f3542';
+                ctx.fillRect(train.x - 2, train.y, train.w + 4, 8);
+                // Warning headlights
+                ctx.fillStyle = '#ff9f43'; 
+                ctx.fillRect(train.x + 8, train.y + train.h - 12, 14, 10);
+                ctx.fillRect(train.x + train.w - 22, train.y + train.h - 12, 14, 10);
+
+                // Run Coin Drop Spawning Loop
+                if(Math.random() < 0.025 && activeCoins.length < 5) {
+                    activeCoins.push({
+                        x: Math.random() * (canvas.width - 30) + 15,
+                        y: Math.random() * (canvas.height - 180) + 110,
+                        r: 8
+                    });
+                }
+
+                // Process Coin Validation Loops
+                for(let c = activeCoins.length - 1; c >= 0; c--) {
+                    let coin = activeCoins[c];
+                    ctx.fillStyle = '#ffd32a';
+                    ctx.beginPath();
+                    ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI*2);
+                    ctx.fill();
+
+                    // Collision Intersection Matrix Calculations
+                    let vectorDist = Math.hypot((runner.x + 15) - coin.x, (runner.y + 15) - coin.y);
+                    if(vectorDist < 15 + coin.r) {
+                        activeCoins.splice(c, 1);
+                        distance += 1; 
+                        cash += 5; // Instant calculation payout loop configuration
+                        cashEl.innerText = cash;
+                        localStorage.setItem("Xdragon_WebCash", cash);
+                        document.getElementById('distance-val').innerText = distance;
+                    }
+                }
+
+                // Impact Terminal Threshold Check
+                if (train.x < runner.x + runner.w && train.x + train.w > runner.x && train.y < runner.y + runner.h && train.y + train.h > runner.y) {
                     gameRunning = false;
-                    
-                    let earnedCash = distance; 
-                    cash += earnedCash;
-                    
-                    localStorage.setItem("Xdragon_WebCash", cash);
-                    
-                    alert("💥 CRASHED! Distance Reached: " + distance + "\n\nConverted straight into +$" + earnedCash + " Cash!");
-                    
-                    cashEl.innerText = cash;
+                    alert("🚂 GAME OVER!\n\nThe train crushed your avatar!\n\nTotal Coins Picked Up: " + distance + " (+$" + (distance * 5) + " Total Cash Added)");
                     gameScreen.classList.add('hidden');
                     return;
                 }
-
-                if(o.y > canvas.height) obstacles.splice(i, 1);
             }
 
             requestAnimationFrame(gameLoop);
