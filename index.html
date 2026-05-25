@@ -587,7 +587,7 @@
                 <li><b>FARM GAME:</b> Click fence plots to harvest wheat or breed pets to age them up for money rewards.</li>
                 <li><b>BURGER BOMB BATTLE:</b> Tactical deduction field arena!
                     <br>• <b>Setup Phase:</b> Select 3 separate burgers to plant your bombs.
-                    <br>• <b>Battle Loop:</b> You guess on the Opponent's Grid. The enemy shoots back at your Grid. Landing on an active enemy bomb deducts life from the attacker!
+                    <br>• <b>Battle Loop:</b> You guess on the Opponent's Grid. The enemy shoots back at your Grid. Landing on an active bomb deducts life from the attacker!
                 </li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
@@ -848,7 +848,7 @@
             }
         }
 
-        // --- FIXED BURGER BOMB GAME LOGIC ---
+        // --- GLOBAL BURGER BOMB LOGIC ---
         document.getElementById('burger-mode-bot-btn').onclick = () => {
             if(burgerGameActive && (playerBombs.length > 0 || enemyBombs.length > 0)) return;
             burgerMatchMode = "bot";
@@ -1012,7 +1012,7 @@
                         } else {
                             burgerPhase = "setup-player2";
                             document.getElementById('burger-instruction-text').innerText = "Player 2 Turn: Choose 3 Burgers on the top grid!";
-                            alert("Player 1 has planted! Pass the phone to Player 2.");
+                            alert("Player 1 has planted! Pass the system to Player 2.");
                             renderDualBurgerGrids();
                         }
                     }, 400);
@@ -1020,6 +1020,7 @@
             }
         }
 
+        // --- LOGIC FIXED HERE: Clicking Enemy/Bot Grid ---
         function handleEnemyGridClick(index) {
             if (!burgerGameActive) return;
 
@@ -1049,9 +1050,10 @@
                 radarClueTiles = radarClueTiles.filter(t => t !== index);
 
                 if (enemyBombs.includes(index)) {
-                    enemyHearts--;
+                    // YOU clicked an enemy bomb, so YOU lose a heart!
+                    playerHearts--;
                     updateBurgerHeartsUI();
-                    alert("💥 BOOM! There was a bomb there! The enemy loses a life!");
+                    alert("💥 BOOM! You triggered a bomb! You lose 1 life!");
                 } else {
                     alert("🍽️ Safe! No bomb found under this burger.");
                 }
@@ -1068,7 +1070,7 @@
                     } else {
                         burgerPhase = "battle-player2-turn";
                         document.getElementById('burger-instruction-text').innerText = "Player 2's Turn: Click a burger on the bottom grid!";
-                        alert("Player 2's turn! Pass the phone back.");
+                        alert("Player 2's turn!");
                         renderDualBurgerGrids();
                     }
                 }, 800);
@@ -1078,6 +1080,7 @@
             }
         }
 
+        // --- LOGIC FIXED HERE: Multiplayer Player 2 or Bot clicking Player 1 Grid ---
         document.getElementById('burger-grid-player').addEventListener('click', function(e) {
             if (!burgerGameActive || burgerPhase !== "battle-player2-turn" || burgerMatchMode !== "multiplayer") return;
             
@@ -1090,9 +1093,10 @@
             revealedPlayerTiles.push(index);
             
             if (playerBombs.includes(index)) {
-                playerHearts--;
+                // Player 2 clicked your bomb, so Player 2 loses a heart!
+                enemyHearts--;
                 updateBurgerHeartsUI();
-                alert("💥 BOOM! Player 2 hit your bomb! You lose 1 life.");
+                alert("💥 BOOM! Player 2 triggered a bomb! Player 2 loses 1 life.");
             } else {
                 alert("🍽️ Safe! Player 2 hit an empty spot.");
             }
@@ -1109,6 +1113,7 @@
             }, 600);
         });
 
+        // --- LOGIC FIXED HERE: Bot AI Attacks Player 1 Grid ---
         function executeBotAIAction() {
             setTimeout(() => {
                 let availableSlots = [];
@@ -1121,9 +1126,10 @@
                     revealedPlayerTiles.push(botChoice);
                     
                     if(playerBombs.includes(botChoice)) {
-                        playerHearts--;
+                        // Bot hit your bomb, so the Bot loses a heart!
+                        enemyHearts--;
                         updateBurgerHeartsUI();
-                        alert("💥 Direct Hit! The Bot successfully hit your bomb at Slot #" + (botChoice+1) + "!");
+                        alert("💥 BOOM! The Bot triggered your bomb at Slot #" + (botChoice+1) + "! The Bot loses 1 life.");
                     } else {
                         alert("🍽️ Safe! The Bot attacked Slot #" + (botChoice+1) + " but found no bomb.");
                     }
