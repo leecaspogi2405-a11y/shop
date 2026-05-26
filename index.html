@@ -612,11 +612,50 @@
             background-color: #3f4452;
         }
 
-        /* Highlight classes are kept but will only activate in bot matches */
         .guess-num-btn.selected-p1 {
             background-color: #1e90ff !important;
             border-color: #00c4ff !important;
             color: white !important;
+        }
+
+        /* Standardized Notification Box styling for user confirmation flow */
+        .notification-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vw;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+        }
+
+        .notification-popup {
+            background-color: #2f3542;
+            border: 3px solid #ffa502;
+            padding: 20px;
+            border-radius: 12px;
+            width: 280px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .notification-msg {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .notification-ok-btn {
+            background-color: #2ed573;
+            color: white;
+            border: none;
+            padding: 8px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            outline: none;
         }
     </style>
 </head>
@@ -628,6 +667,13 @@
             <button class="how-to-play-btn" id="how-to-play-btn">Gameplay Manual</button>
         </div>
         <span class="cash-display">💰 Cash: $<span id="cash-amount">0</span></span>
+    </div>
+
+    <div id="custom-notification-module" class="modal-overlay hidden">
+        <div class="notification-popup" id="notification-popup-border">
+            <div class="notification-msg" id="custom-notification-text">Notification text content...</div>
+            <button class="notification-ok-btn" id="custom-notification-ok-btn">[OK]</button>
+        </div>
     </div>
 
     <div class="card">
@@ -811,7 +857,7 @@
         let alertEndTime = 0;
 
         let wheatCount = parseInt(localStorage.getItem("Xdragon_WheatCount")) || 0;
-        let currentSelectedFarmTarget = null; // Tracks current open panel type
+        let currentSelectedFarmTarget = null; 
 
         // --- BURGER BOMB ENGINE CORE VARIABLES ---
         let burgerMatchMode = "bot"; 
@@ -856,10 +902,10 @@
         let p2GuessesHistory = []; 
         let currentTurnPlayer = 1; 
 
-        const petRewardsTable = { '🐈': 5, '🐕': 5, '🐖': 10, '🐑': 15, '🐅': 20, '🐍': 20, '🐄': 30, '🐊': 30, '🐢': 50 };
+        const petRewardsTable = { '🐕': 5, '🐖': 10, '🐑': 15, '🐅': 20, '🐍': 20, '🐄': 30, '🐊': 30, '🐢': 50 };
 
         let fences = [
-            { id: 0, x: 30,  y: 30,  w: 80, h: 80, locked: false, pet: '🐈', age: 1, xp: 0 },
+            { id: 0, x: 30,  y: 30,  w: 80, h: 80, locked: false, pet: null, age: 1, xp: 0 },
             { id: 1, x: 140, y: 30,  w: 80, h: 80, locked: false, pet: null, age: 1, xp: 0 },
             { id: 2, x: 250, y: 30,  w: 80, h: 80, locked: true,  pet: null, age: 1, xp: 0 },
             { id: 3, x: 30,  y: 130, w: 80, h: 80, locked: true,  pet: null, age: 1, xp: 0 },
@@ -901,6 +947,23 @@
 
         howToPlayBtn.addEventListener('click', () => tutorialModal.classList.remove('hidden'));
         closeModalBtn.addEventListener('click', () => tutorialModal.classList.add('hidden'));
+
+        // Centralized Custom [OK] Prompt UI Controller
+        function triggerCustomNotification(message, borderHex, callback) {
+            const overlay = document.getElementById('custom-notification-module');
+            const textEl = document.getElementById('custom-notification-text');
+            const borderBox = document.getElementById('notification-popup-border');
+            const btn = document.getElementById('custom-notification-ok-btn');
+            
+            textEl.innerText = message;
+            borderBox.style.borderColor = borderHex || "#ffa502";
+            overlay.classList.remove('hidden');
+            
+            btn.onclick = () => {
+                overlay.classList.add('hidden');
+                if(callback) callback();
+            };
+        }
 
         function handleExitToShop() {
             gameRunning = false;
@@ -964,7 +1027,7 @@
                 let generatedCode = "XDRG-TOOL-" + secureToken;
                 codeOutput.innerText = "CODE: " + generatedCode;
                 codeOutput.classList.remove('hidden');
-            } else { alert("🚨 Insufficient Funds! You need $25,000 Cash."); }
+            } else { triggerCustomNotification("🚨 Insufficient Funds! You need $25,000 Cash.", "#ff4757"); }
         });
 
         function updateGlobalCash() {
@@ -1128,19 +1191,17 @@
                     logEl.innerText = `💥 BOOM! Struck a hidden Mine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
+                    triggerCustomNotification(`💥 EXPLOSION!\n\nYou hit a bomb at Slot #${index+1}!`, "#ff4757", () => {
+                        if (checkBurgerGameEnd()) return;
+                        proceedAfterP1Turn();
+                    });
                 } else {
                     logEl.innerText = `✅ Safe Tile Discovered at Slot #${index+1}!`;
                     logEl.style.color = "#2ed573";
-                }
-                
-                if (checkBurgerGameEnd()) return;
-                
-                if (burgerMatchMode === "bot") {
-                    burgerPhase = "battle-player2-turn"; document.getElementById('burger-instruction-text').innerText = "🤖 Bot scanning...";
-                    updateBurgerStatsUI(); renderUnifiedBurgerGrid(); executeBotAIAction();
-                } else {
-                    burgerPhase = "battle-player2-turn"; document.getElementById('burger-instruction-text').innerText = "Player 2 Turn: Click target!";
-                    updateBurgerStatsUI(); renderUnifiedBurgerGrid();
+                    triggerCustomNotification(`✅ SAFE!\n\nSlot #${index+1} is clear of explosives.`, "#2ed573", () => {
+                        if (checkBurgerGameEnd()) return;
+                        proceedAfterP1Turn();
+                    });
                 }
             }
             else if (burgerPhase === "battle-player2-turn" && burgerMatchMode === "multiplayer") {
@@ -1152,13 +1213,30 @@
                     logEl.innerText = `💥 BOOM! Player 2 struck a landmine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
+                    triggerCustomNotification(`💥 EXPLOSION!\n\nPlayer 2 hit a bomb at Slot #${index+1}!`, "#ff4757", () => {
+                        if (checkBurgerGameEnd()) return;
+                        burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Player 1 Turn: Attack target!";
+                        updateBurgerStatsUI(); renderUnifiedBurgerGrid();
+                    });
                 } else {
                     logEl.innerText = `✅ Safe Tile Discovered at Slot #${index+1}!`;
                     logEl.style.color = "#2ed573";
+                    triggerCustomNotification(`✅ SAFE!\n\nSlot #${index+1} is clear of explosives.`, "#2ed573", () => {
+                        if (checkBurgerGameEnd()) return;
+                        burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Player 1 Turn: Attack target!";
+                        updateBurgerStatsUI(); renderUnifiedBurgerGrid();
+                    });
                 }
-                
-                if (checkBurgerGameEnd()) return;
-                burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Player 1 Turn: Attack target!";
+            }
+        }
+
+        function proceedAfterP1Turn() {
+            const logEl = document.getElementById('burger-action-log');
+            if (burgerMatchMode === "bot") {
+                burgerPhase = "battle-player2-turn"; document.getElementById('burger-instruction-text').innerText = "🤖 Bot scanning...";
+                updateBurgerStatsUI(); renderUnifiedBurgerGrid(); executeBotAIAction();
+            } else {
+                burgerPhase = "battle-player2-turn"; document.getElementById('burger-instruction-text').innerText = "Player 2 Turn: Click target!";
                 updateBurgerStatsUI(); renderUnifiedBurgerGrid();
             }
         }
@@ -1176,20 +1254,27 @@
                         logEl.innerText = `💥 Enemy Action: Bot blew up your Mine at Slot #${botChoice+1}!`;
                         logEl.style.color = "#ff4757";
                         updateBurgerStatsUI(); 
+                        triggerCustomNotification(`💥 BOT ATTACK!\n\nThe Bot blew up your bomb at Slot #${botChoice+1}!`, "#ff4757", () => {
+                            if(checkBurgerGameEnd()) return;
+                            burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Your Turn! Launch attack!";
+                            renderUnifiedBurgerGrid();
+                        });
                     } else {
                         logEl.innerText = `🤖 Enemy Action: Bot swept safe tile Slot #${botChoice+1}.`;
                         logEl.style.color = "#2ed573";
+                        triggerCustomNotification(`✅ BOT MISSED!\n\nThe Bot selected safe Slot #${botChoice+1}.`, "#2ed573", () => {
+                            if(checkBurgerGameEnd()) return;
+                            burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Your Turn! Launch attack!";
+                            renderUnifiedBurgerGrid();
+                        });
                     }
-                    if(checkBurgerGameEnd()) return;
                 }
-                burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Your Turn! Launch attack!";
-                renderUnifiedBurgerGrid();
-            }, 1000);
+            }, 600);
         }
 
         document.getElementById('burger-hint-btn').onclick = () => {
             if(!burgerGameActive || burgerPhase !== "battle-player1-turn") return;
-            if(cash < 1500) { alert("🚨 Intel Radar costs $1,500!"); return; }
+            if(cash < 1500) { triggerCustomNotification("🚨 Intel Radar costs $1,500!", "#ff4757"); return; }
             let unrevealedBombs = enemyBombs.filter(b => !revealedEnemyTiles.includes(b) && !radarClueTiles.includes(b));
             if(unrevealedBombs.length > 0) {
                 cash -= 1500; updateGlobalCash();
@@ -1259,13 +1344,13 @@
                 btn.className = "guess-num-btn";
                 btn.innerText = i;
 
-                // Highlights ONLY rendered if playing against the BOT match algorithm
+                // Selection history mapping is ONLY applied if processing actions against Bot Match
                 if (guessMode === "bot") {
                     if (p1GuessesHistory.includes(i)) {
                         btn.classList.add('selected-p1');
                     }
                 }
-                // Multiplayer mode keeps selections secret to prevent other players from cheating
+                // Local 1v1 selections remain blinded to keep tactical values hidden from opponents
 
                 btn.onclick = () => handleGuessSelection(i);
                 matrixContainer.appendChild(btn);
@@ -1281,7 +1366,7 @@
                     document.getElementById('guess-instruction-text').innerText = "Player 2: Select your secret number to hide!";
                     logEl.innerText = "Player 2 Choice Pending...";
                     logEl.style.color = "#ff4757";
-                    alert("Player 1 registered! Hand the device over to Player 2 safely.");
+                    triggerCustomNotification("Player 1 Code Confirmed!\n\nHand device over to Player 2 now.", "#1e90ff");
                 } else if (p2SecretTarget === null) {
                     p2SecretTarget = selectedNumber;
                     guessPhase = "play";
@@ -1289,7 +1374,7 @@
                     document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
                     logEl.innerText = "Attempts Remaining: " + p1AttemptsLeft;
                     logEl.style.color = "#1e90ff";
-                    alert("Setup complete! Player 1 starts guessing now.");
+                    triggerCustomNotification("Player 2 Code Confirmed!\n\nPlayer 1, prepare to make your first guess.", "#2ed573");
                     renderGuessGridMatrix();
                 }
                 return;
@@ -1302,13 +1387,15 @@
 
                     if (selectedNumber === p2SecretTarget) {
                         cash += 500; updateGlobalCash();
-                        alert(`🎉 CORRECT MATCH! The bot's secret target was ${p2SecretTarget}! Earned +$500`);
-                        initGuessGame();
+                        triggerCustomNotification(`🎉 CORRECT MATCH!\n\nThe bot's target was ${p2SecretTarget}! Earned +$500`, "#2ed573", () => {
+                            initGuessGame();
+                        });
                     } else {
                         p1AttemptsLeft--;
                         if (p1AttemptsLeft <= 0) {
-                            alert(`💀 GAME OVER! You failed. The target value was: ${p2SecretTarget}`);
-                            initGuessGame();
+                            triggerCustomNotification(`💀 GAME OVER!\n\nYou ran out of loops. Target was: ${p2SecretTarget}`, "#ff4757", () => {
+                                initGuessGame();
+                            });
                         } else {
                             let hintDirection = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
                             logEl.innerText = `Hint: Choose a number ${hintDirection} than ${selectedNumber}! [${p1AttemptsLeft} Left]`;
@@ -1323,14 +1410,16 @@
                         p1GuessesHistory.push(selectedNumber);
 
                         if (selectedNumber === p2SecretTarget) {
-                            alert(`🎉 PLAYER 1 CRACKED IT! Player 2's target value was ${p2SecretTarget}!`);
-                            initGuessGame();
+                            triggerCustomNotification(`🎉 PLAYER 1 WINS!\n\nSuccessfully matched Player 2's target core code: ${p2SecretTarget}!`, "#2ed573", () => {
+                                initGuessGame();
+                            });
                             return;
                         } else {
                             p1AttemptsLeft--;
                             if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
-                                alert(`💀 DRAW GAME! Both players run out of ammo counters. Target codes were P1:${p1SecretTarget} | P2:${p2SecretTarget}`);
-                                initGuessGame();
+                                triggerCustomNotification(`💀 DRAW MATCH!\n\nNo available ammo remaining.\nTargets: P1 [${p1SecretTarget}] | P2 [${p2SecretTarget}]`, "#ffa502", () => {
+                                    initGuessGame();
+                                });
                                 return;
                             }
                             let hintDirection = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
@@ -1343,8 +1432,9 @@
                             } else {
                                 logEl.innerText = `P1 Hint: Go ${hintDirection} than ${selectedNumber}. [${p1AttemptsLeft} Left]`;
                             }
-                            alert(`Wrong guess Player 1! Hand device over to Player 2.`);
-                            renderGuessGridMatrix();
+                            triggerCustomNotification(`❌ MISSED!\n\nPlayer 1 guess was incorrect. Hand device to Player 2.`, "#ff4757", () => {
+                                renderGuessGridMatrix();
+                            });
                         }
                     } 
                     else if (currentTurnPlayer === 2) {
@@ -1352,14 +1442,16 @@
                         p2GuessesHistory.push(selectedNumber);
 
                         if (selectedNumber === p1SecretTarget) {
-                            alert(`🎉 PLAYER 2 CRACKED IT! Player 1's target value was ${p1SecretTarget}!`);
-                            initGuessGame();
+                            triggerCustomNotification(`🎉 PLAYER 2 WINS!\n\nSuccessfully matched Player 1's target core code: ${p1SecretTarget}!`, "#2ed573", () => {
+                                initGuessGame();
+                            });
                             return;
                         } else {
                             p2AttemptsLeft--;
                             if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
-                                alert(`💀 DRAW GAME! Target codes were P1:${p1SecretTarget} | P2:${p2SecretTarget}`);
-                                initGuessGame();
+                                triggerCustomNotification(`💀 DRAW MATCH!\n\nNo available ammo remaining.\nTargets: P1 [${p1SecretTarget}] | P2 [${p2SecretTarget}]`, "#ffa502", () => {
+                                    initGuessGame();
+                                });
                                 return;
                             }
                             let hintDirection = (selectedNumber < p1SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
@@ -1372,8 +1464,9 @@
                             } else {
                                 logEl.innerText = `P2 Hint: Go ${hintDirection} than ${selectedNumber}. [${p2AttemptsLeft} Left]`;
                             }
-                            alert(`Wrong guess Player 2! Hand device back to Player 1.`);
-                            renderGuessGridMatrix();
+                            triggerCustomNotification(`❌ MISSED!\n\nPlayer 2 guess was incorrect. Hand device to Player 1.`, "#ff4757", () => {
+                                renderGuessGridMatrix();
+                            });
                         }
                     }
                 }
@@ -1540,8 +1633,9 @@
 
             if(mazePlayer.x === mazeGhost.x && mazePlayer.y === mazeGhost.y) {
                 gameRunning = false;
-                alert("💀 CAUGHT BY CHEN CHEN!\n\nYou were trapped inside the maze core matrix.");
-                gameScreen.classList.add('hidden');
+                triggerCustomNotification("💀 CAUGHT BY CHEN CHEN!\n\nYou were trapped inside the maze core matrix.", "#ff4757", () => {
+                    gameScreen.classList.add('hidden');
+                });
             }
         }
 
@@ -1551,7 +1645,6 @@
             let clickX = e.clientX - rect.left;
             let clickY = e.clientY - rect.top;
             
-            // 1. Check inside Wheat Field patch
             if (clickX >= wheatField.x && clickX <= wheatField.x + wheatField.w && clickY >= wheatField.y && clickY <= wheatField.y + wheatField.h) {
                 runner.targetX = wheatField.x + wheatField.w / 2 - 15;
                 runner.targetY = wheatField.y - 15;
@@ -1561,7 +1654,6 @@
                 return;
             }
 
-            // 2. Check inside Plot/Fence zones
             for (let i = 0; i < fences.length; i++) {
                 let f = fences[i];
                 if (f && clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
@@ -1575,7 +1667,6 @@
             }
         }
 
-        // Dedicated helper to keep bubble display active and update content live
         function refreshFarmUIBubble() {
             if (!currentSelectedFarmTarget) {
                 bubbleContainer.innerHTML = "";
@@ -1619,7 +1710,6 @@
             wheatCount += 1;
             document.getElementById('distance-val').innerText = wheatCount;
             saveFarmProgress();
-            // Panel stays persistent, no destruction call!
         }
 
         function executeContextualFeed(index) {
@@ -1627,7 +1717,7 @@
             if (!f || f.locked || !f.pet) return;
 
             if (wheatCount <= 0) {
-                alert("🚨 Out of wheat! Click the golden Wheat Field to harvest some crops first.");
+                triggerCustomNotification("🚨 Out of wheat! Click the golden Wheat Field to harvest some crops first.", "#ffa502");
                 return;
             }
 
@@ -1640,14 +1730,13 @@
                 f.age += 1;
                 let reward = (petRewardsTable[f.pet] || 5) * f.age;
                 
-                // Rewards are auto-claimed into account balance straight away
                 cash += reward;
                 updateGlobalCash();
-                alert(`🎁 Your ${f.pet} grew to Level ${f.age}! Received +$${reward} bonus!`);
+                triggerCustomNotification(`🎁 UPGRADE!\n\nYour ${f.pet} grew to Level ${f.age}! Received +$${reward} bonus!`, "#2ed573");
             }
             
             saveFarmProgress();
-            refreshFarmUIBubble(); // Re-render values instantly while keeping interface active
+            refreshFarmUIBubble(); 
         }
 
         function unlockPlot(index) {
@@ -1655,12 +1744,12 @@
                 cash -= 150; fences[index].locked = false;
                 updateGlobalCash(); saveFarmProgress(); 
                 refreshFarmUIBubble();
-            } else { alert("🚨 Requires $150 Cash!"); }
+            } else { triggerCustomNotification("🚨 Requires $150 Cash!", "#ff4757"); }
         }
 
         function buyFarmPet(emoji, cost) {
-            if (currentGameMode !== "farm") { alert("Enter Farm Game first!"); return; }
-            if (cash < cost) { alert("🚨 Insufficient funds!"); return; }
+            if (currentGameMode !== "farm") { triggerCustomNotification("Enter Farm Game first!", "#ffa502"); return; }
+            if (cash < cost) { triggerCustomNotification("🚨 Insufficient funds!", "#ff4757"); return; }
             let slotFound = false;
             for (let i = 0; i < fences.length; i++) {
                 if (fences[i] && !fences[i].locked && fences[i].pet === null) {
@@ -1672,7 +1761,7 @@
                     break;
                 }
             }
-            if (!slotFound) alert("🚧 No open, unlocked plots available!");
+            if (!slotFound) triggerCustomNotification("🚧 No open, unlocked plots available!", "#ffa502");
         }
 
 
@@ -1716,8 +1805,9 @@
 
                     if (jetAliens[a] && jetAliens[a].y > canvas.height) {
                         gameRunning = false;
-                        alert("🚨 BASE DEFENSE INFILTRATED!");
-                        gameScreen.classList.add('hidden');
+                        triggerCustomNotification("🚨 BASE DEFENSE INFILTRATED!", "#ff4757", () => {
+                            gameScreen.classList.add('hidden');
+                        });
                         return;
                     }
                 }
@@ -1771,8 +1861,11 @@
 
                     if (runner.x + runner.w > pipe.x && runner.x < pipe.x + pipe.w) {
                         if (runner.y < pipe.topHeight || runner.y + runner.h > pipe.bottomY) {
-                            gameRunning = false; alert("💥 FLIGHT TERMINATED!");
-                            gameScreen.classList.add('hidden'); return;
+                            gameRunning = false; 
+                            triggerCustomNotification("💥 FLIGHT TERMINATED!", "#ff4757", () => {
+                                gameScreen.classList.add('hidden');
+                            });
+                            return;
                         }
                     }
 
@@ -1784,8 +1877,11 @@
                 }
 
                 if (runner.y > canvas.height || runner.y < -40) {
-                    gameRunning = false; alert("💥 BOUNDS CRASH BOUNDARY!");
-                    gameScreen.classList.add('hidden'); return;
+                    gameRunning = false; 
+                    triggerCustomNotification("💥 BOUNDS CRASH BOUNDARY!", "#ff4757", () => {
+                        gameScreen.classList.add('hidden');
+                    });
+                    return;
                 }
 
                 ctx.font = "26px Arial"; ctx.fillText("🛩️", runner.x, runner.y + 18);
@@ -1843,8 +1939,10 @@
                     ctx.fillStyle = '#ff4757'; ctx.fillRect(o.x, o.y, o.w, o.h);
                     if (o.x < runner.x + runner.w && o.x + o.w > runner.x && o.y < runner.y + runner.h && o.y + o.h > runner.y) {
                         gameRunning = false; cash += distance; updateGlobalCash();
-                        alert("💥 CRASHED!\n\nDistance Cleared: " + distance + "\nEarned: +$" + distance);
-                        gameScreen.classList.add('hidden'); return;
+                        triggerCustomNotification(`💥 CRASHED!\n\nDistance Cleared: ${distance}\nEarned: +$${distance}`, "#ff4757", () => {
+                            gameScreen.classList.add('hidden');
+                        });
+                        return;
                     }
                     if(o.y > canvas.height) obstacles.splice(i, 1);
                 }
@@ -1883,13 +1981,23 @@
                     if (bush.x < runner.x + runner.w && bush.x + bush.w > runner.x && bush.y < runner.y + runner.h && bush.y + bush.h > runner.y) {
                         activeBushes.splice(b, 1); 
                         if (!isTrainAlertActive) { isTrainAlertActive = true; alertEndTime = Date.now() + 5000; } 
-                        else { gameRunning = false; alert("🚂 CHASED DOWN BY TRAIN!"); gameScreen.classList.add('hidden'); return; }
+                        else { 
+                            gameRunning = false; 
+                            triggerCustomNotification("🚂 CHASED DOWN BY TRAIN!", "#ff4757", () => {
+                                gameScreen.classList.add('hidden');
+                            });
+                            return; 
+                        }
                         continue;
                     }
                     if(bush.y > canvas.height) activeBushes.splice(b, 1);
                 }
                 if (train.y <= runner.y + runner.h && train.y + train.h >= runner.y && train.x < runner.x + runner.w && train.x + train.w > runner.x) {
-                    gameRunning = false; alert("🚂 TRAIN COLLISION STATE TARGETED!"); gameScreen.classList.add('hidden'); return;
+                    gameRunning = false; 
+                    triggerCustomNotification("🚂 TRAIN COLLISION STATE TARGETED!", "#ff4757", () => {
+                        gameScreen.classList.add('hidden');
+                    });
+                    return;
                 }
             }
 
