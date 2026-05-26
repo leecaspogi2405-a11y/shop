@@ -284,18 +284,30 @@
             outline: none;
         }
 
+        /* --- CONTEXT POPUP ACTION BUBBLES --- */
         .farm-action-bubble {
-            background-color: #ffffa0;
-            color: #121212;
-            padding: 6px 14px;
-            border-radius: 10px;
+            width: 100%;
+            max-width: 360px;
+            background-color: #2ed573;
+            color: white;
+            border: 2px solid #26af5f;
             font-weight: bold;
-            font-size: 0.95rem;
-            border: 2px solid #ffa502;
+            font-size: 1rem;
+            padding: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             outline: none;
-            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .farm-action-bubble.feed-style {
+            background-color: #ffa502;
+            border-color: #d68100;
+        }
+        .farm-action-bubble.lock-style {
+            background-color: #3f4452;
+            border-color: #747d8c;
+            color: #ffa502;
         }
 
         .farm-shop-container {
@@ -501,7 +513,7 @@
             background-color: #ffa502;
             color: #121212;
             border: none;
-            padding: 10px 16px;
+            padding: 10px;
             border-radius: 8px;
             font-weight: bold;
             font-size: 0.95rem;
@@ -700,12 +712,12 @@
             <ol>
                 <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
                 <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding green bushes. One hit forces a train chase!</li>
-                <li><b>FARM GAME:</b> Click plots to move and collect wheat, then click pets to seamlessly feed them without pop-ups.</li>
+                <li><b>FARM GAME:</b> Click the Wheat Field to reveal the harvest interface. Click an unlocked Pet plot to open up the Feeding interface directly!</li>
                 <li><b>BURGER BOMB BATTLE:</b> Tactical deduction arena! Clear un-mined safe tiles and reveal hidden positions with dynamic console logs.</li>
                 <li><b>JET SHOOTER:</b> Pilot a fighter plane at the bottom. Shoot ascending alien streams for +$10 cash per execution!</li>
-                <li><b>CHEN CHEN MAZE:</b> Click open paths to slide instantly to the end of the corridor lane. Dodge the fast-tracking ghost!</li>
+                <li><b>CHEN CHEN MAZE:</b> Click open paths to slide instantly to the end of the corridor lane. Dodge the fast-tracking ghost! Coins are registered along the path instantly.</li>
                 <li><b>FLAPPY PLANE:</b> Touch/Click to flap upward and cross volatile columns. Earnings map onto clearance score parameters.</li>
-                <li><b>GUESS A NUMBER:</b> Player 1 locks down a target hidden value, then Player 2 uses directional hints to crack it within 5 attempts!</li>
+                <li><b>GUESS A NUMBER:</b> Dual matching algorithm matrix. Players plant hidden values secretly, then systematically swap roles using feedback counters until targets crash.</li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
@@ -760,11 +772,11 @@
                 <div class="guess-matrix" id="guess-matrix-grid"></div>
             </div>
         </div>
-        
-        <div id="farm-ui-bubble-container" style="margin-top: 8px; min-height: 40px; display: flex; gap: 10px; align-items: center;"></div>
+
+        <div id="farm-ui-bubble-container" style="margin-top: 15px; min-height: 50px; display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; max-width: 360px;"></div>
         
         <div class="farm-shop-container hidden" id="farm-shop-panel">
-            <div class="farm-shop-title">🚜 PET & EXPANSION MARKET</div>
+            <div class="farm-shop-title">🚜 PET MARKET</div>
             <div class="farm-shop-grid">
                 <div class="farm-shop-item" onclick="buyFarmPet('🐕', 5)">
                     <span class="farm-shop-emoji">🐕</span><span>$5</span>
@@ -807,8 +819,6 @@
         let alertEndTime = 0;
 
         let wheatCount = parseInt(localStorage.getItem("Xdragon_WheatCount")) || 0;
-        let selectedTargetIndex = null; 
-        let activeActionType = null; 
 
         // --- BURGER BOMB ENGINE CORE VARIABLES ---
         let burgerMatchMode = "bot"; 
@@ -842,10 +852,16 @@
         let fpPipes = [];
         let fpFrameCounter = 0;
 
+        // --- GUESS A NUMBER CORE STORAGE ENGINE ---
         let guessMode = "bot"; 
         let guessPhase = "setup"; 
-        let guessSecretTarget = 0; 
-        let guessAttemptsLeft = 5;
+        let p1SecretTarget = null;
+        let p2SecretTarget = null;
+        let p1AttemptsLeft = 5;
+        let p2AttemptsLeft = 5;
+        let p1GuessesHistory = []; 
+        let p2GuessesHistory = []; 
+        let currentTurnPlayer = 1; 
 
         const petRewardsTable = { '🐈': 5, '🐕': 5, '🐖': 10, '🐑': 15, '🐅': 20, '🐍': 20, '🐄': 30, '🐊': 30, '🐢': 50 };
 
@@ -909,7 +925,7 @@
         launchLaserBtn.addEventListener('click', () => setupArcadeMode("laser", "Distance: <span id='distance-val'>000000</span>", "Tap Left / Right sides of the screen to steer horizontally."));
         launchTrainBtn.addEventListener('click', () => setupArcadeMode("train", "Coins: <span id='distance-val'>0</span> <span id='alert-timer-label' style='color:#ffa502; margin-left:15px;'></span>", "Dodge bushes! One hit triggers an active train chase."));
         launchFarmBtn.addEventListener('click', () => {
-            setupArcadeMode("farm", "🌾 Wheat Inventory: <span id='distance-val'>0</span>", "Click fencing to feed animals instantly or harvest the bottom wheat patch.");
+            setupArcadeMode("farm", "🌾 Wheat Inventory: <span id='distance-val'>0</span>", "Click on objects inside the canvas grid directly to load interactions.");
             farmShopPanel.classList.remove('hidden');
             document.getElementById('distance-val').innerText = wheatCount;
         });
@@ -919,7 +935,7 @@
         });
         launchJetBtn.addEventListener('click', () => setupArcadeMode("jet", "Aliens Obliterated: <span id='distance-val'>0</span>", "Tap screen sides to steer. Jet fires auto-projectiles constantly."));
         launchChenBtn.addEventListener('click', () => setupArcadeMode("chen", "Coins Kept: <span id='distance-val'>0</span>", "Click open orthogonal paths to slide safely to the wall. Run from the ghost tracker!"));
-        launchFlappyBtn.addEventListener('click', () => setupArcadeMode("flappy", "Altitude Score: <span id='distance-val'>0</span>", "Tap screen continuously to gain flight lift. Avoid cross columns!"));
+        launchFlappyBtn.addEventListener('click', () => setupArcadeMode("flappy", "Altitude Score: <span id='distance-val'>0</span>", "Tap screen continuously to gain flight flight lift. Avoid cross columns!"));
         launchGuessBtn.addEventListener('click', () => {
             setupArcadeMode("guess", "<span style='color:#2ed573;'>🔮 Guess The Secret Number</span>", "Choose numbers from the grid matrix. Match the hidden random value!");
             guessGamePanel.classList.remove('hidden');
@@ -1218,18 +1234,25 @@
         document.getElementById('guess-mode-mp-btn').onclick = () => { guessMode = "multiplayer"; initGuessGame(); };
 
         function initGuessGame() {
-            guessAttemptsLeft = 5;
-            document.getElementById('guess-action-log').innerText = "Attempts Remaining: " + guessAttemptsLeft;
-            document.getElementById('guess-action-log').style.color = "#2ed573";
+            p1SecretTarget = null;
+            p2SecretTarget = null;
+            p1AttemptsLeft = 5;
+            p2AttemptsLeft = 5;
+            p1GuessesHistory = [];
+            p2GuessesHistory = [];
+            currentTurnPlayer = 1;
 
             if (guessMode === "bot") {
-                guessSecretTarget = Math.floor(Math.random() * 100) + 1;
+                p2SecretTarget = Math.floor(Math.random() * 100) + 1;
                 guessPhase = "play";
                 document.getElementById('guess-instruction-text').innerText = "Crack the Bot's Secret Target Number (1 - 100)!";
+                document.getElementById('guess-action-log').innerText = "Attempts Remaining: " + p1AttemptsLeft;
+                document.getElementById('guess-action-log').style.color = "#2ed573";
             } else {
-                guessSecretTarget = null;
                 guessPhase = "setup";
-                document.getElementById('guess-instruction-text').innerText = "Player 1: Select a secret target number on the board!";
+                document.getElementById('guess-instruction-text').innerText = "Player 1: Select your secret number to hide!";
+                document.getElementById('guess-action-log').innerText = "Player 1 Choice Pending...";
+                document.getElementById('guess-action-log').style.color = "#1e90ff";
             }
             renderGuessGridMatrix();
         }
@@ -1241,6 +1264,21 @@
                 let btn = document.createElement('button');
                 btn.className = "guess-num-btn";
                 btn.innerText = i;
+
+                if (guessMode === "multiplayer") {
+                    if (guessPhase === "play") {
+                        if (currentTurnPlayer === 1 && p1GuessesHistory.includes(i)) {
+                            btn.classList.add('selected-p1');
+                        } else if (currentTurnPlayer === 2 && p2GuessesHistory.includes(i)) {
+                            btn.classList.add('selected-p2');
+                        }
+                    }
+                } else {
+                    if (p1GuessesHistory.includes(i)) {
+                        btn.classList.add('selected-p1');
+                    }
+                }
+
                 btn.onclick = () => handleGuessSelection(i);
                 matrixContainer.appendChild(btn);
             }
@@ -1250,28 +1288,105 @@
             const logEl = document.getElementById('guess-action-log');
 
             if (guessPhase === "setup" && guessMode === "multiplayer") {
-                guessSecretTarget = selectedNumber;
-                guessPhase = "play";
-                document.getElementById('guess-instruction-text').innerText = "Player 2: Guess Player 1's Secret Target!";
-                logEl.innerText = "Target Locked! Player 2 has 5 attempts left.";
-                alert("Secret target registered successfully! Hand the device over to Player 2 now.");
+                if (p1SecretTarget === null) {
+                    p1SecretTarget = selectedNumber;
+                    document.getElementById('guess-instruction-text').innerText = "Player 2: Select your secret number to hide!";
+                    logEl.innerText = "Player 2 Choice Pending...";
+                    logEl.style.color = "#ff4757";
+                    alert("Player 1 registered! Hand the device over to Player 2 safely.");
+                } else if (p2SecretTarget === null) {
+                    p2SecretTarget = selectedNumber;
+                    guessPhase = "play";
+                    currentTurnPlayer = 1;
+                    document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
+                    logEl.innerText = "Attempts Remaining: " + p1AttemptsLeft;
+                    logEl.style.color = "#1e90ff";
+                    alert("Setup complete! Player 1 starts guessing now.");
+                    renderGuessGridMatrix();
+                }
                 return;
             }
 
             if (guessPhase === "play") {
-                if (selectedNumber === guessSecretTarget) {
-                    if(guessMode === "bot") { cash += 500; updateGlobalCash(); }
-                    alert(`🎉 CORRECT MATCH! The secret target number was ${guessSecretTarget}!`);
-                    initGuessGame();
-                } else {
-                    guessAttemptsLeft--;
-                    if (guessAttemptsLeft <= 0) {
-                        alert(`💀 GAME OVER! You failed to guess the number. The target was: ${guessSecretTarget}`);
+                if (guessMode === "bot") {
+                    if (p1GuessesHistory.includes(selectedNumber)) return;
+                    p1GuessesHistory.push(selectedNumber);
+
+                    if (selectedNumber === p2SecretTarget) {
+                        cash += 500; updateGlobalCash();
+                        alert(`🎉 CORRECT MATCH! The bot's secret target was ${p2SecretTarget}! Earned +$500`);
                         initGuessGame();
                     } else {
-                        let hintDirection = (selectedNumber < guessSecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
-                        logEl.innerText = `Hint: Choose a number ${hintDirection} than ${selectedNumber}! [${guessAttemptsLeft} Left]`;
-                        logEl.style.color = "#ffa502";
+                        p1AttemptsLeft--;
+                        if (p1AttemptsLeft <= 0) {
+                            alert(`💀 GAME OVER! You failed. The target value was: ${p2SecretTarget}`);
+                            initGuessGame();
+                        } else {
+                            let hintDirection = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                            logEl.innerText = `Hint: Choose a number ${hintDirection} than ${selectedNumber}! [${p1AttemptsLeft} Left]`;
+                            logEl.style.color = "#ffa502";
+                            renderGuessGridMatrix();
+                        }
+                    }
+                } 
+                else if (guessMode === "multiplayer") {
+                    if (currentTurnPlayer === 1) {
+                        if (p1GuessesHistory.includes(selectedNumber)) return;
+                        p1GuessesHistory.push(selectedNumber);
+
+                        if (selectedNumber === p2SecretTarget) {
+                            alert(`🎉 PLAYER 1 CRACKED IT! Player 2's target value was ${p2SecretTarget}!`);
+                            initGuessGame();
+                            return;
+                        } else {
+                            p1AttemptsLeft--;
+                            if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
+                                alert(`💀 DRAW GAME! Both players run out of ammo counters. Target codes were P1:${p1SecretTarget} | P2:${p2SecretTarget}`);
+                                initGuessGame();
+                                return;
+                            }
+                            let hintDirection = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                            
+                            if (p2AttemptsLeft > 0) {
+                                currentTurnPlayer = 2;
+                                document.getElementById('guess-instruction-text').innerText = "Player 2 Turn: Guess Player 1's target!";
+                                logEl.innerText = `P1 Hint was: Go ${hintDirection} than ${selectedNumber}. Player 2 Attempts: ${p2AttemptsLeft}`;
+                                logEl.style.color = "#ff4757";
+                            } else {
+                                logEl.innerText = `P1 Hint: Go ${hintDirection} than ${selectedNumber}. [${p1AttemptsLeft} Left]`;
+                            }
+                            alert(`Wrong guess Player 1! Hand device over to Player 2.`);
+                            renderGuessGridMatrix();
+                        }
+                    } 
+                    else if (currentTurnPlayer === 2) {
+                        if (p2GuessesHistory.includes(selectedNumber)) return;
+                        p2GuessesHistory.push(selectedNumber);
+
+                        if (selectedNumber === p1SecretTarget) {
+                            alert(`🎉 PLAYER 2 CRACKED IT! Player 1's target value was ${p1SecretTarget}!`);
+                            initGuessGame();
+                            return;
+                        } else {
+                            p2AttemptsLeft--;
+                            if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
+                                alert(`💀 DRAW GAME! Target codes were P1:${p1SecretTarget} | P2:${p2SecretTarget}`);
+                                initGuessGame();
+                                return;
+                            }
+                            let hintDirection = (selectedNumber < p1SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                            
+                            if (p1AttemptsLeft > 0) {
+                                currentTurnPlayer = 1;
+                                document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
+                                logEl.innerText = `P2 Hint was: Go ${hintDirection} than ${selectedNumber}. Player 1 Attempts: ${p1AttemptsLeft}`;
+                                logEl.style.color = "#1e90ff";
+                            } else {
+                                logEl.innerText = `P2 Hint: Go ${hintDirection} than ${selectedNumber}. [${p2AttemptsLeft} Left]`;
+                            }
+                            alert(`Wrong guess Player 2! Hand device back to Player 1.`);
+                            renderGuessGridMatrix();
+                        }
                     }
                 }
             }
@@ -1283,7 +1398,7 @@
             canvas = document.getElementById('runnerCanvas');
             ctx = canvas.getContext('2d');
             distance = 0; obstacles = []; activeCoins = []; activeBushes = [];
-            isTrainAlertActive = false; alertEndTime = 0; selectedTargetIndex = null; activeActionType = null;
+            isTrainAlertActive = false; alertEndTime = 0;
             
             jetBullets = []; jetAliens = []; jetScore = 0;
             fpVelocity = 0; fpPipes = []; fpFrameCounter = 0;
@@ -1345,7 +1460,7 @@
             gameLoop();
         }
 
-        // --- CHEN CHEN MAZE SLIDING SYSTEM ---
+        // --- CHEN CHEN MAZE SLIDING SYSTEM WITH INSTANT PATH SCANNING ---
         function generateRandomMazeMatrix() {
             mazeGrid = []; mazeCoins = [];
             const layoutTemplate = [
@@ -1394,7 +1509,6 @@
                 if (Math.abs(dx) > Math.abs(dy)) { stepX = dx > 0 ? 1 : -1; } 
                 else { stepY = dy > 0 ? 1 : -1; }
                 
-                // SLIDING ENGINE ROUTER: Runs down the vector path completely until blocked
                 let currentX = mazePlayer.x;
                 let currentY = mazePlayer.y;
                 
@@ -1405,6 +1519,14 @@
                     if (nextX >= 0 && nextX < mazeCols && nextY >= 0 && nextY < mazeRows && mazeGrid[nextY][nextX] === 0) {
                         currentX = nextX;
                         currentY = nextY;
+                        
+                        for(let i = mazeCoins.length - 1; i >= 0; i--) {
+                            if(mazeCoins[i].r === currentY && mazeCoins[i].c === currentX) {
+                                mazeCoins.splice(i, 1);
+                                distance += 1; cash += 5; updateGlobalCash();
+                                document.getElementById('distance-val').innerText = distance;
+                            }
+                        }
                     } else { break; }
                 }
                 
@@ -1417,14 +1539,6 @@
         }
 
         function processMazeLogicEvaluation() {
-            for(let i=mazeCoins.length-1; i>=0; i--) {
-                if(mazeCoins[i].r === mazePlayer.y && mazeCoins[i].c === mazePlayer.x) {
-                    mazeCoins.splice(i,1);
-                    distance += 1; cash += 5; updateGlobalCash();
-                    document.getElementById('distance-val').innerText = distance;
-                }
-            }
-
             let gdx = mazePlayer.x - mazeGhost.x;
             let gdy = mazePlayer.y - mazeGhost.y;
             
@@ -1445,53 +1559,99 @@
             }
         }
 
-        // --- FARM LOGIC ENGINE OVERHAUL ---
+        // --- CONTEXTUAL DYNAMIC UI POPUP ROUTING AGENT ---
         function processFarmCanvasClick(e) {
             let rect = canvas.getBoundingClientRect();
             let clickX = e.clientX - rect.left;
             let clickY = e.clientY - rect.top;
-            bubbleContainer.innerHTML = "";
-
-            if (clickX >= wheatField.x && clickX <= wheatField.x + wheatField.w &&
-                clickY >= wheatField.y && clickY <= wheatField.y + wheatField.h) {
-                
-                wheatCount += 1;
-                document.getElementById('distance-val').innerText = wheatCount;
-                saveFarmProgress();
-                runner.targetX = wheatField.x + wheatField.w/2 - 15; 
+            
+            // 1. Check if user clicked inside the Wheat Field patch
+            if (clickX >= wheatField.x && clickX <= wheatField.x + wheatField.w && clickY >= wheatField.y && clickY <= wheatField.y + wheatField.h) {
+                runner.targetX = wheatField.x + wheatField.w / 2 - 15;
                 runner.targetY = wheatField.y - 15;
+                
+                bubbleContainer.innerHTML = `
+                    <button class="farm-action-bubble" onclick="executeContextualHarvest()">
+                        🌾 Harvest Crop / Gather Wheat (+1 Stack)
+                    </button>
+                `;
                 return;
             }
-            
+
+            // 2. Check if user clicked inside one of the Plot/Fence zones
             for (let i = 0; i < fences.length; i++) {
                 let f = fences[i];
                 if (f && clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
-                    selectedTargetIndex = i;
+                    runner.targetX = f.x + f.w / 2 - 15; 
+                    runner.targetY = f.y + f.h / 2 - 15;
+                    
                     if (f.locked) {
-                        bubbleContainer.innerHTML = `<button class="farm-action-bubble" onclick="unlockPlot(${i})">Unlock Fence? ($150)</button>`;
+                        bubbleContainer.innerHTML = `
+                            <button class="farm-action-bubble lock-style" onclick="unlockPlot(${i})">
+                                🔓 Unlock Plot #${i+1}? (Costs $150 Cash)
+                            </button>
+                        `;
+                    } else if (f.pet) {
+                        bubbleContainer.innerHTML = `
+                            <button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${i})">
+                                🍖 Feed standard Wheat to Level ${f.age} ${f.pet}
+                            </button>
+                        `;
                     } else {
-                        runner.targetX = f.x + f.w/2 - 15; 
-                        runner.targetY = f.y + f.h/2 - 15;
-                        
-                        // SEAMLESS ACTIVE FEED: Processes calculation immediately without windows
-                        if (f.pet) {
-                            if (wheatCount > 0) {
-                                wheatCount--;
-                                document.getElementById('distance-val').innerText = wheatCount;
-                                f.xp += 34;
-                                if (f.xp >= 100) {
-                                    f.xp = 0; f.age += 1;
-                                    let reward = (petRewardsTable[f.pet] || 5) * f.age;
-                                    cash += reward; updateGlobalCash();
-                                    alert(`🎉 EVOLUTION! Your pet leveled up to Level ${f.age}! Earned +$${reward}`);
-                                }
-                                saveFarmProgress();
-                            }
-                        }
+                        bubbleContainer.innerHTML = `
+                            <div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">
+                                Plot #${i+1} is empty. Buy a Pet from the market below!
+                            </div>
+                        `;
                     }
                     return;
                 }
             }
+            
+            // Clear bubbles if clicking empty workspace area
+            bubbleContainer.innerHTML = "";
+        }
+
+        function executeContextualHarvest() {
+            wheatCount += 1;
+            document.getElementById('distance-val').innerText = wheatCount;
+            saveFarmProgress();
+            bubbleContainer.innerHTML = ""; // Close action bubble directly after use
+        }
+
+        function executeContextualFeed(index) {
+            let f = fences[index];
+            if (!f || f.locked || !f.pet) return;
+
+            if (wheatCount <= 0) {
+                alert("🚨 Out of wheat! Click the golden Wheat Field to harvest some crops first.");
+                return;
+            }
+
+            wheatCount--;
+            document.getElementById('distance-val').innerText = wheatCount;
+            f.xp += 34;
+            
+            if (f.xp >= 100) {
+                f.xp = 0; 
+                f.age += 1;
+                let reward = (petRewardsTable[f.pet] || 5) * f.age;
+                
+                let claimBtn = document.createElement('button');
+                claimBtn.className = "farm-action-bubble";
+                claimBtn.style.backgroundColor = "#2ed573";
+                claimBtn.style.color = "white";
+                claimBtn.innerText = `🎁 Claim Level ${f.age} ${f.pet} Reward (+$${reward})`;
+                claimBtn.onclick = () => {
+                    cash += reward;
+                    updateGlobalCash();
+                    claimBtn.remove();
+                };
+                bubbleContainer.appendChild(claimBtn);
+            }
+            
+            saveFarmProgress();
+            bubbleContainer.innerHTML = ""; // Clear action slot interface
         }
 
         function unlockPlot(index) {
@@ -1509,10 +1669,11 @@
                 if (fences[i] && !fences[i].locked && fences[i].pet === null) {
                     cash -= cost; fences[i].pet = emoji; fences[i].age = 1; fences[i].xp = 0;
                     updateGlobalCash(); saveFarmProgress(); slotFound = true;
+                    bubbleContainer.innerHTML = ""; // Reset
                     break;
                 }
             }
-            if (!slotFound) alert("🚧 No available clear fenced lots!");
+            if (!slotFound) alert("🚧 No open, unlocked plots available!");
         }
 
 
@@ -1639,19 +1800,20 @@
                 ctx.fillStyle = '#27ae60'; ctx.fillRect(wheatField.x - 4, wheatField.y + wheatField.h - 4, wheatField.w + 8, 5);
                 ctx.font = "20px Arial"; ctx.fillText("🌾 🌾 🌾", wheatField.x + 6, wheatField.y + 26);
 
-                fences.forEach((f) => {
+                fences.forEach((f, idx) => {
                     if (!f) return;
                     if (f.locked) {
                         ctx.fillStyle = 'rgba(139, 69, 19, 0.4)'; ctx.fillRect(f.x, f.y, f.w, f.h);
                         ctx.lineWidth = 2; ctx.strokeStyle = '#d63031'; ctx.strokeRect(f.x, f.y, f.w, f.h);
-                        ctx.fillStyle = '#ffffff'; ctx.font = "12px sans-serif"; ctx.fillText("🔒 $150", f.x + 18, f.y + 45);
+                        ctx.fillStyle = '#ffffff'; ctx.font = "12px sans-serif"; ctx.fillText(`🔒 Plot ${idx+1}`, f.x + 16, f.y + 35);
+                        ctx.fillText("$150", f.x + 24, f.y + 55);
                     } else {
                         ctx.fillStyle = '#2ed573'; ctx.fillRect(f.x + 3, f.y + 3, f.w - 6, f.h - 6);
                         ctx.lineWidth = 4; ctx.strokeStyle = '#8b4513'; ctx.strokeRect(f.x, f.y, f.w, f.h);
                         if (f.pet) {
                             ctx.font = "24px Arial"; ctx.fillText(f.pet, f.x + f.w/2 - 12, f.y + f.h/2 + 2);
                             ctx.fillStyle = '#121212'; ctx.font = "bold 10px Arial"; ctx.fillText(`Lv.${f.age} (${f.xp}%)`, f.x + 8, f.y + f.h - 8);
-                        } else { ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = "10px sans-serif"; ctx.fillText("Empty Plot", f.x + 15, f.y + 45); }
+                        } else { ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = "10px sans-serif"; ctx.fillText(`Plot ${idx+1} Empty`, f.x + 8, f.y + 45); }
                     }
                 });
 
