@@ -284,7 +284,6 @@
             outline: none;
         }
 
-        /* --- CONTEXT POPUP ACTION BUBBLES --- */
         .farm-action-bubble {
             width: 100%;
             max-width: 360px;
@@ -368,7 +367,6 @@
             outline: none;
         }
 
-        /* --- BURGER BOMB BATTLE ARENA RAMP --- */
         .burger-game-panel {
             width: 100%;
             max-width: 400px;
@@ -565,7 +563,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- GUESS A NUMBER PANEL & ENGINE STYLE --- */
         .guess-game-panel {
             width: 100%;
             max-width: 400px;
@@ -615,15 +612,10 @@
             background-color: #3f4452;
         }
 
+        /* Highlight classes are kept but will only activate in bot matches */
         .guess-num-btn.selected-p1 {
             background-color: #1e90ff !important;
             border-color: #00c4ff !important;
-            color: white !important;
-        }
-
-        .guess-num-btn.selected-p2 {
-            background-color: #ff4757 !important;
-            border-color: #ff6b81 !important;
             color: white !important;
         }
     </style>
@@ -712,12 +704,12 @@
             <ol>
                 <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
                 <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding green bushes. One hit forces a train chase!</li>
-                <li><b>FARM GAME:</b> Click the Wheat Field to reveal the harvest interface. Click an unlocked Pet plot to open up the Feeding interface directly!</li>
+                <li><b>FARM GAME:</b> Click the Wheat Field or an unlocked Pet plot. Actions remain persistent until manually swapped!</li>
                 <li><b>BURGER BOMB BATTLE:</b> Tactical deduction arena! Clear un-mined safe tiles and reveal hidden positions with dynamic console logs.</li>
                 <li><b>JET SHOOTER:</b> Pilot a fighter plane at the bottom. Shoot ascending alien streams for +$10 cash per execution!</li>
                 <li><b>CHEN CHEN MAZE:</b> Click open paths to slide instantly to the end of the corridor lane. Dodge the fast-tracking ghost! Coins are registered along the path instantly.</li>
                 <li><b>FLAPPY PLANE:</b> Touch/Click to flap upward and cross volatile columns. Earnings map onto clearance score parameters.</li>
-                <li><b>GUESS A NUMBER:</b> Dual matching algorithm matrix. Players plant hidden values secretly, then systematically swap roles using feedback counters until targets crash.</li>
+                <li><b>GUESS A NUMBER:</b> Dual matching algorithm matrix. Hidden targets are fully blinded in PvP layout match setups.</li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
@@ -819,6 +811,7 @@
         let alertEndTime = 0;
 
         let wheatCount = parseInt(localStorage.getItem("Xdragon_WheatCount")) || 0;
+        let currentSelectedFarmTarget = null; // Tracks current open panel type
 
         // --- BURGER BOMB ENGINE CORE VARIABLES ---
         let burgerMatchMode = "bot"; 
@@ -890,7 +883,6 @@
         const burgerGamePanel = document.getElementById('burger-game-panel');
         const guessGamePanel = document.getElementById('guess-game-panel');
         
-        // ROUTING PORTS
         const launchLaserBtn = document.getElementById('launch-laser-btn');
         const launchTrainBtn = document.getElementById('launch-train-btn');
         const launchFarmBtn = document.getElementById('launch-farm-btn');
@@ -913,6 +905,7 @@
         function handleExitToShop() {
             gameRunning = false;
             burgerGameActive = false;
+            currentSelectedFarmTarget = null;
             gameScreen.classList.add('hidden');
             farmShopPanel.classList.add('hidden');
             burgerGamePanel.classList.add('hidden');
@@ -935,7 +928,7 @@
         });
         launchJetBtn.addEventListener('click', () => setupArcadeMode("jet", "Aliens Obliterated: <span id='distance-val'>0</span>", "Tap screen sides to steer. Jet fires auto-projectiles constantly."));
         launchChenBtn.addEventListener('click', () => setupArcadeMode("chen", "Coins Kept: <span id='distance-val'>0</span>", "Click open orthogonal paths to slide safely to the wall. Run from the ghost tracker!"));
-        launchFlappyBtn.addEventListener('click', () => setupArcadeMode("flappy", "Altitude Score: <span id='distance-val'>0</span>", "Tap screen continuously to gain flight flight lift. Avoid cross columns!"));
+        launchFlappyBtn.addEventListener('click', () => setupArcadeMode("flappy", "Altitude Score: <span id='distance-val'>0</span>", "Tap screen continuously to gain flight lift. Avoid cross columns!"));
         launchGuessBtn.addEventListener('click', () => {
             setupArcadeMode("guess", "<span style='color:#2ed573;'>🔮 Guess The Secret Number</span>", "Choose numbers from the grid matrix. Match the hidden random value!");
             guessGamePanel.classList.remove('hidden');
@@ -948,6 +941,7 @@
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
+            currentSelectedFarmTarget = null;
             modeStatLabel.innerHTML = statsHtml + ' <button class="exit-btn" id="exit-game-btn">EXIT</button>';
             document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
             controlHint.innerText = hintText;
@@ -1130,7 +1124,7 @@
                 revealedEnemyTiles.push(index); radarClueTiles = radarClueTiles.filter(t => t !== index);
                 
                 if (enemyBombs.includes(index)) { 
-                    playerHearts--; 
+                    enemyHearts--; 
                     logEl.innerText = `💥 BOOM! Struck a hidden Mine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
@@ -1154,7 +1148,7 @@
                 revealedPlayerTiles.push(index);
                 
                 if (playerBombs.includes(index)) { 
-                    enemyHearts--; 
+                    playerHearts--; 
                     logEl.innerText = `💥 BOOM! Player 2 struck a landmine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
@@ -1178,7 +1172,7 @@
                     let botChoice = availableSlots[Math.floor(Math.random() * availableSlots.length)];
                     revealedPlayerTiles.push(botChoice);
                     if(playerBombs.includes(botChoice)) { 
-                        enemyHearts--; 
+                        playerHearts--; 
                         logEl.innerText = `💥 Enemy Action: Bot blew up your Mine at Slot #${botChoice+1}!`;
                         logEl.style.color = "#ff4757";
                         updateBurgerStatsUI(); 
@@ -1265,19 +1259,13 @@
                 btn.className = "guess-num-btn";
                 btn.innerText = i;
 
-                if (guessMode === "multiplayer") {
-                    if (guessPhase === "play") {
-                        if (currentTurnPlayer === 1 && p1GuessesHistory.includes(i)) {
-                            btn.classList.add('selected-p1');
-                        } else if (currentTurnPlayer === 2 && p2GuessesHistory.includes(i)) {
-                            btn.classList.add('selected-p2');
-                        }
-                    }
-                } else {
+                // Highlights ONLY rendered if playing against the BOT match algorithm
+                if (guessMode === "bot") {
                     if (p1GuessesHistory.includes(i)) {
                         btn.classList.add('selected-p1');
                     }
                 }
+                // Multiplayer mode keeps selections secret to prevent other players from cheating
 
                 btn.onclick = () => handleGuessSelection(i);
                 matrixContainer.appendChild(btn);
@@ -1432,7 +1420,6 @@
                 obstacles.push({ x: canvas.width / 2 - 40, y: canvas.height + 120, w: 80, h: 65, targetY: canvas.height + 120 });
             }
 
-            // CORE INPUT ROUTERS
             window.onkeydown = (e) => {
                 if(["farm", "burger", "guess", "flappy", "chen"].includes(currentGameMode)) return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
@@ -1460,7 +1447,6 @@
             gameLoop();
         }
 
-        // --- CHEN CHEN MAZE SLIDING SYSTEM WITH INSTANT PATH SCANNING ---
         function generateRandomMazeMatrix() {
             mazeGrid = []; mazeCoins = [];
             const layoutTemplate = [
@@ -1565,58 +1551,75 @@
             let clickX = e.clientX - rect.left;
             let clickY = e.clientY - rect.top;
             
-            // 1. Check if user clicked inside the Wheat Field patch
+            // 1. Check inside Wheat Field patch
             if (clickX >= wheatField.x && clickX <= wheatField.x + wheatField.w && clickY >= wheatField.y && clickY <= wheatField.y + wheatField.h) {
                 runner.targetX = wheatField.x + wheatField.w / 2 - 15;
                 runner.targetY = wheatField.y - 15;
                 
-                bubbleContainer.innerHTML = `
-                    <button class="farm-action-bubble" onclick="executeContextualHarvest()">
-                        🌾 Harvest Crop / Gather Wheat (+1 Stack)
-                    </button>
-                `;
+                currentSelectedFarmTarget = "wheat";
+                refreshFarmUIBubble();
                 return;
             }
 
-            // 2. Check if user clicked inside one of the Plot/Fence zones
+            // 2. Check inside Plot/Fence zones
             for (let i = 0; i < fences.length; i++) {
                 let f = fences[i];
                 if (f && clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
                     runner.targetX = f.x + f.w / 2 - 15; 
                     runner.targetY = f.y + f.h / 2 - 15;
                     
-                    if (f.locked) {
-                        bubbleContainer.innerHTML = `
-                            <button class="farm-action-bubble lock-style" onclick="unlockPlot(${i})">
-                                🔓 Unlock Plot #${i+1}? (Costs $150 Cash)
-                            </button>
-                        `;
-                    } else if (f.pet) {
-                        bubbleContainer.innerHTML = `
-                            <button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${i})">
-                                🍖 Feed standard Wheat to Level ${f.age} ${f.pet}
-                            </button>
-                        `;
-                    } else {
-                        bubbleContainer.innerHTML = `
-                            <div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">
-                                Plot #${i+1} is empty. Buy a Pet from the market below!
-                            </div>
-                        `;
-                    }
+                    currentSelectedFarmTarget = { type: "fence", index: i };
+                    refreshFarmUIBubble();
                     return;
                 }
             }
-            
-            // Clear bubbles if clicking empty workspace area
-            bubbleContainer.innerHTML = "";
+        }
+
+        // Dedicated helper to keep bubble display active and update content live
+        function refreshFarmUIBubble() {
+            if (!currentSelectedFarmTarget) {
+                bubbleContainer.innerHTML = "";
+                return;
+            }
+
+            if (currentSelectedFarmTarget === "wheat") {
+                bubbleContainer.innerHTML = `
+                    <button class="farm-action-bubble" onclick="executeContextualHarvest()">
+                        🌾 Harvest Crop / Gather Wheat (+1 Stack)
+                    </button>
+                `;
+            } else if (currentSelectedFarmTarget.type === "fence") {
+                let idx = currentSelectedFarmTarget.index;
+                let f = fences[idx];
+                if (!f) return;
+
+                if (f.locked) {
+                    bubbleContainer.innerHTML = `
+                        <button class="farm-action-bubble lock-style" onclick="unlockPlot(${idx})">
+                            🔓 Unlock Plot #${idx+1}? (Costs $150 Cash)
+                        </button>
+                    `;
+                } else if (f.pet) {
+                    bubbleContainer.innerHTML = `
+                        <button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${idx})">
+                            🍖 Feed standard Wheat to Level ${f.age} ${f.pet}
+                        </button>
+                    `;
+                } else {
+                    bubbleContainer.innerHTML = `
+                        <div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">
+                            Plot #${idx+1} is empty. Buy a Pet from the market below!
+                        </div>
+                    `;
+                }
+            }
         }
 
         function executeContextualHarvest() {
             wheatCount += 1;
             document.getElementById('distance-val').innerText = wheatCount;
             saveFarmProgress();
-            bubbleContainer.innerHTML = ""; // Close action bubble directly after use
+            // Panel stays persistent, no destruction call!
         }
 
         function executeContextualFeed(index) {
@@ -1637,27 +1640,21 @@
                 f.age += 1;
                 let reward = (petRewardsTable[f.pet] || 5) * f.age;
                 
-                let claimBtn = document.createElement('button');
-                claimBtn.className = "farm-action-bubble";
-                claimBtn.style.backgroundColor = "#2ed573";
-                claimBtn.style.color = "white";
-                claimBtn.innerText = `🎁 Claim Level ${f.age} ${f.pet} Reward (+$${reward})`;
-                claimBtn.onclick = () => {
-                    cash += reward;
-                    updateGlobalCash();
-                    claimBtn.remove();
-                };
-                bubbleContainer.appendChild(claimBtn);
+                // Rewards are auto-claimed into account balance straight away
+                cash += reward;
+                updateGlobalCash();
+                alert(`🎁 Your ${f.pet} grew to Level ${f.age}! Received +$${reward} bonus!`);
             }
             
             saveFarmProgress();
-            bubbleContainer.innerHTML = ""; // Clear action slot interface
+            refreshFarmUIBubble(); // Re-render values instantly while keeping interface active
         }
 
         function unlockPlot(index) {
             if (cash >= 150) {
                 cash -= 150; fences[index].locked = false;
-                updateGlobalCash(); saveFarmProgress(); bubbleContainer.innerHTML = "";
+                updateGlobalCash(); saveFarmProgress(); 
+                refreshFarmUIBubble();
             } else { alert("🚨 Requires $150 Cash!"); }
         }
 
@@ -1669,7 +1666,9 @@
                 if (fences[i] && !fences[i].locked && fences[i].pet === null) {
                     cash -= cost; fences[i].pet = emoji; fences[i].age = 1; fences[i].xp = 0;
                     updateGlobalCash(); saveFarmProgress(); slotFound = true;
-                    bubbleContainer.innerHTML = ""; // Reset
+                    if (currentSelectedFarmTarget && currentSelectedFarmTarget.index === i) {
+                        refreshFarmUIBubble();
+                    }
                     break;
                 }
             }
