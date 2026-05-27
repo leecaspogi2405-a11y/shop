@@ -618,6 +618,117 @@
             color: white !important;
         }
 
+        .restaurant-panel {
+            width: 100%;
+            max-width: 400px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            border: 2px solid #54a0ff;
+        }
+
+        .restaurant-kitchen-bench {
+            width: 100%;
+            background-color: #2c3e50;
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 12px;
+            border-bottom: 4px solid #34495e;
+        }
+
+        .restaurant-ingredient-strip {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+            background-color: #151515;
+            padding: 6px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .restaurant-ingredient-bin {
+            background-color: #2f3542;
+            border: 1px solid #57606f;
+            border-radius: 4px;
+            padding: 8px 0;
+            font-size: 1.3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+
+        .restaurant-ingredient-bin:hover {
+            background-color: #54a0ff;
+        }
+
+        .restaurant-center-stage {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            min-height: 80px;
+            background-color: #1a252f;
+            padding: 10px;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .restaurant-chef-avatar {
+            font-size: 2.5rem;
+            animation: bounce ChefAnim 2s infinite alternate;
+        }
+
+        .restaurant-order-ticket {
+            background-color: #f1c40f;
+            color: #121212;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            max-width: 60%;
+            border-left: 4px solid #e67e22;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .restaurant-mixing-bowl {
+            width: 100%;
+            background-color: #151515;
+            border: 1px dashed #747d8c;
+            padding: 10px;
+            border-radius: 6px;
+            box-sizing: border-box;
+            min-height: 45px;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .restaurant-done-btn {
+            background-color: #2ed573;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+            text-transform: uppercase;
+        }
+
+        .restaurant-done-btn:hover {
+            background-color: #26af5f;
+        }
+
         .notification-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -720,9 +831,9 @@
             <p class="game-section-title">FARM GAME</p>
             <button class="play-trigger-btn" id="launch-farm-btn">🌾 PLAY</button>
         </div>
-        <div class="game-column" style="border: 1px dashed #ff9f43;">
-            <p class="game-section-title" style="color: #ff9f43;">BURGER BOMB</p>
-            <button class="play-trigger-btn" id="launch-burger-btn" style="color: #ff9f43;">🍔 PLAY</button>
+        <div class="game-column">
+            <p class="game-section-title">BURGER BOMB</p>
+            <button class="play-trigger-btn" id="launch-burger-btn">🍔 PLAY</button>
         </div>
 
         <div class="game-column" style="border: 1px solid #00d2d3;">
@@ -741,6 +852,11 @@
             <p class="game-section-title" style="color: #2ed573;">GUESS NUMBER</p>
             <button class="play-trigger-btn" id="launch-guess-btn" style="color: #2ed573;">🔮 PLAY</button>
         </div>
+        
+        <div class="game-column" style="border: 1px solid #54a0ff; flex: 1 1 100%;">
+            <p class="game-section-title" style="color: #54a0ff;">CLOUDE RESTAURANT</p>
+            <button class="play-trigger-btn" id="launch-restaurant-btn" style="color: #54a0ff;">🧑‍🍳 START COOKING</button>
+        </div>
     </div>
 
     <div class="modal-overlay hidden" id="tutorial-modal">
@@ -755,6 +871,7 @@
                 <li><b>CHEN CHEN MAZE:</b> Click open paths to slide instantly to the end of the corridor lane. Dodge the fast-tracking ghost! Coins are registered along the path instantly.</li>
                 <li><b>FLAPPY PLANE:</b> Touch/Click to flap upward and cross volatile columns. Earnings map onto clearance score parameters.</li>
                 <li><b>GUESS A NUMBER:</b> Select your hidden number target code and guess your opponent's matrix block before your ammo cycles deplete!</li>
+                <li><b>CLOUDE RESTAURANT:</b> Look at the customer order ticket, tap ingredients to prepare them, and click DONE? to serve and receive cash!</li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
@@ -808,6 +925,28 @@
             <div class="guess-grid-scroll">
                 <div class="guess-matrix" id="guess-matrix-grid"></div>
             </div>
+        </div>
+
+        <div class="restaurant-panel hidden" id="restaurant-panel">
+            <div class="restaurant-kitchen-bench">
+                <div class="restaurant-ingredient-strip">
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥬')">🥬</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('💧')">💧</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🧀')">🧀</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥒')">🥒</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🧊')">🧊</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍅')">🍅</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🧅')">🧅</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🫓')">🫓</div>
+                </div>
+                <div class="restaurant-center-stage">
+                    <div class="restaurant-chef-avatar">👨‍🍳</div>
+                    <div class="restaurant-order-ticket" id="restaurant-order-display">Order: Loading...</div>
+                </div>
+            </div>
+            <div style="align-self: flex-start; margin-bottom: 5px; color: #a4b0be; font-size: 0.85rem; font-weight: bold;">Ingredients:</div>
+            <div class="restaurant-mixing-bowl" id="restaurant-bowl-display"></div>
+            <button class="restaurant-done-btn" onclick="serveRestaurantOrder()">Done?</button>
         </div>
 
         <div id="farm-ui-bubble-container" style="margin-top: 15px; min-height: 50px; display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; max-width: 360px;"></div>
@@ -899,6 +1038,10 @@
         let currentTurnPlayer = 1; 
         let lastBotGuessFeedback = "";
 
+        let currentRestaurantOrder = ""; 
+        let restaurantIngredientsSelected = [];
+        let restaurantOrdersCompleted = 0;
+
         const petRewardsTable = { '🐕': 5, '🐖': 10, '🐑': 15, '🐅': 20, '🐍': 20, '🐄': 30, '🐊': 30, '🐢': 50 };
 
         let fences = [
@@ -925,6 +1068,7 @@
         const farmShopPanel = document.getElementById('farm-shop-panel');
         const burgerGamePanel = document.getElementById('burger-game-panel');
         const guessGamePanel = document.getElementById('guess-game-panel');
+        const restaurantPanel = document.getElementById('restaurant-panel');
         
         const launchLaserBtn = document.getElementById('launch-laser-btn');
         const launchTrainBtn = document.getElementById('launch-train-btn');
@@ -934,6 +1078,7 @@
         const launchChenBtn = document.getElementById('launch-chen-btn');
         const launchFlappyBtn = document.getElementById('launch-flappy-btn');
         const launchGuessBtn = document.getElementById('launch-guess-btn');
+        const launchRestaurantBtn = document.getElementById('launch-restaurant-btn');
 
         const howToPlayBtn = document.getElementById('how-to-play-btn');
         const tutorialModal = document.getElementById('tutorial-modal');
@@ -969,6 +1114,7 @@
             farmShopPanel.classList.add('hidden');
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
+            restaurantPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             saveFarmProgress(); 
             updateGlobalCash();
@@ -993,12 +1139,18 @@
             guessGamePanel.classList.remove('hidden');
             initGuessGame();
         });
+        launchRestaurantBtn.addEventListener('click', () => {
+            setupArcadeMode("restaurant", "Orders Served: <span id='distance-val'>0</span>", "Click items on the strip bench to add ingredients. Finish up by tapping Done!?");
+            restaurantPanel.classList.remove('hidden');
+            initRestaurantGame();
+        });
 
         function setupArcadeMode(modeName, statsHtml, hintText) {
             currentGameMode = modeName;
             farmShopPanel.classList.add('hidden');
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
+            restaurantPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             currentSelectedFarmTarget = null;
             modeStatLabel.innerHTML = statsHtml + ' <button class="exit-btn" id="exit-game-btn">EXIT</button>';
@@ -1050,6 +1202,7 @@
                 });
             }
         }
+
 
         document.getElementById('burger-mode-bot-btn').onclick = () => {
             if(burgerGameActive && (playerBombs.length > 0 || enemyBombs.length > 0)) return;
@@ -1512,6 +1665,73 @@
         }
 
 
+        function initRestaurantGame() {
+            restaurantOrdersCompleted = 0;
+            document.getElementById('distance-val').innerText = restaurantOrdersCompleted;
+            generateNewRestaurantOrder();
+        }
+
+        function generateNewRestaurantOrder() {
+            const types = ["Burger", "Soda"];
+            currentRestaurantOrder = types[Math.floor(Math.random() * types.length)];
+            document.getElementById('restaurant-order-display').innerText = `Order: ${currentRestaurantOrder}`;
+            restaurantIngredientsSelected = [];
+            renderRestaurantBowl();
+        }
+
+        function addRestaurantIngredient(emoji) {
+            restaurantIngredientsSelected.push(emoji);
+            renderRestaurantBowl();
+        }
+
+        function renderRestaurantBowl() {
+            const bowlEl = document.getElementById('restaurant-bowl-display');
+            if (restaurantIngredientsSelected.length === 0) {
+                bowlEl.innerText = "[Empty Mixing Bowl]";
+                bowlEl.style.color = "#747d8c";
+            } else {
+                bowlEl.innerText = restaurantIngredientsSelected.join(" ");
+                bowlEl.style.color = "#ffffff";
+            }
+        }
+
+        function serveRestaurantOrder() {
+            let matchesProfile = false;
+            let currentString = [...restaurantIngredientsSelected].sort().join("");
+
+            if (currentRestaurantOrder === "Burger") {
+                let burgerTarget = ["🥬", "🍅", "🧅", "🥒", "🧀", "🫓"].sort().join("");
+                if (currentString === burgerTarget) matchesProfile = true;
+            } else if (currentRestaurantOrder === "Soda") {
+                let sodaTarget = ["🧊", "💧"].sort().join("");
+                if (currentString === sodaTarget) matchesProfile = true;
+            }
+
+            let generatedPayout = 0;
+            let statusMessage = "";
+            let colorTheme = "";
+
+            if (matchesProfile) {
+                generatedPayout = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+                statusMessage = `✨ PERFECT RECIPE!\n\nThe customer loved your beautifully cooked ${currentRestaurantOrder}!`;
+                colorTheme = "#2ed573";
+                restaurantOrdersCompleted++;
+                document.getElementById('distance-val').innerText = restaurantOrdersCompleted;
+            } else {
+                generatedPayout = Math.floor(Math.random() * (40 - 5 + 1)) + 5;
+                statusMessage = `🤢 WRONG INGREDIENTS!\n\nYou scrambled the recipe requirements for the ${currentRestaurantOrder}.`;
+                colorTheme = "#ff4757";
+            }
+
+            cash += generatedPayout;
+            updateGlobalCash();
+
+            triggerCustomNotification(`${statusMessage}\n\nEarnings Received: +$${generatedPayout} Cash.`, colorTheme, () => {
+                generateNewRestaurantOrder();
+            });
+        }
+
+
         function initGame() {
             canvas = document.getElementById('runnerCanvas');
             ctx = canvas.getContext('2d');
@@ -1521,7 +1741,7 @@
             jetBullets = []; jetAliens = []; jetScore = 0;
             fpVelocity = 0; fpPipes = []; fpFrameCounter = 0;
 
-            if (currentGameMode === "burger" || currentGameMode === "guess") {
+            if (currentGameMode === "burger" || currentGameMode === "guess" || currentGameMode === "restaurant") {
                 canvas.classList.add('hidden');
                 if(currentGameMode === "burger") { burgerGamePanel.classList.remove('hidden'); initBurgerGame(); }
                 return;
@@ -1551,26 +1771,26 @@
             }
 
             window.onkeydown = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant"].includes(currentGameMode)) return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
             };
             window.onkeyup = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant"].includes(currentGameMode)) return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
             };
 
             canvas.ontouchstart = (e) => {
                 if(currentGameMode === "flappy") { fpVelocity = fpJump; return; }
-                if(["farm", "burger", "guess", "chen"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "chen", "restaurant"].includes(currentGameMode)) return;
                 let rect = canvas.getBoundingClientRect();
                 let touchX = e.touches[0].clientX - rect.left;
                 if(touchX < canvas.width / 2) runner.moveLeft = true;
                 else runner.moveRight = true;
             };
             canvas.ontouchend = () => {
-                if(["farm", "burger", "guess", "flappy", "chen"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant"].includes(currentGameMode)) return;
                 runner.moveLeft = false; runner.moveRight = false;
             };
 
@@ -1802,7 +2022,7 @@
 
 
         function gameLoop() {
-            if(!gameRunning || currentGameMode === "burger" || currentGameMode === "guess") return;
+            if(!gameRunning || ["burger", "guess", "restaurant"].includes(currentGameMode)) return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
             if (currentGameMode === "jet") {
