@@ -45,19 +45,6 @@
             font-size: 1.1rem;
         }
 
-        .how-to-play-btn {
-            background: none;
-            border: none;
-            color: #2ed573;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: bold;
-            padding: 0;
-            text-align: left;
-            text-decoration: underline;
-            outline: none;
-        }
-
         .cash-display {
             background-color: #ff4757;
             color: white;
@@ -238,50 +225,6 @@
             align-items: center;
             justify-content: center;
             z-index: 200;
-        }
-
-        .modal-content {
-            background-color: #1e1e1e;
-            border: 2px solid #ff4757;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 360px;
-            padding: 25px;
-            box-sizing: border-box;
-            text-align: left;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .modal-content h3 {
-            color: #ff4757;
-            margin-top: 0;
-            font-size: 1.4rem;
-            text-align: center;
-        }
-
-        .modal-content ol {
-            color: #ffffff;
-            padding-left: 20px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .modal-content ol li {
-            margin-bottom: 10px;
-        }
-
-        .close-modal-btn {
-            background-color: #2ed573;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 15px;
-            outline: none;
         }
 
         .farm-action-bubble {
@@ -618,7 +561,6 @@
             color: white !important;
         }
 
-        /* RESTAURANT REHAUL */
         .restaurant-panel {
             width: 100%;
             max-width: 400px;
@@ -840,7 +782,6 @@
     <div class="header-board">
         <div class="shop-title-container">
             <span class="shop-title">🛠️ Xdragon Web Shop</span>
-            <button class="how-to-play-btn" id="how-to-play-btn">Gameplay Manual</button>
         </div>
         <span class="cash-display">💰 Cash: $<span id="cash-amount">0</span></span>
     </div>
@@ -922,24 +863,6 @@
         <div class="game-column" style="border: 1px solid #54a0ff; flex: 1 1 100%;">
             <p class="game-section-title" style="color: #54a0ff;">CLOUDE RESTAURANT</p>
             <button class="play-trigger-btn" id="launch-restaurant-btn" style="color: #54a0ff;">🧑‍🍳 START COOKING</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay hidden" id="tutorial-modal">
-        <div class="modal-content">
-            <h3>🎮 GAMEPLAY MANUAL</h3>
-            <ol>
-                <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
-                <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding green bushes. One hit forces a train chase!</li>
-                <li><b>FARM GAME:</b> Click the Wheat Field or an unlocked Pet plot. Actions remain persistent until manually swapped!</li>
-                <li><b>BURGER BOMB BATTLE:</b> Plant 3 landmines, then look for safe tiles. Avoid setting off enemy hazards!</li>
-                <li><b>JET SHOOTER:</b> Pilot a fighter plane at the bottom. Shoot ascending alien streams for +$10 cash per execution!</li>
-                <li><b>CHEN CHEN MAZE:</b> Click open paths to slide instantly to the end of the corridor lane. Dodge the fast-tracking ghost! Coins are registered along the path instantly.</li>
-                <li><b>FLAPPY PLANE:</b> Touch/Click to flap upward and cross volatile columns. Earnings map onto clearance score parameters.</li>
-                <li><b>GUESS A NUMBER:</b> Select your hidden number target code and guess your opponent's matrix block before your ammo cycles deplete!</li>
-                <li><b>CLOUDE RESTAURANT:</b> Look at the customer order ticket, tap ingredients to prepare them, and click DONE? to serve and receive cash!</li>
-            </ol>
-            <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
     </div>
 
@@ -1173,15 +1096,8 @@
         const launchGuessBtn = document.getElementById('launch-guess-btn');
         const launchRestaurantBtn = document.getElementById('launch-restaurant-btn');
 
-        const howToPlayBtn = document.getElementById('how-to-play-btn');
-        const tutorialModal = document.getElementById('tutorial-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-
         cashEl.innerText = cash;
         loadFarmProgress(); 
-
-        howToPlayBtn.addEventListener('click', () => tutorialModal.classList.remove('hidden'));
-        closeModalBtn.addEventListener('click', () => tutorialModal.classList.add('hidden'));
 
         function triggerCustomNotification(message, borderHex, callback) {
             const overlay = document.getElementById('custom-notification-module');
@@ -1295,7 +1211,6 @@
                 });
             }
         }
-
 
         document.getElementById('burger-mode-bot-btn').onclick = () => {
             if(burgerGameActive && (playerBombs.length > 0 || enemyBombs.length > 0)) return;
@@ -1547,7 +1462,6 @@
         document.getElementById('burger-retry-btn').onclick = () => initBurgerGame();
         document.getElementById('burger-exit-btn').onclick = () => handleExitToShop();
 
-
         document.getElementById('guess-mode-bot-btn').onclick = () => { guessMode = "bot"; initGuessGame(); };
         document.getElementById('guess-mode-mp-btn').onclick = () => { guessMode = "multiplayer"; initGuessGame(); };
 
@@ -1757,8 +1671,6 @@
             }
         }
 
-
-        /* UPDATED RESTAURANT GAME ENGINE */
         function initRestaurantGame() {
             restaurantOrdersCompleted = 0;
             document.getElementById('distance-val').innerText = restaurantOrdersCompleted;
@@ -1841,7 +1753,6 @@
                 generateNewRestaurantOrder();
             });
         }
-
 
         function initGame() {
             canvas = document.getElementById('runnerCanvas');
@@ -2130,7 +2041,6 @@
             }
             if (!slotFound) triggerCustomNotification("🚧 No open, unlocked plots available!", "#ffa502");
         }
-
 
         function gameLoop() {
             if(!gameRunning || ["burger", "guess", "restaurant"].includes(currentGameMode)) return;
