@@ -67,31 +67,11 @@
             font-size: 1rem;
         }
 
-        /* Language Selector Style */
-        .lang-container {
-            width: 100%;
-            max-width: 420px;
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 10px;
-        }
-
-        .lang-select {
-            background-color: #1e1e1e;
-            color: #ffffff;
-            border: 2px solid #ff4757;
-            padding: 5px 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            outline: none;
-            cursor: pointer;
-        }
-
         .card {
             background-color: #1e1e1e;
             width: 100%;
             max-width: 420px;
-            margin-top: 15px;
+            margin-top: 25px;
             border-radius: 20px;
             padding: 30px 20px;
             display: flex;
@@ -219,7 +199,7 @@
             display: flex;
             gap: 15px;
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             justify-content: space-between;
             align-items: center;
         }
@@ -638,6 +618,7 @@
             color: white !important;
         }
 
+        /* RESTAURANT REHAUL */
         .restaurant-panel {
             width: 100%;
             max-width: 400px;
@@ -664,10 +645,10 @@
 
         .restaurant-ingredient-strip {
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 4px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
             background-color: #151515;
-            padding: 6px;
+            padding: 8px;
             border-radius: 6px;
             margin-bottom: 15px;
         }
@@ -675,16 +656,17 @@
         .restaurant-ingredient-bin {
             background-color: #2f3542;
             border: 1px solid #57606f;
-            border-radius: 4px;
-            padding: 8px 0;
-            font-size: 1.3rem;
+            border-radius: 6px;
+            padding: 10px 0;
+            font-size: 1.4rem;
             text-align: center;
             cursor: pointer;
-            transition: background-color 0.1s;
+            transition: background-color 0.1s, transform 0.1s;
         }
 
         .restaurant-ingredient-bin:hover {
             background-color: #54a0ff;
+            transform: scale(1.05);
         }
 
         .restaurant-center-stage {
@@ -702,41 +684,86 @@
 
         .restaurant-chef-avatar {
             font-size: 2.5rem;
-            animation: bounce ChefAnim 2s infinite alternate;
         }
 
         .restaurant-order-ticket {
             background-color: #f1c40f;
             color: #121212;
-            padding: 8px 12px;
+            padding: 10px 14px;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 0.9rem;
-            max-width: 60%;
-            border-left: 4px solid #e67e22;
+            font-size: 1.05rem;
+            max-width: 65%;
+            border-left: 5px solid #e67e22;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
         .restaurant-mixing-bowl {
             width: 100%;
             background-color: #151515;
-            border: 1px dashed #747d8c;
-            padding: 10px;
+            border: 2px dashed #747d8c;
+            padding: 12px;
             border-radius: 6px;
             box-sizing: border-box;
-            min-height: 45px;
-            font-size: 1.2rem;
-            letter-spacing: 3px;
+            min-height: 50px;
+            font-size: 1.3rem;
+            letter-spacing: 4px;
             text-align: center;
             margin-bottom: 15px;
+        }
+
+        .restaurant-recipe-book {
+            width: 100%;
+            background-color: #1c222e;
+            border: 1px solid #34495e;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .restaurant-recipe-book h4 {
+            margin: 0 0 6px 0;
+            color: #54a0ff;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .recipe-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+
+        .recipe-row {
+            display: flex;
+            justify-content: space-between;
+            background-color: #151b26;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .recipe-name {
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .restaurant-control-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
         }
 
         .restaurant-done-btn {
             background-color: #2ed573;
             color: white;
             border: none;
-            width: 100%;
-            padding: 12px;
+            flex: 2;
+            padding: 14px;
             font-size: 1.1rem;
             font-weight: bold;
             border-radius: 8px;
@@ -747,6 +774,24 @@
 
         .restaurant-done-btn:hover {
             background-color: #26af5f;
+        }
+
+        .restaurant-clear-btn {
+            background-color: #747d8c;
+            color: white;
+            border: none;
+            flex: 1;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+            text-transform: uppercase;
+        }
+
+        .restaurant-clear-btn:hover {
+            background-color: #57606f;
         }
 
         .notification-overlay {
@@ -774,6 +819,7 @@
             font-weight: bold;
             margin-bottom: 15px;
             color: #ffffff;
+            white-space: pre-line;
         }
 
         .notification-ok-btn {
@@ -791,19 +837,12 @@
 </head>
 <body>
 
-    <div class="lang-container">
-        <select class="lang-select" id="lang-toggle-select" onchange="changeLanguageSystem(this.value)">
-            <option value="en">🌐 English</option>
-            <option value="tl">🌐 Tagalog</option>
-        </select>
-    </div>
-
     <div class="header-board">
         <div class="shop-title-container">
-            <span class="shop-title" id="text-shop-title">🛠️ Xdragon Web Shop</span>
+            <span class="shop-title">🛠️ Xdragon Web Shop</span>
             <button class="how-to-play-btn" id="how-to-play-btn">Gameplay Manual</button>
         </div>
-        <span class="cash-display"><span id="text-cash-prefix">💰 Cash:</span> $<span id="cash-amount">0</span></span>
+        <span class="cash-display">💰 Cash: $<span id="cash-amount">0</span></span>
     </div>
 
     <div id="custom-notification-module" class="modal-overlay hidden">
@@ -836,8 +875,8 @@
                 </g>
             </svg>
         </div>
-        <div class="product-title" id="text-prod-title">Strawberry Elephant</div>
-        <div class="description" id="text-prod-desc">
+        <div class="product-title">Strawberry Elephant</div>
+        <div class="description">
             A super rare tool for your game inventory!<br>Survive lasers or outrun trains to stack cash.
         </div>
         <div class="price-tag">💰 $25,000</div>
@@ -847,50 +886,59 @@
 
     <div class="game-menu-container">
         <div class="game-column">
-            <p class="game-section-title" id="title-game-laser">LASER GAME</p>
-            <button class="play-trigger-btn btn-play-label" id="launch-laser-btn">PLAY</button>
+            <p class="game-section-title">LASER GAME</p>
+            <button class="play-trigger-btn" id="launch-laser-btn">PLAY</button>
         </div>
         <div class="game-column">
-            <p class="game-section-title" id="title-game-train">TRAIN GAME</p>
-            <button class="play-trigger-btn btn-play-label" id="launch-train-btn">PLAY</button>
+            <p class="game-section-title">TRAIN GAME</p>
+            <button class="play-trigger-btn" id="launch-train-btn">PLAY</button>
         </div>
         <div class="game-column">
-            <p class="game-section-title" id="title-game-farm">FARM GAME</p>
+            <p class="game-section-title">FARM GAME</p>
             <button class="play-trigger-btn" id="launch-farm-btn">🌾 PLAY</button>
         </div>
         <div class="game-column">
-            <p class="game-section-title" id="title-game-burger">BURGER BOMB</p>
+            <p class="game-section-title">BURGER BOMB</p>
             <button class="play-trigger-btn" id="launch-burger-btn">🍔 PLAY</button>
         </div>
 
         <div class="game-column" style="border: 1px solid #00d2d3;">
-            <p class="game-section-title" id="title-game-jet" style="color: #00d2d3;">JET SHOOTER</p>
-            <button class="play-trigger-btn btn-play-label" id="launch-jet-btn" style="color: #00d2d3;">🚀 PLAY</button>
+            <p class="game-section-title" style="color: #00d2d3;">JET SHOOTER</p>
+            <button class="play-trigger-btn" id="launch-jet-btn" style="color: #00d2d3;">🚀 PLAY</button>
         </div>
         <div class="game-column" style="border: 1px solid #ff4757;">
-            <p class="game-section-title" id="title-game-chen" style="color: #ff4757;">CHEN CHEN MAZE</p>
-            <button class="play-trigger-btn btn-play-label" id="launch-chen-btn" style="color: #ff4757;">👻 PLAY</button>
+            <p class="game-section-title" style="color: #ff4757;">CHEN CHEN MAZE</p>
+            <button class="play-trigger-btn" id="launch-chen-btn" style="color: #ff4757;">👻 PLAY</button>
         </div>
         <div class="game-column" style="border: 1px solid #f1c40f;">
-            <p class="game-section-title" id="title-game-flappy" style="color: #f1c40f;">FLAPPY PLANE</p>
-            <button class="play-trigger-btn btn-play-label" id="launch-flappy-btn" style="color: #f1c40f;">🛩️ PLAY</button>
+            <p class="game-section-title" style="color: #f1c40f;">FLAPPY PLANE</p>
+            <button class="play-trigger-btn" id="launch-flappy-btn" style="color: #f1c40f;">🛩️ PLAY</button>
         </div>
         <div class="game-column" style="border: 1px solid #2ed573;">
-            <p class="game-section-title" id="title-game-guess" style="color: #2ed573;">GUESS NUMBER</p>
-            <button class="play-trigger-btn btn-play-label" id="launch-guess-btn" style="color: #2ed573;">🔮 PLAY</button>
+            <p class="game-section-title" style="color: #2ed573;">GUESS NUMBER</p>
+            <button class="play-trigger-btn" id="launch-guess-btn" style="color: #2ed573;">🔮 PLAY</button>
         </div>
         
         <div class="game-column" style="border: 1px solid #54a0ff; flex: 1 1 100%;">
-            <p class="game-section-title" id="title-game-restaurant" style="color: #54a0ff;">CLOUDE RESTAURANT</p>
+            <p class="game-section-title" style="color: #54a0ff;">CLOUDE RESTAURANT</p>
             <button class="play-trigger-btn" id="launch-restaurant-btn" style="color: #54a0ff;">🧑‍🍳 START COOKING</button>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="tutorial-modal">
         <div class="modal-content">
-            <h3 id="modal-manual-title">🎮 GAMEPLAY MANUAL</h3>
-            <ol id="modal-manual-list">
-                </ol>
+            <h3>🎮 GAMEPLAY MANUAL</h3>
+            <ol>
+                <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
+                <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding green bushes. One hit forces a train chase!</li>
+                <li><b>FARM GAME:</b> Click the Wheat Field or an unlocked Pet plot. Actions remain persistent until manually swapped!</li>
+                <li><b>BURGER BOMB BATTLE:</b> Plant 3 landmines, then look for safe tiles. Avoid setting off enemy hazards!</li>
+                <li><b>JET SHOOTER:</b> Pilot a fighter plane at the bottom. Shoot ascending alien streams for +$10 cash per execution!</li>
+                <li><b>CHEN CHEN MAZE:</b> Click open paths to slide instantly to the end of the corridor lane. Dodge the fast-tracking ghost! Coins are registered along the path instantly.</li>
+                <li><b>FLAPPY PLANE:</b> Touch/Click to flap upward and cross volatile columns. Earnings map onto clearance score parameters.</li>
+                <li><b>GUESS A NUMBER:</b> Select your hidden number target code and guess your opponent's matrix block before your ammo cycles deplete!</li>
+                <li><b>CLOUDE RESTAURANT:</b> Look at the customer order ticket, tap ingredients to prepare them, and click DONE? to serve and receive cash!</li>
+            </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
     </div>
@@ -946,31 +994,58 @@
         </div>
 
         <div class="restaurant-panel hidden" id="restaurant-panel">
+            <div class="restaurant-recipe-book">
+                <h4>📜 Recipe Cheatsheet</h4>
+                <div class="recipe-grid">
+                    <div class="recipe-row"><span class="recipe-name">🍟 Fries:</span><span>🥔 + 🍶</span></div>
+                    <div class="recipe-row"><span class="recipe-name">🥪 Sandwich:</span><span>🍞 + 🥦 + 🥕 + 🥬 + 🥑</span></div>
+                    <div class="recipe-row"><span class="recipe-name">🌮 Tacos:</span><span>🫓 + 🌰 + 🍋 + 🍖 + 🥒</span></div>
+                    <div class="recipe-row"><span class="recipe-name">🍜 Ramen:</span><span>🍥 + 🫔 + 🍡 + 🥡 + 🥢 + 🥚</span></div>
+                    <div class="recipe-row"><span class="recipe-name">🍕 Pizza:</span><span>🫓 + 🫓 + 🍤 + 🌶</span></div>
+                </div>
+            </div>
+
             <div class="restaurant-kitchen-bench">
                 <div class="restaurant-ingredient-strip">
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥔')">🥔</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍶')">🍶</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍞')">🍞</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥦')">🥦</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥕')">🥕</div>
                     <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥬')">🥬</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('💧')">💧</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🧀')">🧀</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥒')">🥒</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🧊')">🧊</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍅')">🍅</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🧅')">🧅</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥑')">🥑</div>
                     <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🫓')">🫓</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🌰')">🌰</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍋')">🍋</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍖')">🍖</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥒')">🥒</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍥')">🍥</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🫔')">🫔</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍡')">🍡</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥡')">🥡</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥢')">🥢</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥚')">🥚</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍤')">🍤</div>
+                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🌶')">🌶</div>
                 </div>
                 <div class="restaurant-center-stage">
                     <div class="restaurant-chef-avatar">👨‍🍳</div>
                     <div class="restaurant-order-ticket" id="restaurant-order-display">Order: Loading...</div>
                 </div>
             </div>
-            <div id="text-ingredient-label" style="align-self: flex-start; margin-bottom: 5px; color: #a4b0be; font-size: 0.85rem; font-weight: bold;">Ingredients:</div>
+            <div style="align-self: flex-start; margin-bottom: 5px; color: #a4b0be; font-size: 0.85rem; font-weight: bold;">Mixing Bowl Ingredients:</div>
             <div class="restaurant-mixing-bowl" id="restaurant-bowl-display"></div>
-            <button class="restaurant-done-btn" id="btn-restaurant-serve" onclick="serveRestaurantOrder()">Done?</button>
+            
+            <div class="restaurant-control-row">
+                <button class="restaurant-clear-btn" onclick="clearRestaurantBowl()">Clear</button>
+                <button class="restaurant-done-btn" onclick="serveRestaurantOrder()">Done?</button>
+            </div>
         </div>
 
         <div id="farm-ui-bubble-container" style="margin-top: 15px; min-height: 50px; display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; max-width: 360px;"></div>
         
         <div class="farm-shop-container hidden" id="farm-shop-panel">
-            <div class="farm-shop-title" id="text-farm-market-title">🚜 PET MARKET</div>
+            <div class="farm-shop-title">🚜 PET MARKET</div>
             <div class="farm-shop-grid">
                 <div class="farm-shop-item" onclick="buyFarmPet('🐕', 5)">
                     <span class="farm-shop-emoji">🐕</span><span>$5</span>
@@ -1003,366 +1078,6 @@
     </div>
 
     <script>
-        // Language System Dictionary Database
-        let currentLang = "en";
-        const langData = {
-            en: {
-                shopTitle: "🛠️ Xdragon Web Shop",
-                manualBtn: "Gameplay Manual",
-                cashPrefix: "💰 Cash:",
-                buyBtn: "BUY PRODUCT",
-                prodTitle: "Strawberry Elephant",
-                prodDesc: "A super rare tool for your game inventory!<br>Survive lasers or outrun trains to stack cash.",
-                playLabel: "PLAY",
-                cookLabel: "🧑‍🍳 START COOKING",
-                manualTitle: "🎮 GAMEPLAY MANUAL",
-                manualList: [
-                    "<b>LASER GAME:</b> Dodge the falling red laser beams.",
-                    "<b>TRAIN GAME:</b> Collect falling gold coins while avoiding green bushes. One hit forces a train chase!",
-                    "<b>FARM GAME:</b> Click the Wheat Field or an unlocked Pet plot. Actions remain persistent until manually swapped!",
-                    "<b>BURGER BOMB BATTLE:</b> Plant 3 landmines, then look for safe tiles. Avoid setting off enemy hazards!",
-                    "<b>JET SHOOTER:</b> Pilot a fighter plane at the bottom. Shoot ascending alien streams for +$10 cash per execution!",
-                    "<b>CHEN CHEN MAZE:</b> Click open paths to slide instantly to the end of the corridor lane. Dodge the fast-tracking ghost! Coins are registered along the path instantly.",
-                    "<b>FLAPPY PLANE:</b> Touch/Click to flap upward and cross volatile columns. Earnings map onto clearance score parameters.",
-                    "<b>GUESS A NUMBER:</b> Select your hidden number target code and guess your opponent's matrix block before your ammo cycles deplete!",
-                    "<b>CLOUDE RESTAURANT:</b> Look at the customer order ticket, tap ingredients to prepare them, and click DONE? to serve and receive cash!"
-                ],
-                gotIt: "GOT IT!",
-                exitBtn: "EXIT",
-                botMatch: "🤖 BOT MATCH",
-                localPvp: "👥 LOCAL PVP",
-                burgerSetupBanner: "Setup: Select 3 Burgers to hide your bombs!",
-                burgerReadyLog: "System Ready. Please setup your board fields.",
-                burgerRadarBtn: "🧐 Buy Intel Radar (-$1500 Cash)",
-                burgerSetupTitle: "🎯 Setup Phase",
-                burgerFinished: "MATCH FINISHED!",
-                rematch: "Rematch",
-                leave: "Leave",
-                botGuess: "🤖 BOT GUESS",
-                localDuel: "👥 LOCAL 1v1 DUEL",
-                guessSetupBanner: "Setting setup target...",
-                guessAttemptsLog: "Attempts Remaining: 5",
-                ingredientLabel: "Ingredients:",
-                serveBtn: "Done?",
-                petMarketTitle: "🚜 PET MARKET",
-                insufficientFunds: "🚨 Insufficient Funds! You need $25,000 Cash.",
-                insufficientRadar: "🚨 Intel Radar costs $1,500!",
-                radarFound: "🧐 Threat tracker updated! Hazard highlighted in Yellow.",
-                farmNoPlot: "🚧 No open, unlocked plots available!",
-                farmEnterFirst: "Enter Farm Game first!",
-                farmUnlockCost: "🔓 Unlock Plot #{num}? (Costs $150 Cash)",
-                farmUnlockRequire: "🚨 Requires $150 Cash!",
-                farmFeedBtn: "🍖 Feed standard Wheat to Level {lv} {pet}",
-                farmOutWheat: "🚨 Out of wheat! Click the golden Wheat Field to harvest some crops first.",
-                farmHarvestBtn: "🌾 Harvest Crop / Gather Wheat (+1 Stack)",
-                farmPlotEmpty: "Plot #{num} is empty. Buy a Pet from the market below!",
-                farmPlotLocked: "🔒 Plot {num}",
-                farmEmptySlot: "Plot {num} Empty",
-                baseInfiltrated: "🚨 BASE DEFENSE INFILTRATED!",
-                flightTerminated: "💥 FLIGHT TERMINATED!",
-                boundsCrash: "💥 BOUNDS CRASH BOUNDARY!",
-                laserCrashed: "💥 CRASHED!\n\nDistance Cleared: {dist}\nEarned: +${dist}",
-                trainChased: "🚂 CHASED DOWN BY TRAIN!",
-                trainCollision: "🚂 TRAIN COLLISION STATE TARGETED!",
-                burgerBotSetupInst: "Setup: Select 3 Burgers to hide your bombs!",
-                burgerP1SetupInst: "Player 1 Setup: Select 3 Burgers for your bombs!",
-                burgerSetupLogP1: "Setup: Click 3 tiles to plant your Landmines!",
-                burgerP1SetupMap: "🛠️ P1 Setup Map",
-                burgerP2SetupMap: "🛠️ P2 Setup Map",
-                burgerP1AttackGrid: "🎯 You Attacking Grid",
-                burgerP1AttackGridMP: "🎯 Player 1 Attacking Grid",
-                burgerP2AttackGrid: "🎯 Bot Attacking Grid",
-                burgerP2AttackGridMP: "🎯 Player 2 Attacking Grid",
-                burgerCommencedLog: "Match Commenced! Choose an attacking target slot.",
-                burgerBotBattleInst: "BATTLE! Attack the Bot's field!",
-                burgerP1BattleInst: "Player 1 Turn: Attack target!",
-                burgerP2BattleInst: "Player 2: Choose 3 locations to place your secret mines.",
-                burgerBoomLog: "💥 BOOM! You hit Bot's Mine at Slot #{idx}!",
-                burgerBoomLogMP: "💥 BOOM! Player 2 struck Player 1's mine at Slot #{idx}!",
-                burgerSafeLog: "✅ Safe Tile Discovered at Slot #{idx}!",
-                burgerExplodeNotif: "💥 EXPLOSION!\n\nYou blew up your own health at Slot #{idx}!",
-                burgerExplodeNotifP2: "💥 EXPLOSION!\n\nPlayer 2 hit a bomb at Slot #{idx}!",
-                burgerSafeNotif: "✅ SAFE!\n\nSlot #{idx} is clear of explosives.",
-                burgerBotScanning: "🤖 Bot scanning...",
-                burgerP2ClickInst: "Player 2 Turn: Click target!",
-                burgerBotDetonated: "💥 Enemy Action: Bot detonated your Mine at Slot #{idx}!",
-                burgerBotAttackNotif: "💥 BOT ATTACK!\n\nThe Bot blew itself up on your bomb at Slot #{idx}!",
-                burgerBotSwept: "🤖 Enemy Action: Bot swept your safe tile at Slot #{idx}.",
-                burgerBotMissNotif: "✅ BOT MISSED!\n\nThe Bot selected safe Slot #{idx}.",
-                burgerBotTurnInst: "Your Turn! Launch attack!",
-                burgerWinReward: "🏆 YOU WIN! (+$500 Reward)",
-                burgerLosePenalty: "💀 YOU LOSE! (-$500 Penalty)",
-                burgerP1Win: "👑 PLAYER 1 WINS!",
-                burgerP2Win: "👑 PLAYER 2 WINS!",
-                guessBotChoice: "Choose your secret number (1 - 100) for the bot to guess!",
-                guessWaitChoice: "Waiting for your number choice...",
-                guessP1SelectHide: "Player 1: Select your secret number to hide!",
-                guessP1ChoicePending: "Player 1 Choice Pending...",
-                guessCrackTarget: "Crack the Bot's Target! Your Turns are Blinded.",
-                guessYourSecret: "Your secret number: {secret}. Attempts: {att}",
-                guessConfirmedNotif: "Secret Confirmed!\n\nYou locked in {secret}. The Bot has locked in its number. Start guessing!",
-                guessP2SelectHide2: "Player 2: Select your secret number to hide!",
-                guessP2Pending: "Player 2 Choice Pending...",
-                guessP1ConfirmedNotif: "Player 1 Code Confirmed!\n\nHand device over to Player 2 now.",
-                guessP1GuessP2Target: "Player 1 Turn: Guess Player 2's target!",
-                guessAttemptsRem: "Attempts Remaining: {att}",
-                guessP2ConfirmedNotif2: "Player 2 Code Confirmed!\n\nPlayer 1, prepare to make your first guess.",
-                guessWinMatchedNotif: "🎉 YOU WIN!\n\nYou matched the bot's target ({target}) first! Earned +$1,500 Cash!",
-                guessBotWinNotif: "💀 BOT WINS!\n\nYou ran out of turns. Bot's target was: {target}. Penalized -$1,500 Cash.",
-                guessDrawMatchNotif: "💀 DRAW MATCH!\n\nNo available attempts remaining.\nTargets: P1 [{p1}] | P2 [{p2}]",
-                guessP2TurnInst: "Player 2 Turn: Guess Player 1's target!",
-                guessP2TurnSetupLog: "P2 Turn Setup. Player 2 Attempts Left: {att}",
-                guessMissedNotif: "❌ MISSED!\n\nPlayer 1 guessed {guess}, which is {hint}.\n\nHand device to Player 2.",
-                guessP1WinMP: "🎉 PLAYER 1 WINS!\n\nSuccessfully matched Player 2's target core code: {target}!",
-                guessP2WinMP: "🎉 PLAYER 2 WINS!\n\nSuccessfully matched Player 1's target core code: {target}!",
-                guessMissedNotif2: "❌ MISSED!\n\nPlayer 2 guessed {guess}, which is {hint}.\n\nHand device to Player 1.",
-                guessP1TurnSetupLog: "P1 Turn Setup. Player 1 Attempts Left: {att}",
-                guessBotWinCorrect: "💀 BOT WINS!\n\nThe bot guessed your number {secret} correctly! Penalized -$1,500 Cash.",
-                guessBotFailed: "🎉 YOU WIN!\n\nThe Bot failed all guesses! Target was uncracked. Earned +$1,500 Cash!",
-                guessHigher: "HIGHER ⬆️",
-                guessLower: "LOWER ⬇️",
-                guessBotTooHigher: "🤖 Bot guessed {guess} (Too higher!)",
-                guessBotTooLower: "🤖 Bot guessed {guess} (Too lower!)",
-                guessTurnLeftLog: "Your last guess was {dir}. {feedback} | Turns Left: {att}",
-                restBowlEmpty: "[Empty Mixing Bowl]",
-                restOrderDisplay: "Order: {order}",
-                restPerfect: "✨ PERFECT RECIPE!\n\nThe customer loved your beautifully cooked {order}!",
-                restWrong: "🤢 WRONG INGREDIENTS!\n\nYou scrambled the recipe requirements for the {order}.",
-                restEarnings: "{status}\n\nEarnings Received: +${pay} Cash.",
-                hintLaser: "Tap Left / Right sides of the screen to steer horizontally.",
-                hintTrain: "Dodge bushes! One hit triggers an active train chase.",
-                hintFarm: "Click on objects inside the canvas grid directly to load interactions.",
-                hintBurger: "Deduce tile hazards and find safe locations across the grid field!",
-                hintJet: "Tap screen sides to steer. Jet fires auto-projectiles constantly.",
-                hintChen: "Click open orthogonal paths to slide safely to the wall. Run from the ghost tracker!",
-                hintFlappy: "Tap screen continuously to gain flight lift. Avoid cross columns!",
-                hintGuess: "Choose numbers from the grid matrix. Match the hidden random value!",
-                hintRest: "Click items on the strip bench to add ingredients. Finish up by tapping Done!?",
-                caughtChen: "💀 CAUGHT BY CHEN CHEN!\n\nYou were trapped inside the maze core matrix.",
-                trainClose: "⚠️ Train Close! {sec}s",
-                scoreLabel: "Score: ",
-                coinsLabel: "Coins: ",
-                wheatInvLabel: "🌾 Wheat Inventory: ",
-                burgerArenaLabel: "🍔 Burger Bomb Arena",
-                aliensLabel: "Aliens Obliterated: ",
-                coinsKeptLabel: "Coins Kept: ",
-                altScoreLabel: "Altitude Score: ",
-                secretNumLabel: "🔮 Guess The Secret Number",
-                orderServedLabel: "Orders Served: "
-            },
-            tl: {
-                shopTitle: "🛠️ Tindahan ni Xdragon",
-                manualBtn: "Gabay sa Paglalaro",
-                cashPrefix: "💰 Pera:",
-                buyBtn: "BILHIN ANG ITEM",
-                prodTitle: "Strawberry Elephant",
-                prodDesc: "Napakabihirang kagamitan para sa iyong imbentaryo!<br>Iwasan ang mga laser o tren para magkapera.",
-                playLabel: "LARO",
-                cookLabel: "🧑‍🍳 MAGLUTO NA",
-                manualTitle: "🎮 GABAY SA PAGLALARO",
-                manualList: [
-                    "<b>LASER GAME:</b> Iwasan ang mga bumabagsak na pulang laser beam.",
-                    "<b>TRAIN GAME:</b> Kolektahin ang mga gintong barya habang iniiwasan ang berdeng halaman. Isang tama lang ay hahabulin ka na ng tren!",
-                    "<b>FARM GAME:</b> I-click ang Wheat Field o ang bukas na Pet plot. Mananatili ang aksyon hanggang sa palitan mo ito!",
-                    "<b>BURGER BOMB BATTLE:</b> Magtanim ng 3 landmines, tapos maghanap ng ligtas na tiles. Huwag matamaan ang bomba ng kalaban!",
-                    "<b>JET SHOOTER:</b> I-drive ang fighter plane sa ilalim. Barilin ang mga alien na pababa para sa dagdag na +$10 kada patay!",
-                    "<b>CHEN CHEN MAZE:</b> I-click ang mga bukas na daan para mabilis na mag-slide sa dulo. Takbuhan ang mabilis na mumo! Agad na makukuha ang barya sa madaanan.",
-                    "<b>FLAPPY PLANE:</b> I-click ang screen para lumipad pataas at umiwas sa mga humaharang na kolum.",
-                    "<b>GUESS A NUMBER:</b> Pumili ng iyong selyadong numero at hulaan ang target na numero ng iyong kalaban bago maubos ang bala!",
-                    "<b>CLOUDE RESTAURANT:</b> Tingnan ang order ng customer, i-tap ang mga sangkap para ihanda ito, at i-click ang Done? para iserve at kumita!"
-                ],
-                gotIt: "KUHA KO!",
-                exitBtn: "ALIS",
-                botMatch: "🤖 LABAN SA BOT",
-                localPvp: "👥 LOKAL NA PVP",
-                burgerSetupBanner: "Setup: Pumili ng 3 Burger para itago ang iyong mga bomba!",
-                burgerReadyLog: "Handa na ang System. Mangyaring i-setup ang iyong mga pwesto.",
-                burgerRadarBtn: "🧐 Bumili ng Intel Radar (-$1500 Pera)",
-                burgerSetupTitle: "🎯 Yugto ng Setup",
-                burgerFinished: "TAPOS NA ANG LABAN!",
-                rematch: "Maglaro Ulit",
-                leave: "Umalis",
-                botGuess: "🤖 BOT ANG HAHULA",
-                localDuel: "👥 LOKAL NA DUEL 1v1",
-                guessSetupBanner: "Inihahanda ang target...",
-                guessAttemptsLog: "Mga Natitirang Pagsubok: 5",
-                ingredientLabel: "Mga Sangkap:",
-                serveBtn: "Tapos na?",
-                petMarketTitle: "🚜 PAMILIHAN NG PET",
-                insufficientFunds: "🚨 Kulang ang Pera! Kailangan mo ng $25,000.",
-                insufficientRadar: "🚨 Ang halaga ng Intel Radar ay $1,500!",
-                radarFound: "🧐 Na-update ang tracker! May babala na kulay Dilaw.",
-                farmNoPlot: "🚧 Walang bakanteng lote na bukas ngayon!",
-                farmEnterFirst: "Pumasok muna sa Farm Game!",
-                farmUnlockCost: "🔓 Buksan ang Plot #{num}? (Nagkakahalaga ng $150)",
-                farmUnlockRequire: "🚨 Kailangan ng $150 na Pera!",
-                farmFeedBtn: "🍖 Pakainin ng Wheat ang Level {lv} {pet}",
-                farmOutWheat: "🚨 Naubusan ng wheat! I-click ang gintong Wheat Field para mag-ani muna.",
-                farmHarvestBtn: "🌾 Mag-ani ng Pananim / Kumuha ng Wheat (+1 Stack)",
-                farmPlotEmpty: "Walang laman ang Plot #{num}. Bumili ng Pet sa merkado sa ibaba!",
-                farmPlotLocked: "🔒 Lote {num}",
-                farmEmptySlot: "Lote {num} Walang Laman",
-                baseInfiltrated: "🚨 NASIRA ANG DEPENSA NG BASE!",
-                flightTerminated: "💥 BAGSAK ANG EROPLANO!",
-                boundsCrash: "💥 LUMAMPAS SA HANGGANAN!",
-                laserCrashed: "💥 NABANGGA!\n\nLayo na Narating: {dist}\nKinita: +${dist}",
-                trainChased: "🚂 NAHABOL AT NASAGASAAN NG TREN!",
-                trainCollision: "🚂 NAGBANGGAAN ANG TREN SA IYONG TARGET!",
-                burgerBotSetupInst: "Setup: Pumili ng 3 Burger para itago ang iyong mga bomba!",
-                burgerP1SetupInst: "Setup ng Player 1: Pumili ng 3 Burger para sa iyong bomba!",
-                burgerSetupLogP1: "Setup: I-click ang 3 tile para magtanim ng Landmines!",
-                burgerP1SetupMap: "🛠️ Mapa ng Setup ni P1",
-                burgerP2SetupMap: "🛠️ Mapa ng Setup ni P2",
-                burgerP1AttackGrid: "🎯 Grid na Inaatake Mo",
-                burgerP1AttackGridMP: "🎯 Grid na Inaatake ni Player 1",
-                burgerP2AttackGrid: "🎯 Grid na Inaatake ng Bot",
-                burgerP2AttackGridMP: "🎯 Grid na Inaatake ni Player 2",
-                burgerCommencedLog: "Nagsimula na ang Laban! Pumili ng target na puwang.",
-                burgerBotBattleInst: "LABAN NA! Atakehin ang field ng Bot!",
-                burgerP1BattleInst: "Turn ni Player 1: Atakehin ang target!",
-                burgerP2BattleInst: "Player 2: Pumili ng 3 lokasyon para sa iyong lihim na bomba.",
-                burgerBoomLog: "💥 SABOG! Natamaan mo ang Bomba ng Bot sa Puwang #{idx}!",
-                burgerBoomLogMP: "💥 SABOG! Natamaan ni Player 2 ang bomba ni Player 1 sa Puwang #{idx}!",
-                burgerSafeLog: "✅ Ligtas na Puwang ang nahanap sa Puwang #{idx}!",
-                burgerExplodeNotif: "💥 PAGSABOG!\n\nNabawasan ang buhay mo sa Puwang #{idx}!",
-                burgerExplodeNotifP2: "💥 PAGSABOG!\n\nNatamaan ni Player 2 ang bomba sa Puwang #{idx}!",
-                burgerSafeNotif: "✅ LIGTAS!\n\nAng Puwang #{idx} ay walang bomba.",
-                burgerBotScanning: "🤖 Nag-iisip ang Bot...",
-                burgerP2ClickInst: "Turn ni Player 2: I-click ang target!",
-                burgerBotDetonated: "💥 Galaw ng Kalaban: Pinasabog ng Bot ang iyong Bomba sa Puwang #{idx}!",
-                burgerBotAttackNotif: "💥 ATRIBO NG BOT!\n\nPinasabog ng Bot ang sarili nito sa bomba mo sa Puwang #{idx}!",
-                burgerBotSwept: "🤖 Galaw ng Kalaban: Sinuri ng Bot ang ligtas na puwang sa #{idx}.",
-                burgerBotMissNotif: "✅ NAGMINTIS ANG BOT!\n\nPumili ang Bot ng ligtas na Puwang #{idx}.",
-                burgerBotTurnInst: "Turn Mo Na! Lumunsad ng atake!",
-                burgerWinReward: "🏆 PANALO KA! (+$500 Gantimpala)",
-                burgerLosePenalty: "💀 TALO KA! (-$500 Parusa)",
-                burgerP1Win: "👑 SI PLAYER 1 ANG PANALO!",
-                burgerP2Win: "👑 SI PLAYER 2 ANG PANALO!",
-                guessBotChoice: "Pumili ng iyong lihim na numero (1 - 100) para hulaan ng bot!",
-                guessWaitChoice: "Inaantay ang iyong piniling numero...",
-                guessP1SelectHide: "Player 1: Pumili ng iyong lihim na numero na itatago!",
-                guessP1ChoicePending: "Nag-aantay sa Pili ni Player 1...",
-                guessCrackTarget: "Tuklasin ang Target ng Bot! Ang iyong Turns ay nakatago.",
-                guessYourSecret: "Lihim mong numero: {secret}. Pagsubok: {att}",
-                guessConfirmedNotif: "Kumpirmado na ang Lihim!\n\nNaitabi mo ang {secret}. Nag-lock na rin ng numero ang Bot. Hula na!",
-                guessP2SelectHide2: "Player 2: Pumili ng iyong lihim na numero na itatago!",
-                guessP2Pending: "Nag-aantay sa Pili ni Player 2...",
-                guessP1ConfirmedNotif: "Code ni Player 1 Kumpirmado!\n\nIpasa ang device sa Player 2 ngayon.",
-                guessP1GuessP2Target: "Turn ni Player 1: Hulaan ang target ni Player 2!",
-                guessAttemptsRem: "Mga Natitirang Pagsubok: {att}",
-                guessP2ConfirmedNotif2: "Code ni Player 2 Kumpirmado!\n\nPlayer 1, ihanda ang unang hula.",
-                guessWinMatchedNotif: "🎉 PANALO KA!\n\nNahulaan mo ang target ng bot ({target})! Nakakuha ng +$1,500 na Pera!",
-                guessBotWinNotif: "💀 PANALO ANG BOT!\n\nNaubusan ka ng turn. Ang target ng Bot ay: {target}. Nabawasan ng -$1,500.",
-                guessDrawMatchNotif: "💀 PATAS ANG LABAN!\n\nWalang natitirang pagsubok.\nTarget: P1 [{p1}] | P2 [{p2}]",
-                guessP2TurnInst: "Turn ni Player 2: Hulaan ang target ni Player 1!",
-                guessP2TurnSetupLog: "Setup ng Turn ni P2. Mga Natitirang Pagsubok ni P2: {att}",
-                guessMissedNotif: "❌ NAGMINTIS!\n\nHunulaan ni Player 1 ang {guess}, na mas {hint}.\n\nIbigay ang device sa Player 2.",
-                guessP1WinMP: "🎉 SI PLAYER 1 ANG PANALO!\n\nMatagumpay na nahulaan ang target code ni Player 2: {target}!",
-                guessP2WinMP: "🎉 SI PLAYER 2 ANG PANALO!\n\nMatagumpay na nahulaan ang target code ni Player 1: {target}!",
-                guessMissedNotif2: "❌ NAGMINTIS!\n\nHunulaan ni Player 2 ang {guess}, na mas {hint}.\n\nIbigay ang device sa Player 1.",
-                guessP1TurnSetupLog: "Setup ng Turn ni P1. Mga Natitirang Pagsubok ni P1: {att}",
-                guessBotWinCorrect: "💀 PANALO ANG BOT!\n\nNahulaan ng bot ang iyong numero na {secret}! Nabawasan ng -$1,500.",
-                guessBotFailed: "🎉 PANALO KA!\n\nBigo ang Bot sa lahat ng hula! Ligtas ang code mo. Bukas na +$1,500 Pera!",
-                guessHigher: "MATAAS ⬆️",
-                guessLower: "MABABA ⬇️",
-                guessBotTooHigher: "🤖 Hula ng Bot ay {guess} (Masyadong mataas!)",
-                guessBotTooLower: "🤖 Hula ng Bot ay {guess} (Masyadong mababa!)",
-                guessTurnLeftLog: "Ang huli mong hula ay {dir}. {feedback} | Pagsubok: {att}",
-                restBowlEmpty: "[Walang Laman ang Mangkok]",
-                restOrderDisplay: "Order: {order}",
-                restPerfect: "✨ PERPEKTONG RESIPE!\n\nNagustuhan ng customer ang iyong nilutong {order}!",
-                restWrong: "🤢 MALING SANGKAP!\n\nNagkamali ka sa mga kailangang sangkap para sa {order}.",
-                restEarnings: "{status}\n\nKinita na Nakuha: +${pay} na Pera.",
-                hintLaser: "I-tap ang Kaliwa / Kanang bahagi ng screen para gumalaw nang pahalang.",
-                hintTrain: "Iwasan ang mga halaman! Isang tama ay magpapasimula ng habulan ng tren.",
-                hintFarm: "I-click ang mga bagay sa loob ng grid para magbukas ng pakikipag-interak.",
-                hintBurger: "Alamin ang mga delikadong tile at maghanap ng ligtas na lokasyon sa grid!",
-                hintJet: "I-tap ang gilid ng screen para mag-steer. Awtomatikong nagbabaril ang jet.",
-                hintChen: "I-click ang mga bukas na orthogonal na daan para mag-slide. Takbuhan ang multo!",
-                hintFlappy: "I-click ang screen nang sunod-sunod para lumipad. Iwasan ang mga kolum!",
-                hintGuess: "Pumili ng mga numero sa grid. Tugmain ang nakatagong random na halaga!",
-                hintRest: "I-click ang mga aytem sa bench para magdagdag ng sangkap. I-tap ang Done!? kapag tapos na.",
-                caughtChen: "💀 NAHULI NI CHEN CHEN!\n\nNa-trap ka sa loob ng maze core matrix.",
-                trainClose: "⚠️ Malapit na ang Tren! {sec}s",
-                scoreLabel: "Puntos: ",
-                coinsLabel: "Mga Barya: ",
-                wheatInvLabel: "🌾 Imbentaryo ng Wheat: ",
-                burgerArenaLabel: "🍔 Arena ng Burger Bomb",
-                aliensLabel: "Alien na Napatay: ",
-                coinsKeptLabel: "Baryang Naitabi: ",
-                altScoreLabel: "Puntos sa Taas: ",
-                secretNumLabel: "🔮 Hulaan ang Lihim na Numero",
-                orderServedLabel: "Nasilbihang Order: "
-            }
-        };
-
-        // Execution logic hook update framework to inject real-time state engine modifications
-        function changeLanguageSystem(langKey) {
-            currentLang = langKey;
-            const dict = langData[langKey];
-
-            // Static UI updates
-            document.getElementById('text-shop-title').innerText = dict.shopTitle;
-            document.getElementById('how-to-play-btn').innerText = dict.manualBtn;
-            document.getElementById('text-cash-prefix').innerText = dict.cashPrefix;
-            document.getElementById('buy-btn').innerText = dict.buyBtn;
-            document.getElementById('text-prod-title').innerText = dict.prodTitle;
-            document.getElementById('text-prod-desc').innerHTML = dict.prodDesc;
-
-            document.getElementById('title-game-laser').innerText = dict.titleGameLaser || (langKey==='tl'?'LARONG LASER':'LASER GAME');
-            document.getElementById('title-game-train').innerText = dict.titleGameTrain || (langKey==='tl'?'LARONG TREN':'TRAIN GAME');
-            document.getElementById('title-game-farm').innerText = dict.titleGameFarm || (langKey==='tl'?'LARONG BUKID':'FARM GAME');
-            document.getElementById('title-game-burger').innerText = dict.titleGameBurger || (langKey==='tl'?'BURGER BOMB':'BURGER BOMB');
-            document.getElementById('title-game-jet').innerText = dict.titleGameJet || (langKey==='tl'?'JET SHOOTER':'JET SHOOTER');
-            document.getElementById('title-game-chen').innerText = dict.titleGameChen || (langKey==='tl'?'CHEN CHEN MAZE':'CHEN CHEN MAZE');
-            document.getElementById('title-game-flappy').innerText = dict.titleGameFlappy || (langKey==='tl'?'FLAPPY PLANE':'FLAPPY PLANE');
-            document.getElementById('title-game-guess').innerText = dict.titleGameGuess || (langKey==='tl'?'HULA NUMERO':'GUESS NUMBER');
-            document.getElementById('title-game-restaurant').innerText = dict.titleGameRestaurant || (langKey==='tl'?'RESTAURANT NI CLOUDE':'CLOUDE RESTAURANT');
-
-            const playButtons = document.querySelectorAll('.btn-play-label');
-            playButtons.forEach(btn => {
-                if(btn.id === 'launch-farm-btn') btn.innerText = "🌾 " + dict.playLabel;
-                else if(btn.id === 'launch-burger-btn') btn.innerText = "🍔 " + dict.playLabel;
-                else if(btn.id === 'launch-jet-btn') btn.innerText = "🚀 " + dict.playLabel;
-                else if(btn.id === 'launch-chen-btn') btn.innerText = "👻 " + dict.playLabel;
-                else if(btn.id === 'launch-flappy-btn') btn.innerText = "🛩️ " + dict.playLabel;
-                else if(btn.id === 'launch-guess-btn') btn.innerText = "🔮 " + dict.playLabel;
-                else if(btn.id === 'launch-restaurant-btn') btn.innerText = dict.cookLabel;
-                else btn.innerText = dict.playLabel;
-            });
-
-            // Help Modal Manual list compilation
-            document.getElementById('modal-manual-title').innerText = dict.manualTitle;
-            document.getElementById('close-modal-btn').innerText = dict.gotIt;
-            const listContainer = document.getElementById('modal-manual-list');
-            listContainer.innerHTML = "";
-            dict.manualList.forEach(itemText => {
-                let li = document.createElement('li');
-                li.innerHTML = itemText;
-                listContainer.appendChild(li);
-            });
-
-            // Subgame elements UI updates
-            document.getElementById('burger-mode-bot-btn').innerText = dict.botMatch;
-            document.getElementById('burger-mode-mp-btn').innerText = dict.localPvp;
-            document.getElementById('burger-hint-btn').innerText = dict.burgerRadarBtn;
-            document.getElementById('burger-retry-btn').innerText = dict.rematch;
-            document.getElementById('burger-exit-btn').innerText = dict.leave;
-            document.getElementById('guess-mode-bot-btn').innerText = dict.botGuess;
-            document.getElementById('guess-mode-mp-btn').innerText = dict.localPvp; // maps matching context profile
-            document.getElementById('text-ingredient-label').innerText = dict.ingredientLabel;
-            document.getElementById('btn-restaurant-serve').innerText = dict.serveBtn;
-            document.getElementById('text-farm-market-title').innerText = dict.petMarketTitle;
-            document.getElementById('exit-game-btn').innerText = dict.exitBtn;
-
-            // Dynamically refresh ongoing state configurations
-            if(gameRunning || burgerGameActive || currentGameMode) {
-                refreshFarmUIBubble();
-                updateBurgerStatsUI();
-                if(currentGameMode === "restaurant") renderRestaurantBowl();
-            }
-        }
-
         let cash = parseInt(localStorage.getItem("Xdragon_WebCash")) || 0; 
         let distance = 0;
         let gameRunning = false;
@@ -1464,7 +1179,6 @@
 
         cashEl.innerText = cash;
         loadFarmProgress(); 
-        changeLanguageSystem("en"); // Boot system into localization index base
 
         howToPlayBtn.addEventListener('click', () => tutorialModal.classList.remove('hidden'));
         closeModalBtn.addEventListener('click', () => tutorialModal.classList.add('hidden'));
@@ -1499,27 +1213,27 @@
             updateGlobalCash();
         }
 
-        launchLaserBtn.addEventListener('click', () => setupArcadeMode("laser", `${langData[currentLang].scoreLabel}<span id='distance-val'>000000</span>`, langData[currentLang].hintLaser));
-        launchTrainBtn.addEventListener('click', () => setupArcadeMode("train", `${langData[currentLang].coinsLabel}<span id='distance-val'>0</span> <span id='alert-timer-label' style='color:#ffa502; margin-left:15px;'></span>`, langData[currentLang].hintTrain));
+        launchLaserBtn.addEventListener('click', () => setupArcadeMode("laser", "Distance: <span id='distance-val'>000000</span>", "Tap Left / Right sides of the screen to steer horizontally."));
+        launchTrainBtn.addEventListener('click', () => setupArcadeMode("train", "Coins: <span id='distance-val'>0</span> <span id='alert-timer-label' style='color:#ffa502; margin-left:15px;'></span>", "Dodge bushes! One hit triggers an active train chase."));
         launchFarmBtn.addEventListener('click', () => {
-            setupArcadeMode("farm", `${langData[currentLang].wheatInvLabel}<span id='distance-val'>0</span>`, langData[currentLang].hintFarm);
+            setupArcadeMode("farm", "🌾 Wheat Inventory: <span id='distance-val'>0</span>", "Click on objects inside the canvas grid directly to load interactions.");
             farmShopPanel.classList.remove('hidden');
             document.getElementById('distance-val').innerText = wheatCount;
         });
         launchBurgerBtn.addEventListener('click', () => {
-            setupArcadeMode("burger", `<span style='color:#ff9f43;'>${langData[currentLang].burgerArenaLabel}</span>`, langData[currentLang].hintBurger);
+            setupArcadeMode("burger", "<span style='color:#ff9f43;'>🍔 Burger Bomb Arena</span>", "Deduce tile hazards and find safe locations across the grid field!");
             burgerGamePanel.classList.remove('hidden');
         });
-        launchJetBtn.addEventListener('click', () => setupArcadeMode("jet", `${langData[currentLang].aliensLabel}<span id='distance-val'>0</span>`, langData[currentLang].hintJet));
-        launchChenBtn.addEventListener('click', () => setupArcadeMode("chen", `${langData[currentLang].coinsKeptLabel}<span id='distance-val'>0</span>`, langData[currentLang].hintChen));
-        launchFlappyBtn.addEventListener('click', () => setupArcadeMode("flappy", `${langData[currentLang].altScoreLabel}<span id='distance-val'>0</span>`, langData[currentLang].hintFlappy));
+        launchJetBtn.addEventListener('click', () => setupArcadeMode("jet", "Aliens Obliterated: <span id='distance-val'>0</span>", "Tap screen sides to steer. Jet fires auto-projectiles constantly."));
+        launchChenBtn.addEventListener('click', () => setupArcadeMode("chen", "Coins Kept: <span id='distance-val'>0</span>", "Click open orthogonal paths to slide safely to the wall. Run from the ghost tracker!"));
+        launchFlappyBtn.addEventListener('click', () => setupArcadeMode("flappy", "Altitude Score: <span id='distance-val'>0</span>", "Tap screen continuously to gain flight lift. Avoid cross columns!"));
         launchGuessBtn.addEventListener('click', () => {
-            setupArcadeMode("guess", `<span style='color:#2ed573;'>${langData[currentLang].secretNumLabel}</span>`, langData[currentLang].hintGuess);
+            setupArcadeMode("guess", "<span style='color:#2ed573;'>🔮 Guess The Secret Number</span>", "Choose numbers from the grid matrix. Match the hidden random value!");
             guessGamePanel.classList.remove('hidden');
             initGuessGame();
         });
         launchRestaurantBtn.addEventListener('click', () => {
-            setupArcadeMode("restaurant", `${langData[currentLang].orderServedLabel}<span id='distance-val'>0</span>`, langData[currentLang].hintRest);
+            setupArcadeMode("restaurant", "Orders Served: <span id='distance-val'>0</span>", "Click items on the strip bench to add ingredients. Finish up by tapping Done!?");
             restaurantPanel.classList.remove('hidden');
             initRestaurantGame();
         });
@@ -1532,7 +1246,7 @@
             restaurantPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             currentSelectedFarmTarget = null;
-            modeStatLabel.innerHTML = statsHtml + ` <button class="exit-btn" id="exit-game-btn">${langData[currentLang].exitBtn}</button>`;
+            modeStatLabel.innerHTML = statsHtml + ' <button class="exit-btn" id="exit-game-btn">EXIT</button>';
             document.getElementById('exit-game-btn').addEventListener('click', handleExitToShop);
             controlHint.innerText = hintText;
             gameScreen.classList.remove('hidden');
@@ -1554,7 +1268,7 @@
                 let generatedCode = "XDRG-TOOL-" + secureToken;
                 codeOutput.innerText = "CODE: " + generatedCode;
                 codeOutput.classList.remove('hidden');
-            } else { triggerCustomNotification(langData[currentLang].insufficientFunds, "#ff4757"); }
+            } else { triggerCustomNotification("🚨 Insufficient Funds! You need $25,000 Cash.", "#ff4757"); }
         });
 
         function updateGlobalCash() {
@@ -1582,6 +1296,7 @@
             }
         }
 
+
         document.getElementById('burger-mode-bot-btn').onclick = () => {
             if(burgerGameActive && (playerBombs.length > 0 || enemyBombs.length > 0)) return;
             burgerMatchMode = "bot";
@@ -1604,14 +1319,14 @@
             burgerGameActive = true; burgerPhase = "setup-player1";
             document.getElementById('burger-end-overlay').classList.add('hidden');
             document.getElementById('unified-grid-container').style.opacity = "1";
-            document.getElementById('burger-action-log').innerText = langData[currentLang].burgerSetupLogP1;
+            document.getElementById('burger-action-log').innerText = "Setup: Click 3 tiles to plant your Landmines!";
             document.getElementById('burger-action-log').style.color = "#2ed573";
             
             if(burgerMatchMode === "bot") {
-                document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerBotSetupInst;
+                document.getElementById('burger-instruction-text').innerText = "Setup: Select 3 Burgers to hide your bombs!";
                 document.getElementById('burger-hint-btn').classList.remove('hidden');
             } else {
-                document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerP1SetupInst;
+                document.getElementById('burger-instruction-text').innerText = "Player 1 Setup: Select 3 Burgers for your bombs!";
                 document.getElementById('burger-hint-btn').classList.add('hidden'); 
             }
             updateBurgerStatsUI();
@@ -1619,15 +1334,15 @@
         }
 
         function updateBurgerStatsUI() {
-            const p1Label = (burgerMatchMode === "multiplayer") ? (currentLang==='tl'?'Peksa 1':'Player 1') : (currentLang==='tl'?'Ikaw':'You');
-            const p2Label = (burgerMatchMode === "multiplayer") ? (currentLang==='tl'?'Peksa 2':'Player 2') : "Bot";
+            const p1Label = (burgerMatchMode === "multiplayer") ? "Player 1" : "You";
+            const p2Label = (burgerMatchMode === "multiplayer") ? "Player 2" : "Bot";
             document.getElementById('unified-p1-hearts').innerText = `${p1Label}: ` + ("❤️".repeat(Math.max(0, playerHearts)) || "💀");
             document.getElementById('unified-p2-hearts').innerText = `${p2Label}: ` + ("❤️".repeat(Math.max(0, enemyHearts)) || "💀");
             const titleEl = document.getElementById('unified-board-title');
-            if (burgerPhase === "setup-player1") { titleEl.innerText = langData[currentLang].burgerP1SetupMap; titleEl.style.color = "#2ed573"; }
-            else if (burgerPhase === "setup-player2") { titleEl.innerText = langData[currentLang].burgerP2SetupMap; titleEl.style.color = "#ffa502"; }
-            else if (burgerPhase === "battle-player1-turn") { titleEl.innerText = (burgerMatchMode === "multiplayer" ? langData[currentLang].burgerP1AttackGridMP : langData[currentLang].burgerP1AttackGrid); titleEl.style.color = "#ff4757"; }
-            else if (burgerPhase === "battle-player2-turn") { titleEl.innerText = (burgerMatchMode === "multiplayer" ? langData[currentLang].burgerP2AttackGridMP : langData[currentLang].burgerP2AttackGrid); titleEl.style.color = "#ffa502"; }
+            if (burgerPhase === "setup-player1") { titleEl.innerText = "🛠️ P1 Setup Map"; titleEl.style.color = "#2ed573"; }
+            else if (burgerPhase === "setup-player2") { titleEl.innerText = "🛠️ P2 Setup Map"; titleEl.style.color = "#ffa502"; }
+            else if (burgerPhase === "battle-player1-turn") { titleEl.innerText = `🎯 ${p1Label} Attacking Grid`; titleEl.style.color = "#ff4757"; }
+            else if (burgerPhase === "battle-player2-turn") { titleEl.innerText = `🎯 ${p2Label} Attacking Grid`; titleEl.style.color = "#ffa502"; }
         }
 
         function renderUnifiedBurgerGrid() {
@@ -1682,14 +1397,14 @@
                                 if (!enemyBombs.includes(randSlot)) enemyBombs.push(randSlot);
                             }
                             burgerPhase = "battle-player1-turn";
-                            document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerBotBattleInst;
-                            logEl.innerText = langData[currentLang].burgerCommencedLog;
+                            document.getElementById('burger-instruction-text').innerText = "BATTLE! Attack the Bot's field!";
+                            logEl.innerText = "Match Commenced! Choose an attacking target slot.";
                             logEl.style.color = "#ffffa0";
                             updateBurgerStatsUI(); renderUnifiedBurgerGrid();
                         } else {
                             burgerPhase = "setup-player2";
-                            document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerP2BattleInst;
-                            logEl.innerText = langData[currentLang].burgerP2BattleInst;
+                            document.getElementById('burger-instruction-text').innerText = "Player 2 Setup: Choose 3 locations.";
+                            logEl.innerText = "Player 2: Choose 3 locations to place your secret mines.";
                             updateBurgerStatsUI(); renderUnifiedBurgerGrid();
                         }
                     }, 400);
@@ -1702,8 +1417,8 @@
                 if (enemyBombs.length === 3) {
                     setTimeout(() => {
                         burgerPhase = "battle-player1-turn";
-                        document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerP1BattleInst;
-                        logEl.innerText = langData[currentLang].burgerP1BattleInst;
+                        document.getElementById('burger-instruction-text').innerText = "Player 1 Turn: Attack target!";
+                        logEl.innerText = "Battle Phase! Player 1 select an attack target vector.";
                         updateBurgerStatsUI(); renderUnifiedBurgerGrid();
                     }, 400);
                 }
@@ -1714,17 +1429,17 @@
                 
                 if (enemyBombs.includes(index)) { 
                     playerHearts--; 
-                    logEl.innerText = langData[currentLang].burgerBoomLog.replace("{idx}", index+1);
+                    logEl.innerText = `💥 BOOM! You hit Bot's Mine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
-                    triggerCustomNotification(langData[currentLang].burgerExplodeNotif.replace("{idx}", index+1), "#ff4757", () => {
+                    triggerCustomNotification(`💥 EXPLOSION!\n\nYou blew up your own health at Slot #${index+1}!`, "#ff4757", () => {
                         if (checkBurgerGameEnd()) return;
                         proceedAfterP1Turn();
                     });
                 } else {
-                    logEl.innerText = langData[currentLang].burgerSafeLog.replace("{idx}", index+1);
+                    logEl.innerText = `✅ Safe Tile Discovered at Slot #${index+1}!`;
                     logEl.style.color = "#2ed573";
-                    triggerCustomNotification(langData[currentLang].burgerSafeNotif.replace("{idx}", index+1), "#2ed573", () => {
+                    triggerCustomNotification(`✅ SAFE!\n\nSlot #${index+1} is clear of explosives.`, "#2ed573", () => {
                         if (checkBurgerGameEnd()) return;
                         proceedAfterP1Turn();
                     });
@@ -1736,20 +1451,20 @@
                 
                 if (playerBombs.includes(index)) { 
                     enemyHearts--; 
-                    logEl.innerText = langData[currentLang].burgerBoomLogMP.replace("{idx}", index+1);
+                    logEl.innerText = `💥 BOOM! Player 2 struck Player 1's mine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
-                    triggerCustomNotification(langData[currentLang].burgerExplodeNotifP2.replace("{idx}", index+1), "#ff4757", () => {
+                    triggerCustomNotification(`💥 EXPLOSION!\n\nPlayer 2 hit a bomb at Slot #${index+1}!`, "#ff4757", () => {
                         if (checkBurgerGameEnd()) return;
-                        burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerP1BattleInst;
+                        burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Player 1 Turn: Attack target!";
                         updateBurgerStatsUI(); renderUnifiedBurgerGrid();
                     });
                 } else {
-                    logEl.innerText = langData[currentLang].burgerSafeLog.replace("{idx}", index+1);
+                    logEl.innerText = `✅ Safe Tile Discovered at Slot #${index+1}!`;
                     logEl.style.color = "#2ed573";
-                    triggerCustomNotification(langData[currentLang].burgerSafeNotif.replace("{idx}", index+1), "#2ed573", () => {
+                    triggerCustomNotification(`✅ SAFE!\n\nSlot #${index+1} is clear of explosives.`, "#2ed573", () => {
                         if (checkBurgerGameEnd()) return;
-                        burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerP1BattleInst;
+                        burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Player 1 Turn: Attack target!";
                         updateBurgerStatsUI(); renderUnifiedBurgerGrid();
                     });
                 }
@@ -1758,10 +1473,10 @@
 
         function proceedAfterP1Turn() {
             if (burgerMatchMode === "bot") {
-                burgerPhase = "battle-player2-turn"; document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerBotScanning;
+                burgerPhase = "battle-player2-turn"; document.getElementById('burger-instruction-text').innerText = "🤖 Bot scanning...";
                 updateBurgerStatsUI(); renderUnifiedBurgerGrid(); executeBotAIAction();
             } else {
-                burgerPhase = "battle-player2-turn"; document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerP2ClickInst;
+                burgerPhase = "battle-player2-turn"; document.getElementById('burger-instruction-text').innerText = "Player 2 Turn: Click target!";
                 updateBurgerStatsUI(); renderUnifiedBurgerGrid();
             }
         }
@@ -1776,20 +1491,20 @@
                     revealedPlayerTiles.push(botChoice);
                     if(playerBombs.includes(botChoice)) { 
                         enemyHearts--; 
-                        logEl.innerText = langData[currentLang].burgerBotDetonated.replace("{idx}", botChoice+1);
+                        logEl.innerText = `💥 Enemy Action: Bot detonated your Mine at Slot #${botChoice+1}!`;
                         logEl.style.color = "#ff4757";
                         updateBurgerStatsUI(); 
-                        triggerCustomNotification(langData[currentLang].burgerBotAttackNotif.replace("{idx}", botChoice+1), "#ff4757", () => {
+                        triggerCustomNotification(`💥 BOT ATTACK!\n\nThe Bot blew itself up on your bomb at Slot #${botChoice+1}!`, "#ff4757", () => {
                             if(checkBurgerGameEnd()) return;
-                            burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerBotTurnInst;
+                            burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Your Turn! Launch attack!";
                             renderUnifiedBurgerGrid();
                         });
                     } else {
-                        logEl.innerText = langData[currentLang].burgerBotSwept.replace("{idx}", botChoice+1);
+                        logEl.innerText = `🤖 Enemy Action: Bot swept your safe tile at Slot #${botChoice+1}.`;
                         logEl.style.color = "#2ed573";
-                        triggerCustomNotification(langData[currentLang].burgerBotMissNotif.replace("{idx}", botChoice+1), "#2ed573", () => {
+                        triggerCustomNotification(`✅ BOT MISSED!\n\nThe Bot selected safe Slot #${botChoice+1}.`, "#2ed573", () => {
                             if(checkBurgerGameEnd()) return;
-                            burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = langData[currentLang].burgerBotTurnInst;
+                            burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Your Turn! Launch attack!";
                             renderUnifiedBurgerGrid();
                         });
                     }
@@ -1799,13 +1514,13 @@
 
         document.getElementById('burger-hint-btn').onclick = () => {
             if(!burgerGameActive || burgerPhase !== "battle-player1-turn") return;
-            if(cash < 1500) { triggerCustomNotification(langData[currentLang].insufficientRadar, "#ff4757"); return; }
+            if(cash < 1500) { triggerCustomNotification("🚨 Intel Radar costs $1,500!", "#ff4757"); return; }
             let unrevealedBombs = enemyBombs.filter(b => !revealedEnemyTiles.includes(b) && !radarClueTiles.includes(b));
             if(unrevealedBombs.length > 0) {
                 cash -= 1500; updateGlobalCash();
                 let chosenSecretBomb = unrevealedBombs[Math.floor(Math.random() * unrevealedBombs.length)];
                 radarClueTiles.push(chosenSecretBomb); renderUnifiedBurgerGrid();
-                document.getElementById('burger-action-log').innerText = langData[currentLang].radarFound;
+                document.getElementById('burger-action-log').innerText = "🧐 Threat tracker updated! Hazard highlighted in Yellow.";
                 document.getElementById('burger-action-log').style.color = "#ffd32a";
             }
         };
@@ -1821,16 +1536,17 @@
             document.getElementById('burger-end-overlay').classList.remove('hidden');
             let title = document.getElementById('burger-end-title');
             if(burgerMatchMode === "bot") {
-                if(isPlayer1Winner) { cash += 500; title.innerText = langData[currentLang].burgerWinReward; title.style.color = "#2ed573"; }
-                else { cash = Math.max(0, cash - 500); title.innerText = langData[currentLang].burgerLosePenalty; title.style.color = "#ff4757"; }
+                if(isPlayer1Winner) { cash += 500; title.innerText = "🏆 YOU WIN! (+$500 Reward)"; title.style.color = "#2ed573"; }
+                else { cash = Math.max(0, cash - 500); title.innerText = "💀 YOU LOSE! (-$500 Penalty)"; title.style.color = "#ff4757"; }
                 updateGlobalCash();
             } else {
-                title.innerText = isPlayer1Winner ? langData[currentLang].burgerP1Win : langData[currentLang].burgerP2Win;
+                title.innerText = isPlayer1Winner ? "👑 PLAYER 1 WINS!" : "👑 PLAYER 2 WINS!";
                 title.style.color = isPlayer1Winner ? "#2ed573" : "#ffa502";
             }
         }
         document.getElementById('burger-retry-btn').onclick = () => initBurgerGame();
         document.getElementById('burger-exit-btn').onclick = () => handleExitToShop();
+
 
         document.getElementById('guess-mode-bot-btn').onclick = () => { guessMode = "bot"; initGuessGame(); };
         document.getElementById('guess-mode-mp-btn').onclick = () => { guessMode = "multiplayer"; initGuessGame(); };
@@ -1847,13 +1563,13 @@
 
             if (guessMode === "bot") {
                 guessPhase = "setup";
-                document.getElementById('guess-instruction-text').innerText = langData[currentLang].guessBotChoice;
-                document.getElementById('guess-action-log').innerText = langData[currentLang].guessWaitChoice;
+                document.getElementById('guess-instruction-text').innerText = "Choose your secret number (1 - 100) for the bot to guess!";
+                document.getElementById('guess-action-log').innerText = "Waiting for your number choice...";
                 document.getElementById('guess-action-log').style.color = "#1e90ff";
             } else {
                 guessPhase = "setup";
-                document.getElementById('guess-instruction-text').innerText = langData[currentLang].guessP1SelectHide;
-                document.getElementById('guess-action-log').innerText = langData[currentLang].guessP1ChoicePending;
+                document.getElementById('guess-instruction-text').innerText = "Player 1: Select your secret number to hide!";
+                document.getElementById('guess-action-log').innerText = "Player 1 Choice Pending...";
                 document.getElementById('guess-action-log').style.color = "#1e90ff";
             }
             renderGuessGridMatrix();
@@ -1885,10 +1601,10 @@
                 p2SecretTarget = Math.floor(Math.random() * 100) + 1; 
                 guessPhase = "play";
                 currentTurnPlayer = 1;
-                document.getElementById('guess-instruction-text').innerText = langData[currentLang].guessCrackTarget;
-                logEl.innerText = langData[currentLang].guessYourSecret.replace("{secret}", p1SecretTarget).replace("{att}", p1AttemptsLeft);
+                document.getElementById('guess-instruction-text').innerText = "Crack the Bot's Target! Your Turns are Blinded.";
+                logEl.innerText = `Your secret number: ${p1SecretTarget}. Attempts: ${p1AttemptsLeft}`;
                 logEl.style.color = "#2ed573";
-                triggerCustomNotification(langData[currentLang].guessConfirmedNotif.replace("{secret}", p1SecretTarget), "#2ed573");
+                triggerCustomNotification(`Secret Confirmed!\n\nYou locked in ${p1SecretTarget}. The Bot has locked in its number. Start guessing!`, "#2ed573");
                 renderGuessGridMatrix();
                 return;
             }
@@ -1896,18 +1612,18 @@
             if (guessPhase === "setup" && guessMode === "multiplayer") {
                 if (p1SecretTarget === null) {
                     p1SecretTarget = selectedNumber;
-                    document.getElementById('guess-instruction-text').innerText = langData[currentLang].guessP2SelectHide2;
-                    logEl.innerText = langData[currentLang].guessP2Pending;
+                    document.getElementById('guess-instruction-text').innerText = "Player 2: Select your secret number to hide!";
+                    logEl.innerText = "Player 2 Choice Pending...";
                     logEl.style.color = "#ff4757";
-                    triggerCustomNotification(langData[currentLang].guessP1ConfirmedNotif, "#1e90ff");
+                    triggerCustomNotification("Player 1 Code Confirmed!\n\nHand device over to Player 2 now.", "#1e90ff");
                 } else if (p2SecretTarget === null) {
                     p2SecretTarget = selectedNumber;
                     guessPhase = "play";
                     currentTurnPlayer = 1;
-                    document.getElementById('guess-instruction-text').innerText = langData[currentLang].guessP1GuessP2Target;
-                    logEl.innerText = langData[currentLang].guessAttemptsRem.replace("{att}", p1AttemptsLeft);
+                    document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
+                    logEl.innerText = "Attempts Remaining: " + p1AttemptsLeft;
                     logEl.style.color = "#1e90ff";
-                    triggerCustomNotification(langData[currentLang].guessP2ConfirmedNotif2, "#2ed573");
+                    triggerCustomNotification("Player 2 Code Confirmed!\n\nPlayer 1, prepare to make your first guess.", "#2ed573");
                     renderGuessGridMatrix();
                 }
                 return;
@@ -1920,17 +1636,17 @@
 
                     if (selectedNumber === p2SecretTarget) {
                         cash += 1500; updateGlobalCash();
-                        triggerCustomNotification(langData[currentLang].guessWinMatchedNotif.replace("{target}", p2SecretTarget), "#2ed573", () => {
+                        triggerCustomNotification(`🎉 YOU WIN!\n\nYou matched the bot's target (${p2SecretTarget}) first! Earned +$1,500 Cash!`, "#2ed573", () => {
                             initGuessGame();
                         });
                         return;
                     } else {
                         p1AttemptsLeft--;
-                        let userHintDirection = (selectedNumber < p2SecretTarget) ? langData[currentLang].guessHigher : langData[currentLang].guessLower;
+                        let userHintDirection = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
                         
                         if (p1AttemptsLeft <= 0) {
                             cash = Math.max(0, cash - 1500); updateGlobalCash();
-                            triggerCustomNotification(langData[currentLang].guessBotWinNotif.replace("{target}", p2SecretTarget), "#ff4757", () => {
+                            triggerCustomNotification(`💀 BOT WINS!\n\nYou ran out of turns. Bot's target was: ${p2SecretTarget}. Penalized -$1,500 Cash.`, "#ff4757", () => {
                                 initGuessGame();
                             });
                             return;
@@ -1945,27 +1661,27 @@
                         p1GuessesHistory.push(selectedNumber);
 
                         if (selectedNumber === p2SecretTarget) {
-                            triggerCustomNotification(langData[currentLang].guessP1WinMP.replace("{target}", p2SecretTarget), "#2ed573", () => {
+                            triggerCustomNotification(`🎉 PLAYER 1 WINS!\n\nSuccessfully matched Player 2's target core code: ${p2SecretTarget}!`, "#2ed573", () => {
                                 initGuessGame();
                             });
                             return;
                         } else {
                             p1AttemptsLeft--;
                             if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
-                                triggerCustomNotification(langData[currentLang].guessDrawMatchNotif.replace("{p1}", p1SecretTarget).replace("{p2}", p2SecretTarget), "#ffa502", () => {
+                                triggerCustomNotification(`💀 DRAW MATCH!\n\nNo available attempts remaining.\nTargets: P1 [${p1SecretTarget}] | P2 [${p2SecretTarget}]`, "#ffa502", () => {
                                     initGuessGame();
                                 });
                                 return;
                             }
-                            let personalHint = (selectedNumber < p2SecretTarget) ? langData[currentLang].guessHigher : langData[currentLang].guessLower;
+                            let personalHint = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
                             
                             if (p2AttemptsLeft > 0) {
                                 currentTurnPlayer = 2;
-                                document.getElementById('guess-instruction-text').innerText = langData[currentLang].guessP2TurnInst;
-                                logEl.innerText = langData[currentLang].guessP2TurnSetupLog.replace("{att}", p2AttemptsLeft);
+                                document.getElementById('guess-instruction-text').innerText = "Player 2 Turn: Guess Player 1's target!";
+                                logEl.innerText = `P2 Turn Setup. Player 2 Attempts Left: ${p2AttemptsLeft}`;
                                 logEl.style.color = "#ff4757";
                             }
-                            triggerCustomNotification(langData[currentLang].guessMissedNotif.replace("{guess}", selectedNumber).replace("{hint}", personalHint), "#ff4757", () => {
+                            triggerCustomNotification(`❌ MISSED!\n\nPlayer 1 guessed ${selectedNumber}, which is ${personalHint}.\n\nHand device to Player 2.`, "#ff4757", () => {
                                 renderGuessGridMatrix();
                             });
                         }
@@ -1975,27 +1691,27 @@
                         p2GuessesHistory.push(selectedNumber);
 
                         if (selectedNumber === p1SecretTarget) {
-                            triggerCustomNotification(langData[currentLang].guessP2WinMP.replace("{target}", p1SecretTarget), "#2ed573", () => {
+                            triggerCustomNotification(`🎉 PLAYER 2 WINS!\n\nSuccessfully matched Player 1's target core code: ${p1SecretTarget}!`, "#2ed573", () => {
                                 initGuessGame();
                             });
                             return;
                         } else {
                             p2AttemptsLeft--;
                             if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
-                                triggerCustomNotification(langData[currentLang].guessDrawMatchNotif.replace("{p1}", p1SecretTarget).replace("{p2}", p2SecretTarget), "#ffa502", () => {
+                                triggerCustomNotification(`💀 DRAW MATCH!\n\nNo available attempts remaining.\nTargets: P1 [${p1SecretTarget}] | P2 [${p2SecretTarget}]`, "#ffa502", () => {
                                     initGuessGame();
                                 });
                                 return;
                             }
-                            let personalHint = (selectedNumber < p1SecretTarget) ? langData[currentLang].guessHigher : langData[currentLang].guessLower;
+                            let personalHint = (selectedNumber < p1SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
                             
                             if (p1AttemptsLeft > 0) {
                                 currentTurnPlayer = 1;
-                                document.getElementById('guess-instruction-text').innerText = langData[currentLang].guessP1GuessP2Target;
-                                logEl.innerText = langData[currentLang].guessP1TurnSetupLog.replace("{att}", p1AttemptsLeft);
+                                document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
+                                logEl.innerText = `P1 Turn Setup. Player 1 Attempts Left: ${p1AttemptsLeft}`;
                                 logEl.style.color = "#1e90ff";
                             }
-                            triggerCustomNotification(langData[currentLang].guessMissedNotif2.replace("{guess}", selectedNumber).replace("{hint}", personalHint), "#ff4757", () => {
+                            triggerCustomNotification(`❌ MISSED!\n\nPlayer 2 guessed ${selectedNumber}, which is ${personalHint}.\n\nHand device to Player 1.`, "#ff4757", () => {
                                 renderGuessGridMatrix();
                             });
                         }
@@ -2018,29 +1734,31 @@
 
             if (botGuess === p1SecretTarget) {
                 cash = Math.max(0, cash - 1500); updateGlobalCash();
-                triggerCustomNotification(langData[currentLang].guessBotWinCorrect.replace("{secret}", p1SecretTarget), "#ff4757", () => {
+                triggerCustomNotification(`💀 BOT WINS!\n\nThe bot guessed your number ${p1SecretTarget} correctly! Penalized -$1,500 Cash.`, "#ff4757", () => {
                     initGuessGame();
                 });
             } else {
                 p2AttemptsLeft--;
-                let botHintFeedback = (botGuess < p1SecretTarget) ? langData[currentLang].guessHigher : langData[currentLang].guessLower;
-                lastBotGuessFeedback = (botGuess < p1SecretTarget) ? langData[currentLang].guessBotTooLower.replace("{guess}", botGuess) : langData[currentLang].guessBotTooHigher.replace("{guess}", botGuess);
+                let botHintFeedback = (botGuess < p1SecretTarget) ? "higher" : "lower";
+                lastBotGuessFeedback = `🤖 Bot guessed ${botGuess} (Too ${botHintFeedback}!)`;
 
                 if (p2AttemptsLeft <= 0) {
                     cash += 1500; updateGlobalCash();
-                    triggerCustomNotification(langData[currentLang].guessBotFailed, "#2ed573", () => {
+                    triggerCustomNotification(`🎉 YOU WIN!\n\nThe Bot failed all guesses! Target was uncracked. Earned +$1,500 Cash!`, "#2ed573", () => {
                         initGuessGame();
                     });
                     return;
                 }
 
                 const logEl = document.getElementById('guess-action-log');
-                logEl.innerText = langData[currentLang].guessTurnLeftLog.replace("{dir}", userHintDirection).replace("{feedback}", lastBotGuessFeedback).replace("{att}", p1AttemptsLeft);
+                logEl.innerText = `Your last guess was ${userHintDirection}. ${lastBotGuessFeedback} | Turns Left: ${p1AttemptsLeft}`;
                 logEl.style.color = "#ffa502";
                 renderGuessGridMatrix();
             }
         }
 
+
+        /* UPDATED RESTAURANT GAME ENGINE */
         function initRestaurantGame() {
             restaurantOrdersCompleted = 0;
             document.getElementById('distance-val').innerText = restaurantOrdersCompleted;
@@ -2048,11 +1766,10 @@
         }
 
         function generateNewRestaurantOrder() {
-            const types = ["Burger", "Soda"];
+            const types = ["Fries 🍟", "Sandwich 🥪", "Tacos 🌮", "Ramen 🍜", "Pizza 🍕"];
             currentRestaurantOrder = types[Math.floor(Math.random() * types.length)];
-            document.getElementById('restaurant-order-display').innerText = langData[currentLang].restOrderDisplay.replace("{order}", currentRestaurantOrder);
-            restaurantIngredientsSelected = [];
-            renderRestaurantBowl();
+            document.getElementById('restaurant-order-display').innerText = `Order: ${currentRestaurantOrder}`;
+            clearRestaurantBowl();
         }
 
         function addRestaurantIngredient(emoji) {
@@ -2060,10 +1777,15 @@
             renderRestaurantBowl();
         }
 
+        function clearRestaurantBowl() {
+            restaurantIngredientsSelected = [];
+            renderRestaurantBowl();
+        }
+
         function renderRestaurantBowl() {
             const bowlEl = document.getElementById('restaurant-bowl-display');
             if (restaurantIngredientsSelected.length === 0) {
-                bowlEl.innerText = langData[currentLang].restBowlEmpty;
+                bowlEl.innerText = "[Empty Mixing Bowl]";
                 bowlEl.style.color = "#747d8c";
             } else {
                 bowlEl.innerText = restaurantIngredientsSelected.join(" ");
@@ -2075,12 +1797,25 @@
             let matchesProfile = false;
             let currentString = [...restaurantIngredientsSelected].sort().join("");
 
-            if (currentRestaurantOrder === "Burger") {
-                let burgerTarget = ["🥬", "🍅", "🧅", "🥒", "🧀", "🫓"].sort().join("");
-                if (currentString === burgerTarget) matchesProfile = true;
-            } else if (currentRestaurantOrder === "Soda") {
-                let sodaTarget = ["🧊", "💧"].sort().join("");
-                if (currentString === sodaTarget) matchesProfile = true;
+            if (currentRestaurantOrder.includes("Fries")) {
+                let friesTarget = ["🥔", "🍶"].sort().join("");
+                if (currentString === friesTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Sandwich")) {
+                let sandwichTarget = ["🍞", "🥦", "🥕", "🥬", "🥑"].sort().join("");
+                if (currentString === sandwichTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Tacos")) {
+                let tacosTarget = ["🫓", "🌰", "🍋", "🍖", "🥒"].sort().join("");
+                if (currentString === tacosTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Ramen")) {
+                let ramenTarget = ["🍥", "🫔", "🍡", "🥡", "🥢", "🥚"].sort().join("");
+                if (currentString === ramenTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Pizza")) {
+                let pizzaTarget = ["🫓", "🫓", "🍤", "🌶"].sort().join("");
+                if (currentString === pizzaTarget) matchesProfile = true;
             }
 
             let generatedPayout = 0;
@@ -2089,23 +1824,24 @@
 
             if (matchesProfile) {
                 generatedPayout = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
-                statusMessage = langData[currentLang].restPerfect.replace("{order}", currentRestaurantOrder);
+                statusMessage = `✨ PERFECT RECIPE!\nThe customer loved your beautifully cooked ${currentRestaurantOrder}!`;
                 colorTheme = "#2ed573";
                 restaurantOrdersCompleted++;
                 document.getElementById('distance-val').innerText = restaurantOrdersCompleted;
             } else {
                 generatedPayout = Math.floor(Math.random() * (40 - 5 + 1)) + 5;
-                statusMessage = langData[currentLang].restWrong.replace("{order}", currentRestaurantOrder);
+                statusMessage = `🤢 WRONG INGREDIENTS!\nYou scrambled the recipe requirements for the ${currentRestaurantOrder}.`;
                 colorTheme = "#ff4757";
             }
 
             cash += generatedPayout;
             updateGlobalCash();
 
-            triggerCustomNotification(langData[currentLang].restEarnings.replace("{status}", statusMessage).replace("{pay}", generatedPayout), colorTheme, () => {
+            triggerCustomNotification(`${statusMessage}\n\nEarnings Received: +$${generatedPayout} Cash.`, colorTheme, () => {
                 generateNewRestaurantOrder();
             });
         }
+
 
         function initGame() {
             canvas = document.getElementById('runnerCanvas');
@@ -2244,7 +1980,7 @@
                 if (currentX !== mazePlayer.x || currentY !== mazePlayer.y) {
                     mazePlayer.x = currentX;
                     mazePlayer.y = currentY;
-                    processChenMazeLogicEvaluation();
+                    processMazeLogicEvaluation();
                 }
             }
         }
@@ -2265,7 +2001,7 @@
 
             if(mazePlayer.x === mazeGhost.x && mazePlayer.y === mazeGhost.y) {
                 gameRunning = false;
-                triggerCustomNotification(langData[currentLang].caughtChen, "#ff4757", () => {
+                triggerCustomNotification("💀 CAUGHT BY CHEN CHEN!\n\nYou were trapped inside the maze core matrix.", "#ff4757", () => {
                     gameScreen.classList.add('hidden');
                 });
             }
@@ -2307,7 +2043,7 @@
             if (currentSelectedFarmTarget === "wheat") {
                 bubbleContainer.innerHTML = `
                     <button class="farm-action-bubble" onclick="executeContextualHarvest()">
-                        ${langData[currentLang].farmHarvestBtn}
+                        🌾 Harvest Crop / Gather Wheat (+1 Stack)
                     </button>
                 `;
             } else if (currentSelectedFarmTarget.type === "fence") {
@@ -2318,19 +2054,19 @@
                 if (f.locked) {
                     bubbleContainer.innerHTML = `
                         <button class="farm-action-bubble lock-style" onclick="unlockPlot(${idx})">
-                            ${langData[currentLang].farmUnlockCost.replace("{num}", idx+1)}
+                            🔓 Unlock Plot #${idx+1}? (Costs $150 Cash)
                         </button>
                     `;
                 } else if (f.pet) {
                     bubbleContainer.innerHTML = `
                         <button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${idx})">
-                            ${langData[currentLang].farmFeedBtn.replace("{lv}", f.age).replace("{pet}", f.pet)}
+                            🍖 Feed standard Wheat to Level ${f.age} ${f.pet}
                         </button>
                     `;
                 } else {
                     bubbleContainer.innerHTML = `
                         <div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">
-                            ${langData[currentLang].farmPlotEmpty.replace("{num}", idx+1)}
+                            Plot #${idx+1} is empty. Buy a Pet from the market below!
                         </div>
                     `;
                 }
@@ -2348,7 +2084,7 @@
             if (!f || f.locked || !f.pet) return;
 
             if (wheatCount <= 0) {
-                triggerCustomNotification(langData[currentLang].farmOutWheat, "#ffa502");
+                triggerCustomNotification("🚨 Out of wheat! Click the golden Wheat Field to harvest some crops first.", "#ffa502");
                 return;
             }
 
@@ -2363,7 +2099,7 @@
                 
                 cash += reward;
                 updateGlobalCash();
-                triggerCustomNotification(currentLang==='tl'?`🎁 UPGRADE!\n\nAng iyong ${f.pet} ay lumaki sa Level ${f.age}! Nakakuha ka ng +$${reward} na bonus!`:`🎁 UPGRADE!\n\nYour ${f.pet} grew to Level ${f.age}! Received +$${reward} bonus!`, "#2ed573");
+                triggerCustomNotification(`🎁 UPGRADE!\n\nYour ${f.pet} grew to Level ${f.age}! Received +$${reward} bonus!`, "#2ed573");
             }
             
             saveFarmProgress();
@@ -2375,12 +2111,12 @@
                 cash -= 150; fences[index].locked = false;
                 updateGlobalCash(); saveFarmProgress(); 
                 refreshFarmUIBubble();
-            } else { triggerCustomNotification(langData[currentLang].farmUnlockRequire, "#ff4757"); }
+            } else { triggerCustomNotification("🚨 Requires $150 Cash!", "#ff4757"); }
         }
 
         function buyFarmPet(emoji, cost) {
-            if (currentGameMode !== "farm") { triggerCustomNotification(langData[currentLang].farmEnterFirst, "#ffa502"); return; }
-            if (cash < cost) { triggerCustomNotification(langData[currentLang].insufficientFunds, "#ff4757"); return; }
+            if (currentGameMode !== "farm") { triggerCustomNotification("Enter Farm Game first!", "#ffa502"); return; }
+            if (cash < cost) { triggerCustomNotification("🚨 Insufficient funds!", "#ff4757"); return; }
             let slotFound = false;
             for (let i = 0; i < fences.length; i++) {
                 if (fences[i] && !fences[i].locked && fences[i].pet === null) {
@@ -2392,8 +2128,9 @@
                     break;
                 }
             }
-            if (!slotFound) triggerCustomNotification(langData[currentLang].farmNoPlot, "#ffa502");
+            if (!slotFound) triggerCustomNotification("🚧 No open, unlocked plots available!", "#ffa502");
         }
+
 
         function gameLoop() {
             if(!gameRunning || ["burger", "guess", "restaurant"].includes(currentGameMode)) return;
@@ -2414,9 +2151,9 @@
                     if (jetBullets[b].y < -20) jetBullets.splice(b, 1);
                 }
 
-                ctx.font = "20px sans-serif";
                 for (let a = jetAliens.length - 1; a >= 0; a--) {
                     jetAliens[a].y += jetAliens[a].speed;
+                    ctx.font = "20px sans-serif";
                     ctx.fillText("👽", jetAliens[a].x, jetAliens[a].y + 16);
 
                     for (let b = jetBullets.length - 1; b >= 0; b--) {
@@ -2433,7 +2170,7 @@
 
                     if (jetAliens[a] && jetAliens[a].y > canvas.height) {
                         gameRunning = false;
-                        triggerCustomNotification(langData[currentLang].baseInfiltrated, "#ff4757", () => {
+                        triggerCustomNotification("🚨 BASE DEFENSE INFILTRATED!", "#ff4757", () => {
                             gameScreen.classList.add('hidden');
                         });
                         return;
@@ -2488,7 +2225,7 @@
                     if (runner.x + runner.w > pipe.x && runner.x < pipe.x + pipe.w) {
                         if (runner.y < pipe.topHeight || runner.y + runner.h > pipe.bottomY) {
                             gameRunning = false; 
-                            triggerCustomNotification(langData[currentLang].flightTerminated, "#ff4757", () => {
+                            triggerCustomNotification("💥 FLIGHT TERMINATED!", "#ff4757", () => {
                                 gameScreen.classList.add('hidden');
                             });
                             return;
@@ -2504,7 +2241,7 @@
 
                 if (runner.y > canvas.height || runner.y < -40) {
                     gameRunning = false; 
-                    triggerCustomNotification(langData[currentLang].boundsCrash, "#ff4757", () => {
+                    triggerCustomNotification("💥 BOUNDS CRASH BOUNDARY!", "#ff4757", () => {
                         gameScreen.classList.add('hidden');
                     });
                     return;
@@ -2515,7 +2252,6 @@
             }
 
             if (currentGameMode === "farm") {
-                ctx.style = "none";
                 ctx.fillStyle = '#f1c40f'; ctx.fillRect(wheatField.x, wheatField.y, wheatField.w, wheatField.h);
                 ctx.fillStyle = '#27ae60'; ctx.fillRect(wheatField.x - 4, wheatField.y + wheatField.h - 4, wheatField.w + 8, 5);
                 ctx.font = "20px Arial"; ctx.fillText("🌾 🌾 🌾", wheatField.x + 6, wheatField.y + 26);
@@ -2525,7 +2261,7 @@
                     if (f.locked) {
                         ctx.fillStyle = 'rgba(139, 69, 19, 0.4)'; ctx.fillRect(f.x, f.y, f.w, f.h);
                         ctx.lineWidth = 2; ctx.strokeStyle = '#d63031'; ctx.strokeRect(f.x, f.y, f.w, f.h);
-                        ctx.fillStyle = '#ffffff'; ctx.font = "12px sans-serif"; ctx.fillText(langData[currentLang].farmPlotLocked.replace("{num}", idx+1), f.x + 16, f.y + 35);
+                        ctx.fillStyle = '#ffffff'; ctx.font = "12px sans-serif"; ctx.fillText(`🔒 Plot ${idx+1}`, f.x + 16, f.y + 35);
                         ctx.fillText("$150", f.x + 24, f.y + 55);
                     } else {
                         ctx.fillStyle = '#2ed573'; ctx.fillRect(f.x + 3, f.y + 3, f.w - 6, f.h - 6);
@@ -2533,7 +2269,7 @@
                         if (f.pet) {
                             ctx.font = "24px Arial"; ctx.fillText(f.pet, f.x + f.w/2 - 12, f.y + f.h/2 + 2);
                             ctx.fillStyle = '#121212'; ctx.font = "bold 10px Arial"; ctx.fillText(`Lv.${f.age} (${f.xp}%)`, f.x + 8, f.y + f.h - 8);
-                        } else { ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = "10px sans-serif"; ctx.fillText(langData[currentLang].farmEmptySlot.replace("{num}", idx+1), f.x + 8, f.y + 45); }
+                        } else { ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = "10px sans-serif"; ctx.fillText(`Plot ${idx+1} Empty`, f.x + 8, f.y + 45); }
                     }
                 });
 
@@ -2563,7 +2299,7 @@
                     ctx.fillStyle = '#ff4757'; ctx.fillRect(o.x, o.y, o.w, o.h);
                     if (o.x < runner.x + runner.w && o.x + o.w > runner.x && o.y < runner.y + runner.h && o.y + o.h > runner.y) {
                         gameRunning = false; cash += distance; updateGlobalCash();
-                        triggerCustomNotification(langData[currentLang].laserCrashed.replace(/{dist}/g, distance), "#ff4757", () => {
+                        triggerCustomNotification(`💥 CRASHED!\n\nDistance Cleared: ${distance}\nEarned: +$${distance}`, "#ff4757", () => {
                             gameScreen.classList.add('hidden');
                         });
                         return;
@@ -2575,7 +2311,7 @@
                 let train = obstacles[0]; let currentTime = Date.now();
                 if (isTrainAlertActive) {
                     let remaining = Math.ceil((alertEndTime - currentTime) / 1000);
-                    if (remaining > 0) { document.getElementById('alert-timer-label').innerText = langData[currentLang].trainClose.replace("{sec}", remaining); train.targetY = runner.y + 35; } 
+                    if (remaining > 0) { document.getElementById('alert-timer-label').innerText = "⚠️ Train Close! " + remaining + "s"; train.targetY = runner.y + 35; } 
                     else { isTrainAlertActive = false; document.getElementById('alert-timer-label').innerText = ""; train.targetY = canvas.height + 120; }
                 } else { train.targetY = canvas.height + 120; }
 
@@ -2607,7 +2343,7 @@
                         if (!isTrainAlertActive) { isTrainAlertActive = true; alertEndTime = Date.now() + 5000; } 
                         else { 
                             gameRunning = false; 
-                            triggerCustomNotification(langData[currentLang].trainChased, "#ff4757", () => {
+                            triggerCustomNotification("🚂 CHASED DOWN BY TRAIN!", "#ff4757", () => {
                                 gameScreen.classList.add('hidden');
                             });
                             return; 
@@ -2618,7 +2354,7 @@
                 }
                 if (train.y <= runner.y + runner.h && train.y + train.h >= runner.y && train.x < runner.x + runner.w && train.x + train.w > runner.x) {
                     gameRunning = false; 
-                    triggerCustomNotification(langData[currentLang].trainCollision, "#ff4757", () => {
+                    triggerCustomNotification("🚂 TRAIN COLLISION STATE TARGETED!", "#ff4757", () => {
                         gameScreen.classList.add('hidden');
                     });
                     return;
