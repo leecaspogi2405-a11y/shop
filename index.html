@@ -618,7 +618,6 @@
             color: white !important;
         }
 
-        /* Standardized Notification Box styling for user confirmation flow */
         .notification-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -859,7 +858,6 @@
         let wheatCount = parseInt(localStorage.getItem("Xdragon_WheatCount")) || 0;
         let currentSelectedFarmTarget = null; 
 
-        // --- BURGER BOMB ENGINE CORE VARIABLES ---
         let burgerMatchMode = "bot"; 
         let burgerPhase = "setup-player1"; 
         let enemyHearts = 3;
@@ -871,7 +869,6 @@
         let radarClueTiles = []; 
         let burgerGameActive = false;
         
-        // --- EXTRA MODULAR MECHANICS SYSTEM PACK ---
         let jetBullets = [];
         let jetAliens = [];
         let jetScore = 0;
@@ -891,7 +888,6 @@
         let fpPipes = [];
         let fpFrameCounter = 0;
 
-        // --- GUESS A NUMBER CORE STORAGE ENGINE ---
         let guessMode = "bot"; 
         let guessPhase = "setup"; 
         let p1SecretTarget = null;
@@ -1055,7 +1051,6 @@
             }
         }
 
-        // --- BURGER BOMB ENGINE CONFIGURATIONS ---
         document.getElementById('burger-mode-bot-btn').onclick = () => {
             if(burgerGameActive && (playerBombs.length > 0 || enemyBombs.length > 0)) return;
             burgerMatchMode = "bot";
@@ -1187,11 +1182,11 @@
                 revealedEnemyTiles.push(index); radarClueTiles = radarClueTiles.filter(t => t !== index);
                 
                 if (enemyBombs.includes(index)) { 
-                    enemyHearts--; 
+                    playerHearts--; 
                     logEl.innerText = `💥 BOOM! You hit Bot's Mine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
-                    triggerCustomNotification(`💥 EXPLOSION!\n\nYou blew up a Bot's mine at Slot #${index+1}!`, "#ff4757", () => {
+                    triggerCustomNotification(`💥 EXPLOSION!\n\nYou blew up your own health at Slot #${index+1}!`, "#ff4757", () => {
                         if (checkBurgerGameEnd()) return;
                         proceedAfterP1Turn();
                     });
@@ -1209,7 +1204,7 @@
                 revealedPlayerTiles.push(index);
                 
                 if (playerBombs.includes(index)) { 
-                    playerHearts--; 
+                    enemyHearts--; 
                     logEl.innerText = `💥 BOOM! Player 2 struck Player 1's mine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
@@ -1249,11 +1244,11 @@
                     let botChoice = availableSlots[Math.floor(Math.random() * availableSlots.length)];
                     revealedPlayerTiles.push(botChoice);
                     if(playerBombs.includes(botChoice)) { 
-                        playerHearts--; 
+                        enemyHearts--; 
                         logEl.innerText = `💥 Enemy Action: Bot detonated your Mine at Slot #${botChoice+1}!`;
                         logEl.style.color = "#ff4757";
                         updateBurgerStatsUI(); 
-                        triggerCustomNotification(`💥 BOT ATTACK!\n\nThe Bot blew up your bomb at Slot #${botChoice+1}!`, "#ff4757", () => {
+                        triggerCustomNotification(`💥 BOT ATTACK!\n\nThe Bot blew itself up on your bomb at Slot #${botChoice+1}!`, "#ff4757", () => {
                             if(checkBurgerGameEnd()) return;
                             burgerPhase = "battle-player1-turn"; document.getElementById('burger-instruction-text').innerText = "Your Turn! Launch attack!";
                             renderUnifiedBurgerGrid();
@@ -1307,7 +1302,6 @@
         document.getElementById('burger-exit-btn').onclick = () => handleExitToShop();
 
 
-        // --- GUESS A NUMBER GAME ENGINE PORT ---
         document.getElementById('guess-mode-bot-btn').onclick = () => { guessMode = "bot"; initGuessGame(); };
         document.getElementById('guess-mode-mp-btn').onclick = () => { guessMode = "multiplayer"; initGuessGame(); };
 
@@ -1356,7 +1350,6 @@
         function handleGuessSelection(selectedNumber) {
             const logEl = document.getElementById('guess-action-log');
 
-            // SETUP PHASE (BOT MODE)
             if (guessPhase === "setup" && guessMode === "bot") {
                 p1SecretTarget = selectedNumber; 
                 p2SecretTarget = Math.floor(Math.random() * 100) + 1; 
@@ -1370,7 +1363,6 @@
                 return;
             }
 
-            // SETUP PHASE (MULTIPLAYER MODE)
             if (guessPhase === "setup" && guessMode === "multiplayer") {
                 if (p1SecretTarget === null) {
                     p1SecretTarget = selectedNumber;
@@ -1391,9 +1383,7 @@
                 return;
             }
 
-            // GAMEPLAY PLAY PHASE
             if (guessPhase === "play") {
-                // --- BOT PLAY PHASE ---
                 if (guessMode === "bot") {
                     if (p1GuessesHistory.includes(selectedNumber)) return;
                     p1GuessesHistory.push(selectedNumber);
@@ -1416,11 +1406,9 @@
                             return;
                         }
 
-                        // Bot's Turn Executed Immediately
                         executeBotGuessingTurn(userHintDirection);
                     }
                 } 
-                // --- PVP PLAY PHASE ---
                 else if (guessMode === "multiplayer") {
                     if (currentTurnPlayer === 1) {
                         if (p1GuessesHistory.includes(selectedNumber)) return;
@@ -1490,7 +1478,6 @@
             let botLowBound = 1;
             let botHighBound = 100;
             
-            // AI calculates boundaries safely using local loops to perform its guess
             p2GuessesHistory.forEach(g => {
                 if (g < p1SecretTarget && g > botLowBound) botLowBound = g + 1;
                 if (g > p1SecretTarget && g < botHighBound) botHighBound = g - 1;
@@ -1525,7 +1512,6 @@
         }
 
 
-        // --- GLOBAL ARCADE ENGINE SYSTEMS ---
         function initGame() {
             canvas = document.getElementById('runnerCanvas');
             ctx = canvas.getContext('2d');
@@ -1668,7 +1654,7 @@
             }
         }
 
-        function processMazeLogicEvaluation() {
+        function processChenMazeLogicEvaluation() {
             let gdx = mazePlayer.x - mazeGhost.x;
             let gdy = mazePlayer.y - mazeGhost.y;
             
@@ -1815,12 +1801,10 @@
         }
 
 
-        // --- CENTRAL GRAPHICS RENDERING MATRIX LOOP ---
         function gameLoop() {
             if(!gameRunning || currentGameMode === "burger" || currentGameMode === "guess") return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
-            // JET SHOOTER SYSTEM
             if (currentGameMode === "jet") {
                 runner.y = canvas.height - 40; 
                 if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
@@ -1867,7 +1851,6 @@
                 requestAnimationFrame(gameLoop); return;
             }
 
-            // CHEN CHEN HORROR MAZE RENDERER
             if (currentGameMode === "chen") {
                 for (let r = 0; r < mazeRows; r++) {
                     for (let c = 0; c < mazeCols; c++) {
@@ -1888,11 +1871,10 @@
                 ctx.fillText("💀", mazeGhost.x * mazeCellSize + 8, mazeGhost.y * mazeCellSize + 30);
 
                 mazeGhostSpeedTimer++;
-                if(mazeGhostSpeedTimer % 35 === 0) { processMazeLogicEvaluation(); }
+                if(mazeGhostSpeedTimer % 35 === 0) { processChenMazeLogicEvaluation(); }
                 requestAnimationFrame(gameLoop); return;
             }
 
-            // FLAPPY PLANE SYSTEM
             if (currentGameMode === "flappy") {
                 fpVelocity += fpGravity; runner.y += fpVelocity;
                 fpFrameCounter++;
@@ -1938,7 +1920,6 @@
                 requestAnimationFrame(gameLoop); return;
             }
 
-            // ORIGINAL FARM MODE MAP
             if (currentGameMode === "farm") {
                 ctx.style = "none";
                 ctx.fillStyle = '#f1c40f'; ctx.fillRect(wheatField.x, wheatField.y, wheatField.w, wheatField.h);
@@ -1969,7 +1950,6 @@
                 requestAnimationFrame(gameLoop); return;
             }
 
-            // CORE ENGINE SYSTEMS (LASER / TRAIN)
             if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
             if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
 
