@@ -929,28 +929,7 @@
             </div>
 
             <div class="restaurant-kitchen-bench">
-                <div class="restaurant-ingredient-strip">
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥔')">🥔</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍶')">🍶</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍞')">🍞</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥦')">🥦</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥕')">🥕</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥬')">🥬</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥑')">🥑</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🫓')">🫓</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🌰')">🌰</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍋')">🍋</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍖')">🍖</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥒')">🥒</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍥')">🍥</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🫔')">🫔</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍡')">🍡</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥡')">🥡</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥢')">🥢</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🥚')">🥚</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🍤')">🍤</div>
-                    <div class="restaurant-ingredient-bin" onclick="addRestaurantIngredient('🌶')">🌶</div>
-                </div>
+                <div class="restaurant-ingredient-strip" id="restaurant-ingredient-strip"></div>
                 <div class="restaurant-center-stage">
                     <div class="restaurant-chef-avatar">👨‍🍳</div>
                     <div class="restaurant-order-ticket" id="restaurant-order-display">Order: Loading...</div>
@@ -1057,6 +1036,12 @@
         let currentRestaurantOrder = ""; 
         let restaurantIngredientsSelected = [];
         let restaurantOrdersCompleted = 0;
+
+        // Base ingredient master list
+        const restaurantIngredientsBaseList = [
+            '🥔','🍶','🍞','🥦','🥕','🥬','🥑','🫓','🌰','🍋',
+            '🍖','🥒','🍥','🫔','🍡','🥡','🥢','🥚','🍤','🌶'
+        ];
 
         const petRewardsTable = { '🐕': 5, '🐖': 10, '🐑': 15, '🐅': 20, '🐍': 20, '🐄': 30, '🐊': 30, '🐢': 50 };
 
@@ -1681,6 +1666,25 @@
             const types = ["Fries 🍟", "Sandwich 🥪", "Tacos 🌮", "Ramen 🍜", "Pizza 🍕"];
             currentRestaurantOrder = types[Math.floor(Math.random() * types.length)];
             document.getElementById('restaurant-order-display').innerText = `Order: ${currentRestaurantOrder}`;
+            
+            // Shuffle the ingredients array using Fisher-Yates algorithm
+            let shuffledIngredients = [...restaurantIngredientsBaseList];
+            for (let i = shuffledIngredients.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledIngredients[i], shuffledIngredients[j]] = [shuffledIngredients[j], shuffledIngredients[i]];
+            }
+
+            // Render the shuffled ingredients layout
+            const stripContainer = document.getElementById('restaurant-ingredient-strip');
+            stripContainer.innerHTML = "";
+            shuffledIngredients.forEach(emoji => {
+                let bin = document.createElement('div');
+                bin.className = "restaurant-ingredient-bin";
+                bin.innerText = emoji;
+                bin.onclick = () => addRestaurantIngredient(emoji);
+                stripContainer.appendChild(bin);
+            });
+
             clearRestaurantBowl();
         }
 
