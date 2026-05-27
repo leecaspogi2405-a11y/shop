@@ -621,7 +621,7 @@
         /* Standardized Notification Box styling for user confirmation flow */
         .notification-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vw;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: rgba(0,0,0,0.6);
             display: flex;
             align-items: center;
@@ -751,11 +751,11 @@
                 <li><b>LASER GAME:</b> Dodge the falling red laser beams.</li>
                 <li><b>TRAIN GAME:</b> Collect falling gold coins while avoiding green bushes. One hit forces a train chase!</li>
                 <li><b>FARM GAME:</b> Click the Wheat Field or an unlocked Pet plot. Actions remain persistent until manually swapped!</li>
-                <li><b>BURGER BOMB BATTLE:</b> Tactical deduction arena! Clear un-mined safe tiles and reveal hidden positions with dynamic console logs.</li>
+                <li><b>BURGER BOMB BATTLE:</b> Plant 3 landmines, then look for safe tiles. Avoid setting off enemy hazards!</li>
                 <li><b>JET SHOOTER:</b> Pilot a fighter plane at the bottom. Shoot ascending alien streams for +$10 cash per execution!</li>
                 <li><b>CHEN CHEN MAZE:</b> Click open paths to slide instantly to the end of the corridor lane. Dodge the fast-tracking ghost! Coins are registered along the path instantly.</li>
                 <li><b>FLAPPY PLANE:</b> Touch/Click to flap upward and cross volatile columns. Earnings map onto clearance score parameters.</li>
-                <li><b>GUESS A NUMBER:</b> Dual matching algorithm matrix. Hidden targets are fully blinded in PvP layout match setups.</li>
+                <li><b>GUESS A NUMBER:</b> Select your hidden number target code and guess your opponent's matrix block before your ammo cycles deplete!</li>
             </ol>
             <button class="close-modal-btn" id="close-modal-btn">GOT IT!</button>
         </div>
@@ -901,6 +901,7 @@
         let p1GuessesHistory = []; 
         let p2GuessesHistory = []; 
         let currentTurnPlayer = 1; 
+        let lastBotGuessFeedback = "";
 
         const petRewardsTable = { '🐕': 5, '🐖': 10, '🐑': 15, '🐅': 20, '🐍': 20, '🐄': 30, '🐊': 30, '🐢': 50 };
 
@@ -948,7 +949,6 @@
         howToPlayBtn.addEventListener('click', () => tutorialModal.classList.remove('hidden'));
         closeModalBtn.addEventListener('click', () => tutorialModal.classList.add('hidden'));
 
-        // Centralized Custom [OK] Prompt UI Controller
         function triggerCustomNotification(message, borderHex, callback) {
             const overlay = document.getElementById('custom-notification-module');
             const textEl = document.getElementById('custom-notification-text');
@@ -1188,10 +1188,10 @@
                 
                 if (enemyBombs.includes(index)) { 
                     enemyHearts--; 
-                    logEl.innerText = `💥 BOOM! Struck a hidden Mine at Slot #${index+1}!`;
+                    logEl.innerText = `💥 BOOM! You hit Bot's Mine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
-                    triggerCustomNotification(`💥 EXPLOSION!\n\nYou hit a bomb at Slot #${index+1}!`, "#ff4757", () => {
+                    triggerCustomNotification(`💥 EXPLOSION!\n\nYou blew up a Bot's mine at Slot #${index+1}!`, "#ff4757", () => {
                         if (checkBurgerGameEnd()) return;
                         proceedAfterP1Turn();
                     });
@@ -1210,7 +1210,7 @@
                 
                 if (playerBombs.includes(index)) { 
                     playerHearts--; 
-                    logEl.innerText = `💥 BOOM! Player 2 struck a landmine at Slot #${index+1}!`;
+                    logEl.innerText = `💥 BOOM! Player 2 struck Player 1's mine at Slot #${index+1}!`;
                     logEl.style.color = "#ff4757";
                     updateBurgerStatsUI(); 
                     triggerCustomNotification(`💥 EXPLOSION!\n\nPlayer 2 hit a bomb at Slot #${index+1}!`, "#ff4757", () => {
@@ -1231,7 +1231,6 @@
         }
 
         function proceedAfterP1Turn() {
-            const logEl = document.getElementById('burger-action-log');
             if (burgerMatchMode === "bot") {
                 burgerPhase = "battle-player2-turn"; document.getElementById('burger-instruction-text').innerText = "🤖 Bot scanning...";
                 updateBurgerStatsUI(); renderUnifiedBurgerGrid(); executeBotAIAction();
@@ -1251,7 +1250,7 @@
                     revealedPlayerTiles.push(botChoice);
                     if(playerBombs.includes(botChoice)) { 
                         playerHearts--; 
-                        logEl.innerText = `💥 Enemy Action: Bot blew up your Mine at Slot #${botChoice+1}!`;
+                        logEl.innerText = `💥 Enemy Action: Bot detonated your Mine at Slot #${botChoice+1}!`;
                         logEl.style.color = "#ff4757";
                         updateBurgerStatsUI(); 
                         triggerCustomNotification(`💥 BOT ATTACK!\n\nThe Bot blew up your bomb at Slot #${botChoice+1}!`, "#ff4757", () => {
@@ -1260,7 +1259,7 @@
                             renderUnifiedBurgerGrid();
                         });
                     } else {
-                        logEl.innerText = `🤖 Enemy Action: Bot swept safe tile Slot #${botChoice+1}.`;
+                        logEl.innerText = `🤖 Enemy Action: Bot swept your safe tile at Slot #${botChoice+1}.`;
                         logEl.style.color = "#2ed573";
                         triggerCustomNotification(`✅ BOT MISSED!\n\nThe Bot selected safe Slot #${botChoice+1}.`, "#2ed573", () => {
                             if(checkBurgerGameEnd()) return;
@@ -1320,13 +1319,13 @@
             p1GuessesHistory = [];
             p2GuessesHistory = [];
             currentTurnPlayer = 1;
+            lastBotGuessFeedback = "";
 
             if (guessMode === "bot") {
-                p2SecretTarget = Math.floor(Math.random() * 100) + 1;
-                guessPhase = "play";
-                document.getElementById('guess-instruction-text').innerText = "Crack the Bot's Secret Target Number (1 - 100)!";
-                document.getElementById('guess-action-log').innerText = "Attempts Remaining: " + p1AttemptsLeft;
-                document.getElementById('guess-action-log').style.color = "#2ed573";
+                guessPhase = "setup";
+                document.getElementById('guess-instruction-text').innerText = "Choose your secret number (1 - 100) for the bot to guess!";
+                document.getElementById('guess-action-log').innerText = "Waiting for your number choice...";
+                document.getElementById('guess-action-log').style.color = "#1e90ff";
             } else {
                 guessPhase = "setup";
                 document.getElementById('guess-instruction-text').innerText = "Player 1: Select your secret number to hide!";
@@ -1344,14 +1343,11 @@
                 btn.className = "guess-num-btn";
                 btn.innerText = i;
 
-                // Selection history mapping is ONLY applied if processing actions against Bot Match
-                if (guessMode === "bot") {
+                if (guessMode === "bot" && guessPhase === "play") {
                     if (p1GuessesHistory.includes(i)) {
                         btn.classList.add('selected-p1');
                     }
                 }
-                // Local 1v1 selections remain blinded to keep tactical values hidden from opponents
-
                 btn.onclick = () => handleGuessSelection(i);
                 matrixContainer.appendChild(btn);
             }
@@ -1360,6 +1356,21 @@
         function handleGuessSelection(selectedNumber) {
             const logEl = document.getElementById('guess-action-log');
 
+            // SETUP PHASE (BOT MODE)
+            if (guessPhase === "setup" && guessMode === "bot") {
+                p1SecretTarget = selectedNumber; 
+                p2SecretTarget = Math.floor(Math.random() * 100) + 1; 
+                guessPhase = "play";
+                currentTurnPlayer = 1;
+                document.getElementById('guess-instruction-text').innerText = "Crack the Bot's Target! Your Turns are Blinded.";
+                logEl.innerText = `Your secret number: ${p1SecretTarget}. Attempts: ${p1AttemptsLeft}`;
+                logEl.style.color = "#2ed573";
+                triggerCustomNotification(`Secret Confirmed!\n\nYou locked in ${p1SecretTarget}. The Bot has locked in its number. Start guessing!`, "#2ed573");
+                renderGuessGridMatrix();
+                return;
+            }
+
+            // SETUP PHASE (MULTIPLAYER MODE)
             if (guessPhase === "setup" && guessMode === "multiplayer") {
                 if (p1SecretTarget === null) {
                     p1SecretTarget = selectedNumber;
@@ -1380,30 +1391,36 @@
                 return;
             }
 
+            // GAMEPLAY PLAY PHASE
             if (guessPhase === "play") {
+                // --- BOT PLAY PHASE ---
                 if (guessMode === "bot") {
                     if (p1GuessesHistory.includes(selectedNumber)) return;
                     p1GuessesHistory.push(selectedNumber);
 
                     if (selectedNumber === p2SecretTarget) {
-                        cash += 500; updateGlobalCash();
-                        triggerCustomNotification(`🎉 CORRECT MATCH!\n\nThe bot's target was ${p2SecretTarget}! Earned +$500`, "#2ed573", () => {
+                        cash += 1500; updateGlobalCash();
+                        triggerCustomNotification(`🎉 YOU WIN!\n\nYou matched the bot's target (${p2SecretTarget}) first! Earned +$1,500 Cash!`, "#2ed573", () => {
                             initGuessGame();
                         });
+                        return;
                     } else {
                         p1AttemptsLeft--;
+                        let userHintDirection = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                        
                         if (p1AttemptsLeft <= 0) {
-                            triggerCustomNotification(`💀 GAME OVER!\n\nYou ran out of loops. Target was: ${p2SecretTarget}`, "#ff4757", () => {
+                            cash = Math.max(0, cash - 1500); updateGlobalCash();
+                            triggerCustomNotification(`💀 BOT WINS!\n\nYou ran out of turns. Bot's target was: ${p2SecretTarget}. Penalized -$1,500 Cash.`, "#ff4757", () => {
                                 initGuessGame();
                             });
-                        } else {
-                            let hintDirection = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
-                            logEl.innerText = `Hint: Choose a number ${hintDirection} than ${selectedNumber}! [${p1AttemptsLeft} Left]`;
-                            logEl.style.color = "#ffa502";
-                            renderGuessGridMatrix();
+                            return;
                         }
+
+                        // Bot's Turn Executed Immediately
+                        executeBotGuessingTurn(userHintDirection);
                     }
                 } 
+                // --- PVP PLAY PHASE ---
                 else if (guessMode === "multiplayer") {
                     if (currentTurnPlayer === 1) {
                         if (p1GuessesHistory.includes(selectedNumber)) return;
@@ -1417,22 +1434,20 @@
                         } else {
                             p1AttemptsLeft--;
                             if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
-                                triggerCustomNotification(`💀 DRAW MATCH!\n\nNo available ammo remaining.\nTargets: P1 [${p1SecretTarget}] | P2 [${p2SecretTarget}]`, "#ffa502", () => {
+                                triggerCustomNotification(`💀 DRAW MATCH!\n\nNo available attempts remaining.\nTargets: P1 [${p1SecretTarget}] | P2 [${p2SecretTarget}]`, "#ffa502", () => {
                                     initGuessGame();
                                 });
                                 return;
                             }
-                            let hintDirection = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                            let personalHint = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
                             
                             if (p2AttemptsLeft > 0) {
                                 currentTurnPlayer = 2;
                                 document.getElementById('guess-instruction-text').innerText = "Player 2 Turn: Guess Player 1's target!";
-                                logEl.innerText = `P1 Hint was: Go ${hintDirection} than ${selectedNumber}. Player 2 Attempts: ${p2AttemptsLeft}`;
+                                logEl.innerText = `P2 Turn Setup. Player 2 Attempts Left: ${p2AttemptsLeft}`;
                                 logEl.style.color = "#ff4757";
-                            } else {
-                                logEl.innerText = `P1 Hint: Go ${hintDirection} than ${selectedNumber}. [${p1AttemptsLeft} Left]`;
                             }
-                            triggerCustomNotification(`❌ MISSED!\n\nPlayer 1 guess was incorrect. Hand device to Player 2.`, "#ff4757", () => {
+                            triggerCustomNotification(`❌ MISSED!\n\nPlayer 1 guessed ${selectedNumber}, which is ${personalHint}.\n\nHand device to Player 2.`, "#ff4757", () => {
                                 renderGuessGridMatrix();
                             });
                         }
@@ -1449,27 +1464,63 @@
                         } else {
                             p2AttemptsLeft--;
                             if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
-                                triggerCustomNotification(`💀 DRAW MATCH!\n\nNo available ammo remaining.\nTargets: P1 [${p1SecretTarget}] | P2 [${p2SecretTarget}]`, "#ffa502", () => {
+                                triggerCustomNotification(`💀 DRAW MATCH!\n\nNo available attempts remaining.\nTargets: P1 [${p1SecretTarget}] | P2 [${p2SecretTarget}]`, "#ffa502", () => {
                                     initGuessGame();
                                 });
                                 return;
                             }
-                            let hintDirection = (selectedNumber < p1SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                            let personalHint = (selectedNumber < p1SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
                             
                             if (p1AttemptsLeft > 0) {
                                 currentTurnPlayer = 1;
                                 document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
-                                logEl.innerText = `P2 Hint was: Go ${hintDirection} than ${selectedNumber}. Player 1 Attempts: ${p1AttemptsLeft}`;
+                                logEl.innerText = `P1 Turn Setup. Player 1 Attempts Left: ${p1AttemptsLeft}`;
                                 logEl.style.color = "#1e90ff";
-                            } else {
-                                logEl.innerText = `P2 Hint: Go ${hintDirection} than ${selectedNumber}. [${p2AttemptsLeft} Left]`;
                             }
-                            triggerCustomNotification(`❌ MISSED!\n\nPlayer 2 guess was incorrect. Hand device to Player 1.`, "#ff4757", () => {
+                            triggerCustomNotification(`❌ MISSED!\n\nPlayer 2 guessed ${selectedNumber}, which is ${personalHint}.\n\nHand device to Player 1.`, "#ff4757", () => {
                                 renderGuessGridMatrix();
                             });
                         }
                     }
                 }
+            }
+        }
+
+        function executeBotGuessingTurn(userHintDirection) {
+            let botLowBound = 1;
+            let botHighBound = 100;
+            
+            // AI calculates boundaries safely using local loops to perform its guess
+            p2GuessesHistory.forEach(g => {
+                if (g < p1SecretTarget && g > botLowBound) botLowBound = g + 1;
+                if (g > p1SecretTarget && g < botHighBound) botHighBound = g - 1;
+            });
+
+            let botGuess = Math.floor(Math.random() * (botHighBound - botLowBound + 1)) + botLowBound;
+            p2GuessesHistory.push(botGuess);
+
+            if (botGuess === p1SecretTarget) {
+                cash = Math.max(0, cash - 1500); updateGlobalCash();
+                triggerCustomNotification(`💀 BOT WINS!\n\nThe bot guessed your number ${p1SecretTarget} correctly! Penalized -$1,500 Cash.`, "#ff4757", () => {
+                    initGuessGame();
+                });
+            } else {
+                p2AttemptsLeft--;
+                let botHintFeedback = (botGuess < p1SecretTarget) ? "higher" : "lower";
+                lastBotGuessFeedback = `🤖 Bot guessed ${botGuess} (Too ${botHintFeedback}!)`;
+
+                if (p2AttemptsLeft <= 0) {
+                    cash += 1500; updateGlobalCash();
+                    triggerCustomNotification(`🎉 YOU WIN!\n\nThe Bot failed all guesses! Target was uncracked. Earned +$1,500 Cash!`, "#2ed573", () => {
+                        initGuessGame();
+                    });
+                    return;
+                }
+
+                const logEl = document.getElementById('guess-action-log');
+                logEl.innerText = `Your last guess was ${userHintDirection}. ${lastBotGuessFeedback} | Turns Left: ${p1AttemptsLeft}`;
+                logEl.style.color = "#ffa502";
+                renderGuessGridMatrix();
             }
         }
 
@@ -1639,7 +1690,6 @@
             }
         }
 
-        // --- CONTEXTUAL DYNAMIC UI POPUP ROUTING AGENT ---
         function processFarmCanvasClick(e) {
             let rect = canvas.getBoundingClientRect();
             let clickX = e.clientX - rect.left;
