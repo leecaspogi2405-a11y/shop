@@ -754,6 +754,72 @@
             background-color: #57606f;
         }
 
+        /* --- ACE THE BOMB JOYSTICK STYLES --- */
+        .ace-bomb-panel {
+            width: 100%;
+            max-width: 400px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            border: 2px solid #eb4d4b;
+        }
+
+        .joystick-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .joystick-wrapper-box {
+            background-color: #151515;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .joystick-header-tag {
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .virtual-dpad-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            width: 90px;
+            height: 90px;
+        }
+
+        .dpad-direction-btn {
+            background-color: #2f3542;
+            border: 1px solid #57606f;
+            color: white;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            outline: none;
+        }
+        .dpad-direction-btn:active {
+            background-color: #ff4757;
+        }
+
         .notification-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -792,63 +858,6 @@
             border-radius: 6px;
             cursor: pointer;
             outline: none;
-        }
-
-        /* --- ACE THE BOMB PANEL STYLES --- */
-        .ab-control-panel {
-            width: 100%;
-            max-width: 400px;
-            background-color: #1e1e1e;
-            border-radius: 12px;
-            padding: 15px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-            border: 2px solid #9b59b6;
-        }
-        .joystick-matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .joystick-wrapper {
-            background-color: #151515;
-            border: 1px solid #9b59b6;
-            border-radius: 8px;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .joystick-title {
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #9b59b6;
-            margin-bottom: 4px;
-        }
-        .joystick-cross {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
-            width: 105px;
-        }
-        .joy-btn {
-            background-color: #2f3542;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            width: 32px;
-            height: 32px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        .joy-btn:active {
-            background-color: #9b59b6;
         }
     </style>
 </head>
@@ -933,13 +942,15 @@
             <p class="game-section-title" style="color: #2ed573;">GUESS NUMBER</p>
             <button class="play-trigger-btn" id="launch-guess-btn" style="color: #2ed573;">🔮 PLAY</button>
         </div>
-        <div class="game-column full-width" style="border: 1px solid #9b59b6;">
-            <p class="game-section-title" style="color: #9b59b6;">💣 ACE THE BOMB</p>
-            <button class="play-trigger-btn" id="launch-ab-btn" style="color: #9b59b6;">🏃‍♂️ PLAY ARENA</button>
-        </div>
+        
         <div class="game-column full-width" style="border: 1px solid #54a0ff;">
             <p class="game-section-title" style="color: #54a0ff;">CLOUDE RESTAURANT</p>
             <button class="play-trigger-btn" id="launch-restaurant-btn" style="color: #54a0ff;">🧑‍🍳 START COOKING</button>
+        </div>
+
+        <div class="game-column full-width" style="border: 2px solid #eb4d4b;">
+            <p class="game-section-title" style="color: #eb4d4b;">💣 ACE THE BOMB</p>
+            <button class="play-trigger-btn" id="launch-acebomb-btn" style="color: #eb4d4b;">🏃‍♂️ RUN NOW</button>
         </div>
     </div>
 
@@ -1025,18 +1036,30 @@
             </div>
         </div>
 
-        <div class="ab-control-panel hidden" id="ab-control-panel">
+        <div class="ace-bomb-panel hidden" id="ace-bomb-panel">
             <div class="burger-mode-select">
-                <button class="mode-tab-btn active" id="ab-mode-bot-btn">🤖 BOT MATCH</button>
-                <button class="mode-tab-btn" id="ab-mode-mp-btn">👥 LOCAL PVP PARTY</button>
+                <button class="mode-tab-btn active" id="ab-mode-bot-btn">🤖 BOT MODE</button>
+                <button class="mode-tab-btn" id="ab-mode-pvp-btn">👥 PLAYER MODE</button>
             </div>
-            <div class="burger-instruction-banner" style="background-color: #4a275a; color: #e0b0ff;">
-                Total Combatants: <span id="ab-count-label">4</span>
-                <button style="margin-left:10px; background:#9b59b6; color:white; border:none; border-radius:3px; padding:2px 6px; cursor:pointer;" onclick="toggleABComponents()">Change</button>
-            </div>
-            <div class="action-log-ticker" id="ab-ticker" style="color: #e0b0ff; border-color: #9b59b6;">Detonation Clock: 15.0s</div>
             
-            <div class="joystick-matrix-grid" id="ab-joystick-grid"></div>
+            <div style="margin-bottom: 10px; font-size: 0.9rem; font-weight: bold;">
+                Total Contenders: 
+                <select id="ab-competitor-select" style="background:#2f3542; color:white; border:1px solid #57606f; padding:4px 8px; border-radius:4px;">
+                    <option value="2">2 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="4" selected>4 Players</option>
+                </select>
+                <button class="exit-btn" id="ab-restart-game-btn" style="background-color:#2ed573; margin-left:10px;">START</button>
+            </div>
+
+            <div class="burger-instruction-banner" id="ab-instruction-banner" style="background-color:#78281f; color:#f5b041;">
+                Fuse Time Left: 15.0s
+            </div>
+            <div class="action-log-ticker" id="ab-action-ticker" style="color:#ff7675;">
+                Game is running! Pass the bomb!
+            </div>
+
+            <div class="joystick-grid-layout" id="ab-joystick-grid"></div>
         </div>
 
         <div id="farm-ui-bubble-container" style="margin-top: 15px; min-height: 50px; display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; max-width: 360px;"></div>
@@ -1075,7 +1098,10 @@
     </div>
 
     <script>
-        let cash = parseInt(localStorage.getItem("Xdragon_WebCash")) || 0; 
+        let cash = parseInt(localStorage.getItem("Xdragon_WebCash"));
+        if (isNaN(cash) || cash === null) {
+            cash = 0;
+        }
         let distance = 0;
         let gameRunning = false;
         let currentGameMode = "laser"; 
@@ -1132,14 +1158,6 @@
         let restaurantIngredientsSelected = [];
         let restaurantOrdersCompleted = 0;
 
-        /* --- ACE THE BOMB CONFIG STATE VARIATION --- */
-        let abMatchMode = "bot";
-        let abConfiguredComponentsCount = 4;
-        let abPlayersData = [];
-        let abBombCarrierIdx = 0;
-        let abBombTimer = 15.0;
-        let abLastTimeStamped = 0;
-
         const restaurantIngredientsBaseList = [
             '🥔','🍶','🍞','🥦','🥕','🥬','🥑','🫓','🌰','🍋',
             '🍖','🥒','🍥','🫔','🍡','🥡','🥢','🥚','🍤','🌶',
@@ -1162,6 +1180,15 @@
         
         let wheatField = { x: 140, y: 315, w: 80, h: 40 };
 
+        /* --- ACE THE BOMB DATA CORE --- */
+        let abGameMode = "bot"; 
+        let abMaxPlayers = 4;
+        let abPlayersArray = [];
+        let abBombCarrierIdx = 0;
+        let abBombFuseTimer = 15.0;
+        let abLastPassTimestamp = 0; 
+        const abPassCooldownDuration = 1000; 
+
         const cashEl = document.getElementById('cash-amount');
         const buyBtn = document.getElementById('buy-btn');
         const codeOutput = document.getElementById('code-output');
@@ -1173,7 +1200,7 @@
         const burgerGamePanel = document.getElementById('burger-game-panel');
         const guessGamePanel = document.getElementById('guess-game-panel');
         const restaurantPanel = document.getElementById('restaurant-panel');
-        const abControlPanel = document.getElementById('ab-control-panel');
+        const aceBombPanel = document.getElementById('ace-bomb-panel');
         
         const launchLaserBtn = document.getElementById('launch-laser-btn');
         const launchTrainBtn = document.getElementById('launch-train-btn');
@@ -1184,7 +1211,7 @@
         const launchFlappyBtn = document.getElementById('launch-flappy-btn');
         const launchGuessBtn = document.getElementById('launch-guess-btn');
         const launchRestaurantBtn = document.getElementById('launch-restaurant-btn');
-        const launchABBtn = document.getElementById('launch-ab-btn');
+        const launchAceBombBtn = document.getElementById('launch-acebomb-btn');
 
         cashEl.innerText = cash;
         loadFarmProgress(); 
@@ -1214,7 +1241,7 @@
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
             restaurantPanel.classList.add('hidden');
-            abControlPanel.classList.add('hidden');
+            aceBombPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             saveFarmProgress(); 
             updateGlobalCash();
@@ -1244,10 +1271,10 @@
             restaurantPanel.classList.remove('hidden');
             initRestaurantGame();
         });
-        launchABBtn.addEventListener('click', () => {
-            setupArcadeMode("ab", "<span style='color:#9b59b6;'>💣 Ace the Bomb Arena</span>", "Keep moving! Run from whoever holds the explosive element and pass it away!");
-            abControlPanel.classList.remove('hidden');
-            initAceTheBombGame();
+        launchAceBombBtn.addEventListener('click', () => {
+            setupArcadeMode("acebomb", "<span style='color:#eb4d4b;'>🧨 Ace The Bomb</span>", "Use virtual joysticks below to steer characters and escape the explosive device carrier!");
+            aceBombPanel.classList.remove('hidden');
+            initAceBombControlsAndLayout();
         });
 
         function setupArcadeMode(modeName, statsHtml, hintText) {
@@ -1256,7 +1283,7 @@
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
             restaurantPanel.classList.add('hidden');
-            abControlPanel.classList.add('hidden');
+            aceBombPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             currentSelectedFarmTarget = null;
             modeStatLabel.innerHTML = statsHtml + ' <button class="exit-btn" id="exit-game-btn">EXIT</button>';
@@ -1774,474 +1801,350 @@
             generateNewRestaurantOrder();
         }
 
-        /* --- ACE THE BOMB CORE ARCHITECTURE LOGIC --- */
+        /* --- ACE THE BOMB LOGIC HANDLERS --- */
         document.getElementById('ab-mode-bot-btn').onclick = () => {
-            abMatchMode = "bot";
-            document.getElementById('ab-mode-bot-btn').classList.add('active');
-            document.getElementById('ab-mode-mp-btn').classList.remove('active');
-            initAceTheBombGame();
-        };
-        document.getElementById('ab-mode-mp-btn').onclick = () => {
-            abMatchMode = "multiplayer";
-            document.getElementById('ab-mode-mp-btn').classList.add('active');
-            document.getElementById('ab-mode-bot-btn').classList.remove('active');
-            initAceTheBombGame();
+            abGameMode = "bot";
+            document.getElementById('ab-mode-bot-btn').className = "mode-tab-btn active";
+            document.getElementById('ab-mode-pvp-btn').className = "mode-tab-btn";
+            initAceBombControlsAndLayout();
         };
 
-        function toggleABComponents() {
-            if(abConfiguredComponentsCount === 4) abConfiguredComponentsCount = 2;
-            else if(abConfiguredComponentsCount === 2) abConfiguredComponentsCount = 3;
-            else abConfiguredComponentsCount = 4;
-            document.getElementById('ab-count-label').innerText = abConfiguredComponentsCount;
-            initAceTheBombGame();
+        document.getElementById('ab-mode-pvp-btn').onclick = () => {
+            abGameMode = "pvp";
+            document.getElementById('ab-mode-pvp-btn').className = "mode-tab-btn active";
+            document.getElementById('ab-mode-bot-btn').className = "mode-tab-btn";
+            initAceBombControlsAndLayout();
+        };
+
+        document.getElementById('ab-restart-game-btn').onclick = () => {
+            initGame();
+        };
+
+        function initAceBombControlsAndLayout() {
+            const selectEl = document.getElementById('ab-competitor-select');
+            abMaxPlayers = parseInt(selectEl.value) || 4;
+
+            const joyGrid = document.getElementById('ab-joystick-grid');
+            joyGrid.innerHTML = "";
+
+            let joysticksToRender = (abGameMode === "bot") ? 1 : abMaxPlayers;
+
+            for(let i = 0; i < joysticksToRender; i++) {
+                let pNum = i + 1;
+                let wrap = document.createElement('div');
+                wrap.className = "joystick-wrapper-box";
+                
+                let header = document.createElement('div');
+                header.className = "joystick-header-tag";
+                header.innerText = "Player " + pNum + " Pad";
+                header.style.color = getPlayerColorThemeHex(pNum);
+                wrap.appendChild(header);
+
+                let dpad = document.createElement('div');
+                dpad.className = "virtual-dpad-container";
+
+                let btnBlank1 = document.createElement('div');
+                let btnUp = document.createElement('button');
+                btnUp.className = "dpad-direction-btn"; btnUp.innerText = "▲";
+                setupDpadTouchAction(btnUp, pNum, "up");
+
+                let btnBlank2 = document.createElement('div');
+                let btnLeft = document.createElement('button');
+                btnLeft.className = "dpad-direction-btn"; btnLeft.innerText = "◀";
+                setupDpadTouchAction(btnLeft, pNum, "left");
+
+                let btnCenter = document.createElement('div');
+                btnCenter.className = "dpad-direction-btn"; btnCenter.style.background = "#4b5263";
+
+                let btnRight = document.createElement('button');
+                btnRight.className = "dpad-direction-btn"; btnRight.innerText = "▶";
+                setupDpadTouchAction(btnRight, pNum, "right");
+
+                let btnBlank3 = document.createElement('div');
+                let btnDown = document.createElement('button');
+                btnDown.className = "dpad-direction-btn"; btnDown.innerText = "▼";
+                setupDpadTouchAction(btnDown, pNum, "down");
+                let btnBlank4 = document.createElement('div');
+
+                dpad.appendChild(btnBlank1); dpad.appendChild(btnUp); dpad.appendChild(btnBlank2);
+                dpad.appendChild(btnLeft); dpad.appendChild(btnCenter); dpad.appendChild(btnRight);
+                dpad.appendChild(btnBlank3); dpad.appendChild(btnDown); dpad.appendChild(btnBlank4);
+
+                wrap.appendChild(dpad);
+                joyGrid.appendChild(wrap);
+            }
         }
 
-        function initAceTheBombGame() {
-            abBombTimer = 15.0;
-            abPlayersData = [];
-            abLastTimeStamped = Date.now();
-            
-            const titles = ["Player 1", "Player 2", "Player 3", "Player 4"];
-            const colors = ["#1e90ff", "#2ed573", "#ffa502", "#e84393"];
-            
-            for(let i = 0; i < abConfiguredComponentsCount; i++) {
-                let isBotEntity = (abMatchMode === "bot" && i > 0);
-                abPlayersData.push({
-                    id: i,
-                    name: titles[i] + (isBotEntity ? " (Bot)" : ""),
-                    x: 40 + (i * 70),
-                    y: 60 + (i * 70),
+        function setupDpadTouchAction(element, playerNumber, direction) {
+            const triggerMovement = () => {
+                if(!gameRunning || currentGameMode !== "acebomb") return;
+                let pObj = abPlayersArray[playerNumber - 1];
+                if(!pObj || !pObj.alive) return;
+
+                let stride = 14;
+                if(direction === "up" && pObj.y > 20) pObj.y -= stride;
+                if(direction === "down" && pObj.y < 340) pObj.y += stride;
+                if(direction === "left" && pObj.x > 20) pObj.x -= stride;
+                if(direction === "right" && pObj.x < 340) pObj.x += stride;
+            };
+
+            element.onmousedown = (e) => { e.preventDefault(); triggerMovement(); };
+            element.ontouchstart = (e) => { e.preventDefault(); triggerMovement(); };
+        }
+
+        function getPlayerColorThemeHex(num) {
+            if(num === 1) return "#1e90ff";
+            if(num === 2) return "#2ed573";
+            if(num === 3) return "#ffa502";
+            return "#ff4757";
+        }
+
+        function setupAceBombEntities() {
+            abPlayersArray = [];
+            const selectEl = document.getElementById('ab-competitor-select');
+            abMaxPlayers = parseInt(selectEl.value) || 4;
+
+            let spawnCoordinates = [
+                { x: 50, y: 50 },
+                { x: 310, y: 50 },
+                { x: 50, y: 310 },
+                { x: 310, y: 310 }
+            ];
+
+            for(let i = 0; i < abMaxPlayers; i++) {
+                let isBotRole = (abGameMode === "bot" && i > 0);
+                abPlayersArray.push({
+                    id: i + 1,
+                    x: spawnCoordinates[i].x,
+                    y: spawnCoordinates[i].y,
                     radius: 14,
-                    color: colors[i],
-                    isBot: isBotEntity,
                     alive: true,
-                    cooldown: 0,
-                    dx: 0, dy: 0
+                    isBot: isBotRole,
+                    color: getPlayerColorThemeHex(i + 1)
                 });
             }
-            
-            abBombCarrierIdx = Math.floor(Math.random() * abConfiguredComponentsCount);
-            buildABJoystickLayoutUI();
+
+            abBombCarrierIdx = Math.floor(Math.random() * abMaxPlayers);
+            abBombFuseTimer = 15.0;
+            abLastPassTimestamp = Date.now();
+            document.getElementById('ab-action-ticker').innerText = `Contender P${abBombCarrierIdx + 1} targeted with the explosive package!`;
         }
 
-        function buildABJoystickLayoutUI() {
-            const container = document.getElementById('ab-joystick-grid');
-            container.innerHTML = "";
-            
-            abPlayersData.forEach((p) => {
-                if(p.isBot || !p.alive) return;
-                
-                let joyBox = document.createElement('div');
-                joyBox.className = "joystick-wrapper";
-                
-                let title = document.createElement('div');
-                title.className = "joystick-title";
-                title.style.color = p.color;
-                title.innerText = p.name;
-                joyBox.appendChild(title);
-                
-                let cross = document.createElement('div');
-                cross.className = "joystick-cross";
-                
-                let blank1 = document.createElement('div');
-                let upBtn = document.createElement('button');
-                upBtn.className = "joy-btn"; upBtn.innerText = "▲";
-                upBtn.onmousedown = () => { p.dy = -4.5; p.dx = 0; };
-                upBtn.ontouchstart = (e) => { e.preventDefault(); p.dy = -4.5; p.dx = 0; };
-                
-                let blank2 = document.createElement('div');
-                let leftBtn = document.createElement('button');
-                leftBtn.className = "joy-btn"; leftBtn.innerText = "◀";
-                leftBtn.onmousedown = () => { p.dx = -4.5; p.dy = 0; };
-                leftBtn.ontouchstart = (e) => { e.preventDefault(); p.dx = -4.5; p.dy = 0; };
-                
-                let stopBtn = document.createElement('button');
-                stopBtn.className = "joy-btn"; stopBtn.innerText = "■";
-                stopBtn.style.background = "#4b5263";
-                stopBtn.onmousedown = () => { p.dx = 0; p.dy = 0; };
-                stopBtn.ontouchstart = (e) => { e.preventDefault(); p.dx = 0; p.dy = 0; };
-                
-                let rightBtn = document.createElement('button');
-                rightBtn.className = "joy-btn"; rightBtn.innerText = "▶";
-                rightBtn.onmousedown = () => { p.dx = 4.5; p.dy = 0; };
-                rightBtn.ontouchstart = (e) => { e.preventDefault(); p.dx = 4.5; p.dy = 0; };
-                
-                let blank3 = document.createElement('div');
-                let downBtn = document.createElement('button');
-                downBtn.className = "joy-btn"; downBtn.innerText = "▼";
-                downBtn.onmousedown = () => { p.dy = 4.5; p.dx = 0; };
-                downBtn.ontouchstart = (e) => { e.preventDefault(); p.dy = 4.5; p.dx = 0; };
-                
-                cross.appendChild(blank1); cross.appendChild(upBtn); cross.appendChild(blank2);
-                cross.appendChild(leftBtn); cross.appendChild(stopBtn); cross.appendChild(rightBtn);
-                cross.appendChild(blank3); cross.appendChild(downBtn);
-                
-                joyBox.appendChild(cross);
-                container.appendChild(joyBox);
-            });
-        }
-
-        function processAceTheBombFrameUpdate() {
-            let currentNow = Date.now();
-            let elapsedSec = (currentNow - abLastTimeStamped) / 1000;
-            abLastTimeStamped = currentNow;
-            
-            abBombTimer -= elapsedSec;
-            if(abBombTimer <= 0) abBombTimer = 0;
-            
-            document.getElementById('ab-ticker').innerText = "Detonation Clock: " + abBombTimer.toFixed(1) + "s";
-            
-            let aliveCount = 0;
-            let lastSurvivor = null;
-            
-            abPlayersData.forEach(p => {
-                if(p.alive) {
-                    aliveCount++;
-                    lastSurvivor = p;
-                }
-            });
-            
-            if(aliveCount <= 1) {
-                gameRunning = false;
-                if(lastSurvivor && lastSurvivor.id === 0) {
-                    if(abMatchMode === "bot") {
-                        cash += 500; updateGlobalCash();
-                        triggerCustomNotification("🏆 ARENA CHAMPION!\nYou aced the bomb and survived! Earned +$500 cash.", "#2ed573", handleExitToShop);
+        function executeAceBombFrameCalculations() {
+            let rightNow = Date.now();
+            abBombFuseTimer -= 1 / 60;
+            if(abBombFuseTimer <= 0) {
+                abBombFuseTimer = 0;
+                let victim = abPlayersArray[abBombCarrierIdx];
+                if(victim && victim.alive) {
+                    victim.alive = false;
+                    document.getElementById('ab-action-ticker').innerText = `💥 BOOM! Player ${victim.id} exploded into dust!`;
+                    
+                    let activeSurvivors = abPlayersArray.filter(p => p.alive);
+                    if(activeSurvivors.length <= 1) {
+                        gameRunning = false;
+                        let ultimateWinner = activeSurvivors[0] ? activeSurvivors[0].id : 1;
+                        
+                        if(abGameMode === "bot") {
+                            if(ultimateWinner === 1) {
+                                cash += 500; updateGlobalCash();
+                                triggerCustomNotification("🏆 VICTORY!\n\nYou outmaneuvered the server matrices! Earned +$500 Cash.", "#2ed573", handleExitToShop);
+                            } else {
+                                cash = Math.max(0, cash - 500); updateGlobalCash();
+                                triggerCustomNotification(`💀 ELIMINATED!\n\nPlayer ${ultimateWinner} wins the field match. Penalized -$500 Cash.`, "#ff4757", handleExitToShop);
+                            }
+                        } else {
+                            triggerCustomNotification(`👑 CHAMPIONSHIP CONCLUDED!\n\nPlayer ${ultimateWinner} is the lone survivor!`, "#2ed573", handleExitToShop);
+                        }
+                        return;
                     } else {
-                        triggerCustomNotification(`🏆 MATCH OVER!\n${lastSurvivor.name} won the survival arena match!`, "#2ed573", handleExitToShop);
-                    }
-                } else {
-                    if(abMatchMode === "bot") {
-                        cash = Math.max(0, cash - 500); updateGlobalCash();
-                        triggerCustomNotification("💀 ELIMINATED!\nYour player profile blew up. Penalized -$500 cash.", "#ff4757", handleExitToShop);
-                    } else {
-                        triggerCustomNotification(`🏆 MATCH OVER!\n${lastSurvivor ? lastSurvivor.name : "Nobody"} survived the blast radius!`, "#ffa502", handleExitToShop);
+                        abBombCarrierIdx = abPlayersArray.findIndex(p => p.alive);
+                        abBombFuseTimer = 15.0;
+                        abLastPassTimestamp = Date.now();
                     }
                 }
-                return;
-            }
-            
-            if(abBombTimer <= 0) {
-                let carrier = abPlayersData[abBombCarrierIdx];
-                if(carrier && carrier.alive) {
-                    carrier.alive = false;
-                    triggerCustomNotification(`💥 BOOM!\n${carrier.name} exploded!`, "#ff4757", () => {
-                        abBombTimer = 15.0;
-                        abLastTimeStamped = Date.now();
-                        let nextLiveIdx = abPlayersData.findIndex(p => p.alive);
-                        if(nextLiveIdx !== -1) abBombCarrierIdx = nextLiveIdx;
-                        buildABJoystickLayoutUI();
-                    });
-                }
-                return;
             }
 
-            abPlayersData.forEach((p, idx) => {
-                if(!p.alive) return;
-                if(p.cooldown > 0) p.cooldown -= elapsedSec;
-                
+            document.getElementById('ab-instruction-banner').innerText = `Fuse Time Left: ${abBombFuseTimer.toFixed(1)}s`;
+
+            ctx.lineWidth = 4; ctx.strokeStyle = "#444"; ctx.strokeRect(0,0, canvas.width, canvas.height);
+
+            for(let i = 0; i < abPlayersArray.length; i++) {
+                let p = abPlayersArray[i];
+                if(!p.alive) continue;
+
                 if(p.isBot) {
-                    let target = null;
-                    if(idx === abBombCarrierIdx) {
-                        let closestDist = 999999;
-                        abPlayersData.forEach((o, oIdx) => {
-                            if(oIdx !== idx && o.alive && o.cooldown <= 0) {
-                                let d = Math.hypot(o.x - p.x, o.y - p.y);
-                                if(d < closestDist) { closestDist = d; target = o; }
+                    let targetUnit = null;
+                    if(abBombCarrierIdx === i) {
+                        let closestDistance = 9999;
+                        abPlayersArray.forEach((other, oIdx) => {
+                            if(oIdx !== i && other.alive) {
+                                let d = Math.hypot(other.x - p.x, other.y - p.y);
+                                if(d < closestDistance) { closestDistance = d; targetUnit = other; }
                             }
                         });
-                        if(target) {
-                            let angle = Math.atan2(target.y - p.y, target.x - p.x);
-                            p.x += Math.cos(angle) * 2.2; p.y += Math.sin(angle) * 2.2;
+                        if(targetUnit) {
+                            let dx = targetUnit.x - p.x; let dy = targetUnit.y - p.y; let dist = Math.hypot(dx, dy);
+                            if(dist > 2) { p.x += (dx / dist) * 2.2; p.y += (dy / dist) * 2.2; }
                         }
                     } else {
-                        let carrier = abPlayersData[abBombCarrierIdx];
-                        if(carrier) {
-                            let dist = Math.hypot(carrier.x - p.x, carrier.y - p.y);
-                            if(dist < 120) {
-                                let angle = Math.atan2(p.y - carrier.y, p.x - carrier.x);
-                                p.x += Math.cos(angle) * 2.5; p.y += Math.sin(angle) * 2.5;
-                            } else {
-                                p.x += (Math.random() - 0.5) * 2; p.y += (Math.random() - 0.5) * 2;
-                            }
+                        let dangerousCarrier = abPlayersArray[abBombCarrierIdx];
+                        if(dangerousCarrier) {
+                            let dx = p.x - dangerousCarrier.x; let dy = p.y - dangerousCarrier.y; let dist = Math.hypot(dx, dy);
+                            if(dist < 160 && dist > 2) { p.x += (dx / dist) * 3.0; p.y += (dy / dist) * 3.0; }
                         }
+                        if(Math.random() < 0.02) { p.x += (Math.random() - 0.5) * 20; p.y += (Math.random() - 0.5) * 20; }
                     }
-                } else {
-                    p.x += p.dx; p.y += p.dy;
+
+                    if(p.x < 20) p.x = 20; if(p.x > 340) p.x = 340;
+                    if(p.y < 20) p.y = 20; if(p.y > 340) p.y = 340;
                 }
-                
-                if(p.x < p.radius) p.x = p.radius;
-                if(p.x > canvas.width - p.radius) p.x = canvas.width - p.radius;
-                if(p.y < p.radius) p.y = p.radius;
-                if(p.y > canvas.height - p.radius) p.y = canvas.height - p.radius;
-            });
 
-            let carrier = abPlayersData[abBombCarrierIdx];
-            if(carrier && carrier.alive && carrier.cooldown <= 0) {
-                abPlayersData.forEach((p, idx) => {
-                    if(idx !== abBombCarrierIdx && p.alive && p.cooldown <= 0) {
-                        let dist = Math.hypot(carrier.x - p.x, carrier.y - p.y);
-                        if(dist < (carrier.radius + p.radius)) {
-                            abBombCarrierIdx = idx;
-                            abPlayersData[abBombCarrierIdx].cooldown = 3.0;
-                            carrier.cooldown = 3.0;
-                        }
-                    }
-                });
-            }
-
-            abPlayersData.forEach(p => {
-                if(!p.alive) return;
+                ctx.fillStyle = p.color;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
                 ctx.fill();
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "#ffffff";
-                ctx.stroke();
-                
-                if(p.id === abBombCarrierIdx) {
-                    ctx.font = "16px Arial";
-                    ctx.fillText("💣", p.x - 8, p.y - 18);
+
+                ctx.fillStyle = "white"; ctx.font = "bold 11px Arial"; ctx.textAlign = "center";
+                ctx.fillText(p.isBot ? "🤖" : `P${p.id}`, p.x, p.y + 4);
+
+                if(abBombCarrierIdx === i) {
+                    ctx.strokeStyle = "#eb4d4b"; ctx.lineWidth = 3;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.radius + 6 + Math.sin(rightNow / 100) * 3, 0, Math.PI*2);
+                    ctx.stroke();
+                    ctx.font = "14px Arial"; ctx.fillText("💣", p.x, p.y - 18);
                 }
-                if(p.cooldown > 0) {
-                    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-                    ctx.font = "bold 9px Arial";
-                    ctx.fillText("🔒 " + Math.ceil(p.cooldown) + "s", p.x - 12, p.y + 3);
-                }
-            });
-        }
-
-        function initGame() {
-            canvas = document.getElementById('runnerCanvas');
-            ctx = canvas.getContext('2d');
-            distance = 0; obstacles = []; activeCoins = []; activeBushes = [];
-            isTrainAlertActive = false; alertEndTime = 0;
-            
-            jetBullets = []; jetAliens = []; jetScore = 0;
-            fpVelocity = 0; fpPipes = []; fpFrameCounter = 0;
-
-            if (currentGameMode === "burger" || currentGameMode === "guess" || currentGameMode === "restaurant") {
-                canvas.classList.add('hidden');
-                if(currentGameMode === "burger") { burgerGamePanel.classList.remove('hidden'); initBurgerGame(); }
-                return;
-            } else { canvas.classList.remove('hidden'); }
-
-            gameRunning = true;
-            runner = {
-                x: canvas.width / 2 - 15, y: canvas.height - 100, 
-                w: 30, h: 30, speed: 8.5,
-                targetX: canvas.width / 2 - 15, targetY: canvas.height - 100,
-                moveLeft: false, moveRight: false
-            };
-
-            if (currentGameMode === "farm") {
-                runner.x = 165; runner.y = 220; runner.speed = 5;
-                canvas.onclick = processFarmCanvasClick;
-            } else if (currentGameMode === "chen") {
-                canvas.onclick = processChenMazeClick;
-                generateRandomMazeMatrix();
-            } else if (currentGameMode === "flappy") {
-                runner.y = canvas.height / 2; runner.w = 34; runner.h = 24;
-                canvas.onclick = () => { fpVelocity = fpJump; };
-            } else if (currentGameMode === "ab") {
-                canvas.onclick = null;
-            } else { canvas.onclick = null; }
-
-            if(currentGameMode === "train") {
-                obstacles.push({ x: canvas.width / 2 - 40, y: canvas.height + 120, w: 80, h: 65, targetY: canvas.height + 120 });
             }
 
-            window.onkeydown = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
-                if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
-                if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
-            };
-            window.onkeyup = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
-                if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
-                if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
-            };
+            let carrier = abPlayersArray[abBombCarrierIdx];
+            if(carrier && carrier.alive && (rightNow - abLastPassTimestamp > abPassCooldownDuration)) {
+                for(let j = 0; j < abPlayersArray.length; j++) {
+                    if(j === abBombCarrierIdx) continue;
+                    let target = abPlayersArray[j];
+                    if(!target.alive) continue;
 
-            canvas.ontouchstart = (e) => {
-                if(currentGameMode === "flappy") { fpVelocity = fpJump; return; }
-                if(["farm", "burger", "guess", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
-                let rect = canvas.getBoundingClientRect();
-                let touchX = e.touches[0].clientX - rect.left;
-                if(touchX < canvas.width / 2) runner.moveLeft = true;
-                else runner.moveRight = true;
-            };
-            canvas.ontouchend = () => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
-                runner.moveLeft = false; runner.moveRight = false;
-            };
-
-            gameLoop();
-        }
-
-        function generateRandomMazeMatrix() {
-            mazeGrid = []; mazeCoins = [];
-            const layoutTemplate = [
-                [0,0,0,0,1,0,0,0,0],
-                [0,1,1,0,1,0,1,1,0],
-                [0,1,0,0,0,0,0,1,0],
-                [0,0,0,1,1,1,0,0,0],
-                [1,1,0,1,0,1,0,1,1],
-                [0,0,0,1,1,1,0,0,0],
-                [0,1,0,0,0,0,0,1,0],
-                [0,1,1,0,1,0,1,1,0],
-                [0,0,0,0,1,0,0,0,0]
-            ];
-            
-            for(let r=0; r<mazeRows; r++) {
-                mazeGrid[r] = [];
-                for(let c=0; c<mazeCols; c++) {
-                    mazeGrid[r][c] = layoutTemplate[r][c];
-                    if(layoutTemplate[r][c] === 0 && Math.random() < 0.25 && !(r===0 && c===0) && !(r===8 && c===8)) {
-                        mazeCoins.push({r: r, c: c});
+                    let intersectionDistance = Math.hypot(carrier.x - target.x, carrier.y - target.y);
+                    if(intersectionDistance < (carrier.radius + target.radius + 4)) {
+                        abBombCarrierIdx = j;
+                        abLastPassTimestamp = rightNow;
+                        document.getElementById('ab-action-ticker').innerText = `🔄 Passed! Bomb moved from Player ${carrier.id} to Player ${target.id}!`;
+                        break;
                     }
                 }
             }
-            mazePlayer.x = 0; mazePlayer.y = 0;
-            mazeGhost.x = 8; mazeGhost.y = 8;
-            mazeGhostSpeedTimer = 0;
         }
 
-        function processChenMazeClick(e) {
-            let rect = canvas.getBoundingClientRect();
-            let clickX = e.clientX - rect.left;
-            let clickY = e.clientY - rect.top;
-
-            let targetCol = Math.floor(clickX / mazeCellSize);
-            let targetRow = Math.floor(clickY / mazeCellSize);
-
-            if(targetCol >= 0 && targetCol < mazeCols && targetRow >= 0 && targetRow < mazeRows) {
-                if (targetCol === mazePlayer.x && targetRow === mazePlayer.y) return;
-                
-                let dx = targetCol - mazePlayer.x;
-                let dy = targetRow - mazePlayer.y;
-                
-                let stepX = 0;
-                let stepY = 0;
-                
-                if (Math.abs(dx) > Math.abs(dy)) { stepX = dx > 0 ? 1 : -1; } 
-                else { stepY = dy > 0 ? 1 : -1; }
-                
-                let currentX = mazePlayer.x;
-                let currentY = mazePlayer.y;
-                
-                while (true) {
-                    let nextX = currentX + stepX;
-                    let nextY = currentY + stepY;
-                    
-                    if (nextX >= 0 && nextX < mazeCols && nextY >= 0 && nextY < mazeRows && mazeGrid[nextY][nextX] === 0) {
-                        currentX = nextX;
-                        currentY = nextY;
-                        
-                        for(let i = mazeCoins.length - 1; i >= 0; i--) {
-                            if(mazeCoins[i].r === currentY && mazeCoins[i].c === currentX) {
-                                mazeCoins.splice(i, 1);
-                                distance += 1; cash += 5; updateGlobalCash();
-                                document.getElementById('distance-val').innerText = distance;
-                            }
-                        }
-                    } else { break; }
-                }
-                
-                if (currentX !== mazePlayer.x || currentY !== mazePlayer.y) {
-                    mazePlayer.x = currentX;
-                    mazePlayer.y = currentY;
-                    processChenMazeLogicEvaluation();
-                }
-            }
-        }
-
-        function processChenMazeLogicEvaluation() {
-            let gdx = mazePlayer.x - mazeGhost.x;
-            let gdy = mazePlayer.y - mazeGhost.y;
+        function generateNewRestaurantOrder() {
+            const types = [
+                "Fries 🍟", "Sandwich 🥪", "Tacos 🌮", "Ramen 🍜", "Pizza 🍕",
+                "Burger 🍔", "Soda 🥤", "Spaghetti 🍝", "HotDog 🌭"
+            ];
+            currentRestaurantOrder = types[Math.floor(Math.random() * types.length)];
+            document.getElementById('restaurant-order-display').innerText = `Order: ${currentRestaurantOrder}`;
             
-            if(Math.abs(gdx) > Math.abs(gdy)) {
-                let step = gdx > 0 ? 1 : -1;
-                if(mazeGrid[mazeGhost.y][mazeGhost.x + step] === 0) mazeGhost.x += step;
-                else if(mazeGrid[mazeGhost.y + (gdy > 0 ? 1 : -1)]?.[mazeGhost.x] === 0) mazeGhost.y += (gdy > 0 ? 1 : -1);
+            let shuffledIngredients = [...restaurantIngredientsBaseList];
+            for (let i = shuffledIngredients.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledIngredients[i], shuffledIngredients[j]] = [shuffledIngredients[j], shuffledIngredients[i]];
+            }
+
+            const stripContainer = document.getElementById('restaurant-ingredient-strip');
+            stripContainer.innerHTML = "";
+            shuffledIngredients.forEach(emoji => {
+                let bin = document.createElement('div');
+                bin.className = "restaurant-ingredient-bin";
+                bin.innerText = emoji;
+                bin.onclick = () => addRestaurantIngredient(emoji);
+                stripContainer.appendChild(bin);
+            });
+
+            clearRestaurantBowl();
+        }
+
+        function addRestaurantIngredient(emoji) {
+            restaurantIngredientsSelected.push(emoji);
+            renderRestaurantBowl();
+        }
+
+        function clearRestaurantBowl() {
+            restaurantIngredientsSelected = [];
+            renderRestaurantBowl();
+        }
+
+        function renderRestaurantBowl() {
+            const bowlEl = document.getElementById('restaurant-bowl-display');
+            if (restaurantIngredientsSelected.length === 0) {
+                bowlEl.innerText = "[Empty Mixing Bowl]";
+                bowlEl.style.color = "#747d8c";
             } else {
-                let step = gdy > 0 ? 1 : -1;
-                if(mazeGrid[mazeGhost.y + step]?.[mazeGhost.x] === 0) mazeGhost.y += step;
-                else if(mazeGrid[mazeGhost.y][mazeGhost.x + (gdx > 0 ? 1 : -1)] === 0) mazeGhost.x += (gdx > 0 ? 1 : -1);
-            }
-
-            if(mazePlayer.x === mazeGhost.x && mazePlayer.y === mazeGhost.y) {
-                gameRunning = false;
-                triggerCustomNotification("💀 CAUGHT BY CHEN CHEN!\n\nYou were trapped inside the maze core matrix.", "#ff4757", () => {
-                    gameScreen.classList.add('hidden');
-                });
+                bowlEl.innerText = restaurantIngredientsSelected.join(" ");
+                bowlEl.style.color = "#ffffff";
             }
         }
 
-        function processFarmCanvasClick(e) {
-            let rect = canvas.getBoundingClientRect();
-            let clickX = e.clientX - rect.left;
-            let clickY = e.clientY - rect.top;
-            
-            if (clickX >= wheatField.x && clickX <= wheatField.x + wheatField.w && clickY >= wheatField.y && clickY <= wheatField.y + wheatField.h) {
-                runner.targetX = wheatField.x + wheatField.w / 2 - 15;
-                runner.targetY = wheatField.y - 15;
-                
-                currentSelectedFarmTarget = "wheat";
-                refreshFarmUIBubble();
-                return;
+        function serveRestaurantOrder() {
+            let matchesProfile = false;
+            let currentString = [...restaurantIngredientsSelected].sort().join("");
+
+            if (currentRestaurantOrder.includes("Fries")) {
+                let friesTarget = ["🥔", "🍶"].sort().join("");
+                if (currentString === friesTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Sandwich")) {
+                let sandwichTarget = ["🍞", "🥦", "🥕", "🥬", "🥑"].sort().join("");
+                if (currentString === sandwichTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Tacos")) {
+                let tacosTarget = ["🫓", "🌰", "🍋", "🍖", "🥒"].sort().join("");
+                if (currentString === tacosTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Ramen")) {
+                let ramenTarget = ["🍥", "🫔", "🍡", "🥡", "🥢", "🥚"].sort().join("");
+                if (currentString === ramenTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Pizza")) {
+                let pizzaTarget = ["🫓", "🫓", "🍤", "🌶"].sort().join("");
+                if (currentString === pizzaTarget) matchesProfile = true;
+            }
+            else if (currentRestaurantOrder.includes("Burger")) {
+                let burgerTarget = ["🫓", "🫓", "🥬", "🥒", "🍅", "🧅", "🧀"].sort().join("");
+                if (currentString === burgerTarget) matchesProfile = true;
+            }
+            else if (currentRestaurantOrder.includes("Soda")) {
+                let sodaTarget = ["🧊", "🍶", "💧"].sort().join("");
+                if (currentString === sodaTarget) matchesProfile = true;
+            }
+            else if (currentRestaurantOrder.includes("Spaghetti")) {
+                let spaghettiTarget = ["🫔", "🥫", "🧅"].sort().join("");
+                if (currentString === spaghettiTarget) matchesProfile = true;
+            }
+            else if (currentRestaurantOrder.includes("HotDog")) {
+                let hotdogTarget = ["🥖", "🍅", "🫓"].sort().join("");
+                if (currentString === hotdogTarget) matchesProfile = true;
             }
 
-            for (let i = 0; i < fences.length; i++) {
-                let f = fences[i];
-                if (f && clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
-                    runner.targetX = f.x + f.w / 2 - 15; 
-                    runner.targetY = f.y + f.h / 2 - 15;
-                    
-                    currentSelectedFarmTarget = { type: "fence", index: i };
-                    refreshFarmUIBubble();
-                    return;
-                }
-            }
-        }
+            let generatedPayout = 0;
+            let statusMessage = "";
+            let colorTheme = "";
 
-        function refreshFarmUIBubble() {
-            if (!currentSelectedFarmTarget) {
-                bubbleContainer.innerHTML = "";
-                return;
+            if (matchesProfile) {
+                generatedPayout = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+                statusMessage = `✨ PERFECT RECIPE!\nThe customer loved your beautifully cooked ${currentRestaurantOrder}!`;
+                colorTheme = "#2ed573";
+                restaurantOrdersCompleted++;
+                document.getElementById('distance-val').innerText = restaurantOrdersCompleted;
+            } else {
+                generatedPayout = Math.floor(Math.random() * (40 - 5 + 1)) + 5;
+                statusMessage = `🤢 WRONG INGREDIENTS!\nYou scrambled the recipe requirements for the ${currentRestaurantOrder}.`;
+                colorTheme = "#ff4757";
             }
 
-            if (currentSelectedFarmTarget === "wheat") {
-                bubbleContainer.innerHTML = `
-                    <button class="farm-action-bubble" onclick="executeContextualHarvest()">
-                        🌾 Harvest Crop / Gather Wheat (+1 Stack)
-                    </button>
-                `;
-            } else if (currentSelectedFarmTarget.type === "fence") {
-                let idx = currentSelectedFarmTarget.index;
-                let f = fences[idx];
-                if (!f) return;
+            cash += generatedPayout;
+            updateGlobalCash();
 
-                if (f.locked) {
-                    bubbleContainer.innerHTML = `
-                        <button class="farm-action-bubble lock-style" onclick="unlockPlot(${idx})">
-                            🔓 Unlock Plot #${idx+1}? (Costs $150 Cash)
-                        </button>
-                    `;
-                } else if (f.pet) {
-                    bubbleContainer.innerHTML = `
-                        <button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${idx})">
-                            🍖 Feed standard Wheat to Level ${f.age} ${f.pet}
-                        </button>
-                    `;
-                } else {
-                    bubbleContainer.innerHTML = `
-                        <div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">
-                            Plot #${idx+1} is empty. Buy a Pet from the market below!
-                        </div>
-                    `;
-                }
-            }
+            triggerCustomNotification(`${statusMessage}\n\nEarnings Received: +$${generatedPayout} Cash.`, colorTheme, () => {
+                generateNewRestaurantOrder();
+            });
         }
 
         function executeContextualHarvest() {
@@ -2306,8 +2209,8 @@
             if(!gameRunning || ["burger", "guess", "restaurant"].includes(currentGameMode)) return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
-            if (currentGameMode === "ab") {
-                processAceTheBombFrameUpdate();
+            if (currentGameMode === "acebomb") {
+                executeAceBombFrameCalculations();
                 requestAnimationFrame(gameLoop);
                 return;
             }
@@ -2538,6 +2441,237 @@
             }
 
             requestAnimationFrame(gameLoop);
+        }
+
+        function initGame() {
+            canvas = document.getElementById('runnerCanvas');
+            ctx = canvas.getContext('2d');
+            distance = 0; obstacles = []; activeCoins = []; activeBushes = [];
+            isTrainAlertActive = false; alertEndTime = 0;
+            
+            jetBullets = []; jetAliens = []; jetScore = 0;
+            fpVelocity = 0; fpPipes = []; fpFrameCounter = 0;
+
+            if (currentGameMode === "burger" || currentGameMode === "guess" || currentGameMode === "restaurant" || currentGameMode === "acebomb") {
+                canvas.classList.add('hidden');
+                if(currentGameMode === "burger") { burgerGamePanel.classList.remove('hidden'); initBurgerGame(); }
+                if(currentGameMode === "acebomb") { canvas.classList.remove('hidden'); setupAceBombEntities(); gameRunning = true; gameLoop(); }
+                return;
+            } else { canvas.classList.remove('hidden'); }
+
+            gameRunning = true;
+            runner = {
+                x: canvas.width / 2 - 15, y: canvas.height - 100, 
+                w: 30, h: 30, speed: 8.5,
+                targetX: canvas.width / 2 - 15, targetY: canvas.height - 100,
+                moveLeft: false, moveRight: false
+            };
+
+            if (currentGameMode === "farm") {
+                runner.x = 165; runner.y = 220; runner.speed = 5;
+                canvas.onclick = processFarmCanvasClick;
+            } else if (currentGameMode === "chen") {
+                canvas.onclick = processChenMazeClick;
+                generateRandomMazeMatrix();
+            } else if (currentGameMode === "flappy") {
+                runner.y = canvas.height / 2; runner.w = 34; runner.h = 24;
+                canvas.onclick = () => { fpVelocity = fpJump; };
+            } else { canvas.onclick = null; }
+
+            if(currentGameMode === "train") {
+                obstacles.push({ x: canvas.width / 2 - 40, y: canvas.height + 120, w: 80, h: 65, targetY: canvas.height + 120 });
+            }
+
+            window.onkeydown = (e) => {
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "acebomb"].includes(currentGameMode)) return;
+                if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
+                if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
+            };
+            window.onkeyup = (e) => {
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "acebomb"].includes(currentGameMode)) return;
+                if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
+                if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
+            };
+
+            canvas.ontouchstart = (e) => {
+                if(currentGameMode === "flappy") { fpVelocity = fpJump; return; }
+                if(["farm", "burger", "guess", "chen", "restaurant", "acebomb"].includes(currentGameMode)) return;
+                let rect = canvas.getBoundingClientRect();
+                let touchX = e.touches[0].clientX - rect.left;
+                if(touchX < canvas.width / 2) runner.moveLeft = true;
+                else runner.moveRight = true;
+            };
+            canvas.ontouchend = () => {
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "acebomb"].includes(currentGameMode)) return;
+                runner.moveLeft = false; runner.moveRight = false;
+            };
+
+            gameLoop();
+        }
+
+        function generateRandomMazeMatrix() {
+            mazeGrid = []; mazeCoins = [];
+            const layoutTemplate = [
+                [0,0,0,0,1,0,0,0,0],
+                [0,1,1,0,1,0,1,1,0],
+                [0,1,0,0,0,0,0,1,0],
+                [0,0,0,1,1,1,0,0,0],
+                [1,1,0,1,0,1,0,1,1],
+                [0,0,0,1,1,1,0,0,0],
+                [0,1,0,0,0,0,0,1,0],
+                [0,1,1,0,1,0,1,1,0],
+                [0,0,0,0,1,0,0,0,0]
+            ];
+            
+            for(let r=0; r<mazeRows; r++) {
+                mazeGrid[r] = [];
+                for(let c=0; c<mazeCols; c++) {
+                    mazeGrid[r][c] = layoutTemplate[r][c];
+                    if(layoutTemplate[r][c] === 0 && Math.random() < 0.25 && !(r===0 && c===0) && !(r===8 && c===8)) {
+                        mazeCoins.push({r: r, c: c});
+                    }
+                }
+            }
+            mazePlayer.x = 0; mazePlayer.y = 0;
+            mazeGhost.x = 8; mazeGhost.y = 8;
+            mazeGhostSpeedTimer = 0;
+        }
+
+        function processChenMazeClick(e) {
+            let rect = canvas.getBoundingClientRect();
+            let clickX = e.clientX - rect.left;
+            let clickY = e.clientY - rect.top;
+
+            let targetCol = Math.floor(clickX / mazeCellSize);
+            let targetRow = Math.floor(clickY / mazeCellSize);
+
+            if(targetCol >= 0 && targetCol < mazeCols && targetRow >= 0 && targetRow < mazeRows) {
+                if (targetCol === mazePlayer.x && targetRow === mazePlayer.y) return;
+                
+                let dx = targetCol - mazePlayer.x;
+                let dy = targetRow - mazePlayer.y;
+                
+                let stepX = 0;
+                let stepY = 0;
+                
+                if (Math.abs(dx) > Math.abs(dy)) { stepX = dx > 0 ? 1 : -1; } 
+                else { stepY = dy > 0 ? 1 : -1; }
+                
+                let currentX = mazePlayer.x;
+                let currentY = mazePlayer.y;
+                
+                while (true) {
+                    let nextX = currentX + stepX;
+                    let nextY = currentY + stepY;
+                    
+                    if (nextX >= 0 && nextX < mazeCols && nextY >= 0 && nextY < mazeRows && mazeGrid[nextY][nextX] === 0) {
+                        currentX = nextX;
+                        currentY = nextY;
+                        
+                        for(let i = mazeCoins.length - 1; i >= 0; i--) {
+                            if(mazeCoins[i].r === currentY && mazeCoins[i].c === currentX) {
+                                mazeCoins.splice(i, 1);
+                                distance += 1; cash += 5; updateGlobalCash();
+                                document.getElementById('distance-val').innerText = distance;
+                            }
+                        }
+                    } else { break; }
+                }
+                
+                if (currentX !== mazePlayer.x || currentY !== mazePlayer.y) {
+                    mazePlayer.x = currentX;
+                    mazePlayer.y = currentY;
+                    processChenMazeLogicEvaluation();
+                }
+            }
+        }
+
+        function processChenMazeLogicEvaluation() {
+            let gdx = mazePlayer.x - mazeGhost.x;
+            let gdy = mazePlayer.y - mazeGhost.y;
+            
+            if(Math.abs(gdx) > Math.abs(gdy)) {
+                let step = gdx > 0 ? 1 : -1;
+                if(mazeGrid[mazeGhost.y][mazeGhost.x + step] === 0) mazeGhost.x += step;
+                else if(mazeGrid[mazeGhost.y + (gdy > 0 ? 1 : -1)]?.[mazeGhost.x] === 0) mazeGhost.y += (gdy > 0 ? 1 : -1);
+            } else {
+                let step = gdy > 0 ? 1 : -1;
+                if(mazeGrid[mazeGhost.y + step]?.[mazeGhost.x] === 0) mazeGhost.y += step;
+                else if(mazeGrid[mazeGhost.y][mazeGhost.x + (gdx > 0 ? 1 : -1)] === 0) mazeGhost.x += (gdx > 0 ? 1 : -1);
+            }
+
+            if(mazePlayer.x === mazeGhost.x && mazePlayer.y === mazeGhost.y) {
+                gameRunning = false;
+                triggerCustomNotification("💀 CAUGHT BY CHEN CHEN!\n\nYou were trapped inside the maze core matrix.", "#ff4757", () => {
+                    gameScreen.classList.add('hidden');
+                });
+            }
+        }
+
+        function processFarmCanvasClick(e) {
+            let rect = canvas.getBoundingClientRect();
+            let clickX = e.clientX - rect.left;
+            let clickY = e.clientY - rect.top;
+            
+            if (clickX >= wheatField.x && clickX <= wheatField.x + wheatField.w && clickY >= wheatField.y && clickY <= wheatField.y + wheatField.h) {
+                runner.targetX = wheatField.x + wheatField.w / 2 - 15;
+                runner.targetY = wheatField.y - 15;
+                
+                currentSelectedFarmTarget = "wheat";
+                refreshFarmUIBubble();
+                return;
+            }
+
+            for (let i = 0; i < fences.length; i++) {
+                let f = fences[i];
+                if (f && clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
+                    runner.targetX = f.x + f.w / 2 - 15; 
+                    runner.targetY = f.y + f.h / 2 - 15;
+                    
+                    currentSelectedFarmTarget = { type: "fence", index: i };
+                    refreshFarmUIBubble();
+                    return;
+                }
+            }
+        }
+
+        function refreshFarmUIBubble() {
+            if (!currentSelectedFarmTarget) {
+                bubbleContainer.innerHTML = "";
+                return;
+            }
+
+            if (currentSelectedFarmTarget === "wheat") {
+                bubbleContainer.innerHTML = `
+                    <button class="farm-action-bubble" onclick="executeContextualHarvest()">
+                        🌾 Harvest Crop / Gather Wheat (+1 Stack)
+                    </button>
+                `;
+            } else if (currentSelectedFarmTarget.type === "fence") {
+                let idx = currentSelectedFarmTarget.index;
+                let f = fences[idx];
+                if (!f) return;
+
+                if (f.locked) {
+                    bubbleContainer.innerHTML = `
+                        <button class="farm-action-bubble lock-style" onclick="unlockPlot(${idx})">
+                            🔓 Unlock Plot #${idx+1}? (Costs $150 Cash)
+                        </button>
+                    `;
+                } else if (f.pet) {
+                    bubbleContainer.innerHTML = `
+                        <button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${idx})">
+                            🍖 Feed standard Wheat to Level ${f.age} ${f.pet}
+                        </button>
+                    `;
+                } else {
+                    bubbleContainer.innerHTML = `
+                        <div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">
+                            Plot #${idx+1} is empty. Buy a Pet from the market below!
+                        </div>
+                    `;
+                }
+            }
         }
     </script>
 </body>
