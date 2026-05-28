@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xdragon Web Shop & Arcade</title>
     <style>
         body {
@@ -754,6 +754,64 @@
             background-color: #57606f;
         }
 
+        /* --- ACE THE BOMB AREA --- */
+        .atb-panel {
+            width: 100%;
+            max-width: 400px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            border: 2px solid #9b59b6;
+        }
+
+        .atb-joystick-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .atb-joystick-box {
+            background: #151515;
+            border: 1px solid #444;
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .atb-joystick-label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .atb-pad-surface {
+            width: 80px;
+            height: 80px;
+            background: #2c3e50;
+            border-radius: 50%;
+            position: relative;
+            touch-action: none;
+        }
+
+        .atb-pad-thumb {
+            width: 30px;
+            height: 30px;
+            background: #e74c3c;
+            border-radius: 50%;
+            position: absolute;
+            top: 25px; left: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+        }
+
         .notification-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -792,52 +850,6 @@
             border-radius: 6px;
             cursor: pointer;
             outline: none;
-        }
-
-        /* --- ACE THE BOMB PANEL --- */
-        .acebomb-panel {
-            width: 100%;
-            max-width: 400px;
-            background-color: #1e1e1e;
-            border-radius: 12px;
-            padding: 15px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-            border: 2px solid #e1b12c;
-        }
-
-        .joysticks-layout-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 100%;
-            margin-top: 15px;
-            box-sizing: border-box;
-        }
-
-        .joystick-outer-base {
-            width: 90px;
-            height: 90px;
-            background: rgba(47, 53, 66, 0.8);
-            border: 2px solid #747d8c;
-            border-radius: 50%;
-            position: relative;
-            touch-action: none;
-            margin: 0 auto;
-        }
-
-        .joystick-inner-stick {
-            width: 36px;
-            height: 36px;
-            background: #ff4757;
-            border-radius: 50%;
-            position: absolute;
-            top: 27px;
-            left: 27px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
         }
     </style>
 </head>
@@ -922,13 +934,15 @@
             <p class="game-section-title" style="color: #2ed573;">GUESS NUMBER</p>
             <button class="play-trigger-btn" id="launch-guess-btn" style="color: #2ed573;">🔮 PLAY</button>
         </div>
+        
         <div class="game-column full-width" style="border: 1px solid #54a0ff;">
             <p class="game-section-title" style="color: #54a0ff;">CLOUDE RESTAURANT</p>
             <button class="play-trigger-btn" id="launch-restaurant-btn" style="color: #54a0ff;">🧑‍🍳 START COOKING</button>
         </div>
-        <div class="game-column full-width" style="border: 2px solid #e1b12c; margin-top: 5px;">
-            <p class="game-section-title" style="color: #e1b12c;">💣 ACE THE BOMB 💣</p>
-            <button class="play-trigger-btn" id="launch-acebomb-btn" style="color: #e1b12c;">🏃‍♂️ RUN & TAG</button>
+
+        <div class="game-column full-width" style="border: 2px solid #9b59b6; background-color: #1a1326;">
+            <p class="game-section-title" style="color: #2ed573; font-weight: 900;">🔥 NEW MODE 🔥</p>
+            <button class="play-trigger-btn" id="launch-atb-btn" style="color: #9b59b6;">💣 ACE THE BOMB</button>
         </div>
     </div>
 
@@ -1014,20 +1028,24 @@
             </div>
         </div>
 
-        <div class="acebomb-panel hidden" id="acebomb-panel">
+        <div class="atb-panel hidden" id="atb-panel">
             <div class="burger-mode-select">
-                <button class="mode-tab-btn active" id="ab-mode-bot-btn">🤖 BOT MODE</button>
-                <button class="mode-tab-btn" id="ab-mode-player-btn">👥 PLAYER MODE</button>
+                <button class="mode-tab-btn active" id="atb-bot-btn">🤖 BOT MATCH</button>
+                <button class="mode-tab-btn" id="atb-mp-btn">👥 PLAYER MODE</button>
             </div>
-            <div class="burger-mode-select" id="ab-player-count-row" style="display:none;">
-                <button class="mode-tab-btn" id="ab-pc-2">2 PLYRS</button>
-                <button class="mode-tab-btn" id="ab-pc-3">3 PLYRS</button>
-                <button class="mode-tab-btn active" id="ab-pc-4">4 PLYRS</button>
+            <div style="margin-bottom: 12px; font-weight: bold; font-size: 0.9rem;">
+                Total Contenders: 
+                <select id="atb-count-select" style="background:#2f3542; color:#fff; border:1px solid #747d8c; border-radius:4px; padding:4px;">
+                    <option value="2">2 Contenders</option>
+                    <option value="3">3 Contenders</option>
+                    <option value="4" selected>4 Contenders</option>
+                </select>
+                <button id="atb-restart-btn" style="background:#9b59b6; border:none; color:white; padding:4px 10px; border-radius:4px; cursor:pointer; margin-left:6px; font-weight:bold;">Reset</button>
             </div>
-            <div class="burger-instruction-banner" id="ab-timer-banner" style="background-color: #ff4757; color: white; font-size: 1.1rem;">Detonation: 15.0s</div>
-            <div class="action-log-ticker" id="ab-status-ticker" style="color: #e1b12c;">Pass the bomb! Keep moving away!</div>
+            <div class="burger-instruction-banner" id="atb-timer-banner" style="background-color:#2c3e50; color:#e74c3c;">Bomb Fuse: 15.0s</div>
+            <div class="action-log-ticker" id="atb-log" style="color:#e0a8ff;">Tag an opponent to pass the ticking bomb!</div>
             
-            <div class="joysticks-layout-grid" id="ab-joysticks-container">
+            <div class="atb-joystick-matrix" id="atb-joystick-matrix">
                 </div>
         </div>
 
@@ -1124,13 +1142,14 @@
         let restaurantIngredientsSelected = [];
         let restaurantOrdersCompleted = 0;
 
-        /* --- ACE THE BOMB GLOBAL PARAMETERS --- */
-        let abGameMode = "bot"; 
-        let abTotalConfigPlayers = 4; 
-        let abCompetitors = []; 
-        let abDetonationTimer = 15.0; 
-        let abBombCarrierIdx = 0; 
-        let abPassCooldownTimer = 0; 
+        /* ACE THE BOMB GLOBAL ENGINE FIELDS */
+        let atbMode = "bot"; 
+        let atbTotalPlayers = 4;
+        let atbPlayers = []; 
+        let atbBombCarrierIdx = 0;
+        let atbBombTimer = 15.0;
+        let atbLastTime = 0;
+        let activeJoysticksData = {}; 
 
         const restaurantIngredientsBaseList = [
             '🥔','🍶','🍞','🥦','🥕','🥬','🥑','🫓','🌰','🍋',
@@ -1165,7 +1184,7 @@
         const burgerGamePanel = document.getElementById('burger-game-panel');
         const guessGamePanel = document.getElementById('guess-game-panel');
         const restaurantPanel = document.getElementById('restaurant-panel');
-        const acebombPanel = document.getElementById('acebomb-panel');
+        const atbPanel = document.getElementById('atb-panel');
         
         const launchLaserBtn = document.getElementById('launch-laser-btn');
         const launchTrainBtn = document.getElementById('launch-train-btn');
@@ -1176,7 +1195,7 @@
         const launchFlappyBtn = document.getElementById('launch-flappy-btn');
         const launchGuessBtn = document.getElementById('launch-guess-btn');
         const launchRestaurantBtn = document.getElementById('launch-restaurant-btn');
-        const launchAcebombBtn = document.getElementById('launch-acebomb-btn');
+        const launchAtbBtn = document.getElementById('launch-atb-btn');
 
         cashEl.innerText = cash;
         loadFarmProgress(); 
@@ -1206,7 +1225,7 @@
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
             restaurantPanel.classList.add('hidden');
-            acebombPanel.classList.add('hidden');
+            atbPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             saveFarmProgress(); 
             updateGlobalCash();
@@ -1236,10 +1255,10 @@
             restaurantPanel.classList.remove('hidden');
             initRestaurantGame();
         });
-        launchAcebombBtn.addEventListener('click', () => {
-            setupArcadeMode("acebomb", "<span style='color:#e1b12c;'>💣 Ace the Bomb</span>", "Use virtual joysticks below the arena to steer your character. Tag others to get rid of the bomb before 15 seconds!");
-            acebombPanel.classList.remove('hidden');
-            initAceBombGame();
+        launchAtbBtn.addEventListener('click', () => {
+            setupArcadeMode("atb", "<span style='color:#9b59b6;'>💣 Ace The Bomb Arena</span>", "Move around and collide with opponents to pass the ticking package!");
+            atbPanel.classList.remove('hidden');
+            initAceTheBombGame();
         });
 
         function setupArcadeMode(modeName, statsHtml, hintText) {
@@ -1248,7 +1267,7 @@
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
             restaurantPanel.classList.add('hidden');
-            acebombPanel.classList.add('hidden');
+            atbPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             currentSelectedFarmTarget = null;
             modeStatLabel.innerHTML = statsHtml + ' <button class="exit-btn" id="exit-game-btn">EXIT</button>';
@@ -1555,10 +1574,14 @@
         document.getElementById('guess-mode-mp-btn').onclick = () => { guessMode = "multiplayer"; initGuessGame(); };
 
         function initGuessGame() {
-            p1SecretTarget = null; p2SecretTarget = null;
-            p1AttemptsLeft = 5; p2AttemptsLeft = 5;
-            p1GuessesHistory = []; p2GuessesHistory = [];
-            currentTurnPlayer = 1; lastBotGuessFeedback = "";
+            p1SecretTarget = null;
+            p2SecretTarget = null;
+            p1AttemptsLeft = 5;
+            p2AttemptsLeft = 5;
+            p1GuessesHistory = [];
+            p2GuessesHistory = [];
+            currentTurnPlayer = 1;
+            lastBotGuessFeedback = "";
 
             if (guessMode === "bot") {
                 guessPhase = "setup";
@@ -1579,9 +1602,13 @@
             matrixContainer.innerHTML = "";
             for (let i = 1; i <= 100; i++) {
                 let btn = document.createElement('button');
-                btn.className = "guess-num-btn"; btn.innerText = i;
+                btn.className = "guess-num-btn";
+                btn.innerText = i;
+
                 if (guessMode === "bot" && guessPhase === "play") {
-                    if (p1GuessesHistory.includes(i)) btn.classList.add('selected-p1');
+                    if (p1GuessesHistory.includes(i)) {
+                        btn.classList.add('selected-p1');
+                    }
                 }
                 btn.onclick = () => handleGuessSelection(i);
                 matrixContainer.appendChild(btn);
@@ -1594,25 +1621,30 @@
             if (guessPhase === "setup" && guessMode === "bot") {
                 p1SecretTarget = selectedNumber; 
                 p2SecretTarget = Math.floor(Math.random() * 100) + 1; 
-                guessPhase = "play"; currentTurnPlayer = 1;
+                guessPhase = "play";
+                currentTurnPlayer = 1;
                 document.getElementById('guess-instruction-text').innerText = "Crack the Bot's Target! Your Turns are Blinded.";
                 logEl.innerText = `Your secret number: ${p1SecretTarget}. Attempts: ${p1AttemptsLeft}`;
                 logEl.style.color = "#2ed573";
                 triggerCustomNotification(`Secret Confirmed!\n\nYou locked in ${p1SecretTarget}. The Bot has locked in its number. Start guessing!`, "#2ed573");
-                renderGuessGridMatrix(); return;
+                renderGuessGridMatrix();
+                return;
             }
 
             if (guessPhase === "setup" && guessMode === "multiplayer") {
                 if (p1SecretTarget === null) {
                     p1SecretTarget = selectedNumber;
                     document.getElementById('guess-instruction-text').innerText = "Player 2: Select your secret number to hide!";
-                    logEl.innerText = "Player 2 Choice Pending..."; logEl.style.color = "#ff4757";
+                    logEl.innerText = "Player 2 Choice Pending...";
+                    logEl.style.color = "#ff4757";
                     triggerCustomNotification("Player 1 Code Confirmed!\n\nHand device over to Player 2 now.", "#1e90ff");
                 } else if (p2SecretTarget === null) {
                     p2SecretTarget = selectedNumber;
-                    guessPhase = "play"; currentTurnPlayer = 1;
+                    guessPhase = "play";
+                    currentTurnPlayer = 1;
                     document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
-                    logEl.innerText = "Attempts Remaining: " + p1AttemptsLeft; logEl.style.color = "#1e90ff";
+                    logEl.innerText = "Attempts Remaining: " + p1AttemptsLeft;
+                    logEl.style.color = "#1e90ff";
                     triggerCustomNotification("Player 2 Code Confirmed!\n\nPlayer 1, prepare to make your first guess.", "#2ed573");
                     renderGuessGridMatrix();
                 }
@@ -1629,9 +1661,11 @@
                         triggerCustomNotification(`🎉 YOU WIN!\n\nYou matched the bot's target (${p2SecretTarget}) first! Earned +$1,500 Cash!`, "#2ed573", () => {
                             initGuessGame();
                         });
+                        return;
                     } else {
                         p1AttemptsLeft--;
                         let userHintDirection = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                        
                         if (p1AttemptsLeft <= 0) {
                             cash = Math.max(0, cash - 1500); updateGlobalCash();
                             triggerCustomNotification(`💀 BOT WINS!\n\nYou ran out of turns. Bot's target was: ${p2SecretTarget}. Penalized -$1,500 Cash.`, "#ff4757", () => {
@@ -1639,6 +1673,7 @@
                             });
                             return;
                         }
+
                         executeBotGuessingTurn(userHintDirection);
                     }
                 } 
@@ -1651,6 +1686,7 @@
                             triggerCustomNotification(`🎉 PLAYER 1 WINS!\n\nSuccessfully matched Player 2's target core code: ${p2SecretTarget}!`, "#2ed573", () => {
                                 initGuessGame();
                             });
+                            return;
                         } else {
                             p1AttemptsLeft--;
                             if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
@@ -1660,10 +1696,12 @@
                                 return;
                             }
                             let personalHint = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                            
                             if (p2AttemptsLeft > 0) {
                                 currentTurnPlayer = 2;
                                 document.getElementById('guess-instruction-text').innerText = "Player 2 Turn: Guess Player 1's target!";
-                                logEl.innerText = `P2 Turn Setup. Player 2 Attempts Left: ${p2AttemptsLeft}`; logEl.style.color = "#ff4757";
+                                logEl.innerText = `P2 Turn Setup. Player 2 Attempts Left: ${p2AttemptsLeft}`;
+                                logEl.style.color = "#ff4757";
                             }
                             triggerCustomNotification(`❌ MISSED!\n\nPlayer 1 guessed ${selectedNumber}, which is ${personalHint}.\n\nHand device to Player 2.`, "#ff4757", () => {
                                 renderGuessGridMatrix();
@@ -1678,6 +1716,7 @@
                             triggerCustomNotification(`🎉 PLAYER 2 WINS!\n\nSuccessfully matched Player 1's target core code: ${p1SecretTarget}!`, "#2ed573", () => {
                                 initGuessGame();
                             });
+                            return;
                         } else {
                             p2AttemptsLeft--;
                             if (p1AttemptsLeft <= 0 && p2AttemptsLeft <= 0) {
@@ -1687,10 +1726,12 @@
                                 return;
                             }
                             let personalHint = (selectedNumber < p1SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                            
                             if (p1AttemptsLeft > 0) {
                                 currentTurnPlayer = 1;
                                 document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
-                                logEl.innerText = `P1 Turn Setup. Player 1 Attempts Left: ${p1AttemptsLeft}`; logEl.style.color = "#1e90ff";
+                                logEl.innerText = `P1 Turn Setup. Player 1 Attempts Left: ${p1AttemptsLeft}`;
+                                logEl.style.color = "#1e90ff";
                             }
                             triggerCustomNotification(`❌ MISSED!\n\nPlayer 2 guessed ${selectedNumber}, which is ${personalHint}.\n\nHand device to Player 1.`, "#ff4757", () => {
                                 renderGuessGridMatrix();
@@ -1702,7 +1743,9 @@
         }
 
         function executeBotGuessingTurn(userHintDirection) {
-            let botLowBound = 1, botHighBound = 100;
+            let botLowBound = 1;
+            let botHighBound = 100;
+            
             p2GuessesHistory.forEach(g => {
                 if (g < p1SecretTarget && g > botLowBound) botLowBound = g + 1;
                 if (g > p1SecretTarget && g < botHighBound) botHighBound = g - 1;
@@ -1728,9 +1771,11 @@
                     });
                     return;
                 }
+
                 const logEl = document.getElementById('guess-action-log');
                 logEl.innerText = `Your last guess was ${userHintDirection}. ${lastBotGuessFeedback} | Turns Left: ${p1AttemptsLeft}`;
-                logEl.style.color = "#ffa502"; renderGuessGridMatrix();
+                logEl.style.color = "#ffa502";
+                renderGuessGridMatrix();
             }
         }
 
@@ -1740,278 +1785,270 @@
             generateNewRestaurantOrder();
         }
 
-        /* --- ACE THE BOMB CORE RE-INITIALIZATION AND INTERACTION SYSTEMS --- */
-        document.getElementById('ab-mode-bot-btn').onclick = () => {
-            abGameMode = "bot";
-            document.getElementById('ab-mode-bot-btn').classList.add('active');
-            document.getElementById('ab-mode-player-btn').classList.remove('active');
-            document.getElementById('ab-player-count-row').style.display = "none";
-            initAceBombGame();
-        };
-
-        document.getElementById('ab-mode-player-btn').onclick = () => {
-            abGameMode = "player";
-            document.getElementById('ab-mode-player-btn').classList.add('active');
-            document.getElementById('ab-mode-bot-btn').classList.remove('active');
-            document.getElementById('ab-player-count-row').style.display = "flex";
-            initAceBombGame();
-        };
-
-        [2, 3, 4].forEach(count => {
-            document.getElementById(`ab-pc-${count}`).onclick = () => {
-                [2, 3, 4].forEach(c => document.getElementById(`ab-pc-${c}`).classList.remove('active'));
-                document.getElementById(`ab-pc-${count}`).classList.add('active');
-                abTotalConfigPlayers = count;
-                initAceBombGame();
-            };
-        });
-
-        function initAceBombGame() {
-            abDetonationTimer = 15.0;
-            abPassCooldownTimer = 0;
-            abCompetitors = [];
+        function generateNewRestaurantOrder() {
+            const types = [
+                "Fries 🍟", "Sandwich 🥪", "Tacos 🌮", "Ramen 🍜", "Pizza 🍕",
+                "Burger 🍔", "Soda 🥤", "Spaghetti 🍝", "HotDog 🌭"
+            ];
+            currentRestaurantOrder = types[Math.floor(Math.random() * types.length)];
+            document.getElementById('restaurant-order-display').innerText = `Order: ${currentRestaurantOrder}`;
             
-            let totalPlayersToCreate = (abGameMode === "bot") ? 4 : abTotalConfigPlayers;
-            let labelColors = ["#1e90ff", "#2ed573", "#ffa502", "#9b59b6"];
+            let shuffledIngredients = [...restaurantIngredientsBaseList];
+            for (let i = shuffledIngredients.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledIngredients[i], shuffledIngredients[j]] = [shuffledIngredients[j], shuffledIngredients[i]];
+            }
+
+            const stripContainer = document.getElementById('restaurant-ingredient-strip');
+            stripContainer.innerHTML = "";
+            shuffledIngredients.forEach(emoji => {
+                let bin = document.createElement('div');
+                bin.className = "restaurant-ingredient-bin";
+                bin.innerText = emoji;
+                bin.onclick = () => addRestaurantIngredient(emoji);
+                stripContainer.appendChild(bin);
+            });
+
+            clearRestaurantBowl();
+        }
+
+        function addRestaurantIngredient(emoji) {
+            restaurantIngredientsSelected.push(emoji);
+            renderRestaurantBowl();
+        }
+
+        function clearRestaurantBowl() {
+            restaurantIngredientsSelected = [];
+            renderRestaurantBowl();
+        }
+
+        function renderRestaurantBowl() {
+            const bowlEl = document.getElementById('restaurant-bowl-display');
+            if (restaurantIngredientsSelected.length === 0) {
+                bowlEl.innerText = "[Empty Mixing Bowl]";
+                bowlEl.style.color = "#747d8c";
+            } else {
+                bowlEl.innerText = restaurantIngredientsSelected.join(" ");
+                bowlEl.style.color = "#ffffff";
+            }
+        }
+
+        function serveRestaurantOrder() {
+            let matchesProfile = false;
+            let currentString = [...restaurantIngredientsSelected].sort().join("");
+
+            if (currentRestaurantOrder.includes("Fries")) {
+                let friesTarget = ["🥔", "🍶"].sort().join("");
+                if (currentString === friesTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Sandwich")) {
+                let sandwichTarget = ["🍞", "🥦", "🥕", "🥬", "🥑"].sort().join("");
+                if (currentString === sandwichTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Tacos")) {
+                let tacosTarget = ["🫓", "🌰", "🍋", "🍖", "🥒"].sort().join("");
+                if (currentString === tacosTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Ramen")) {
+                let ramenTarget = ["🍥", "🫔", "🍡", "🥡", "🥢", "🥚"].sort().join("");
+                if (currentString === ramenTarget) matchesProfile = true;
+            } 
+            else if (currentRestaurantOrder.includes("Pizza")) {
+                let pizzaTarget = ["🫓", "🫓", "🍤", "🌶"].sort().join("");
+                if (currentString === pizzaTarget) matchesProfile = true;
+            }
+            else if (currentRestaurantOrder.includes("Burger")) {
+                let burgerTarget = ["🫓", "🫓", "🥬", "🥒", "🍅", "🧅", "🧀"].sort().join("");
+                if (currentString === burgerTarget) matchesProfile = true;
+            }
+            else if (currentRestaurantOrder.includes("Soda")) {
+                let sodaTarget = ["🧊", "🍶", "💧"].sort().join("");
+                if (currentString === sodaTarget) matchesProfile = true;
+            }
+            else if (currentRestaurantOrder.includes("Spaghetti")) {
+                let spaghettiTarget = ["🫔", "🥫", "🧅"].sort().join("");
+                if (currentString === spaghettiTarget) matchesProfile = true;
+            }
+            else if (currentRestaurantOrder.includes("HotDog")) {
+                let hotdogTarget = ["🥖", "🍅", "🫓"].sort().join("");
+                if (currentString === hotdogTarget) matchesProfile = true;
+            }
+
+            let generatedPayout = 0;
+            let statusMessage = "";
+            let colorTheme = "";
+
+            if (matchesProfile) {
+                generatedPayout = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+                statusMessage = `✨ PERFECT RECIPE!\nThe customer loved your beautifully cooked ${currentRestaurantOrder}!`;
+                colorTheme = "#2ed573";
+                restaurantOrdersCompleted++;
+                document.getElementById('distance-val').innerText = restaurantOrdersCompleted;
+            } else {
+                generatedPayout = Math.floor(Math.random() * (40 - 5 + 1)) + 5;
+                statusMessage = `🤢 WRONG INGREDIENTS!\nYou scrambled the recipe requirements for the ${currentRestaurantOrder}.`;
+                colorTheme = "#ff4757";
+            }
+
+            cash += generatedPayout;
+            updateGlobalCash();
+
+            triggerCustomNotification(`${statusMessage}\n\nEarnings Received: +$${generatedPayout} Cash.`, colorTheme, () => {
+                generateNewRestaurantOrder();
+            });
+        }
+
+        /* --- ACE THE BOMB GAME CORE MECHANICS --- */
+        document.getElementById('atb-bot-btn').onclick = () => { atbMode = "bot"; initAceTheBombGame(); };
+        document.getElementById('atb-mp-btn').onclick = () => { atbMode = "player"; initAceTheBombGame(); };
+        document.getElementById('atb-count-select').onchange = () => { initAceTheBombGame(); };
+        document.getElementById('atb-restart-btn').onclick = () => { initAceTheBombGame(); };
+
+        function initAceTheBombGame() {
+            atbTotalPlayers = parseInt(document.getElementById('atb-count-select').value) || 4;
+            atbBombTimer = 15.0;
+            atbPlayers = [];
+            activeJoysticksData = {};
             
-            for(let i = 0; i < totalPlayersToCreate; i++) {
-                let isBotAgent = (abGameMode === "bot" && i > 0);
-                abCompetitors.push({
-                    id: i + 1,
-                    x: 60 + (i % 2) * 200,
-                    y: 70 + Math.floor(i / 2) * 180,
-                    radius: 14,
-                    speed: 3.2,
-                    isBot: isBotAgent,
+            document.getElementById('atb-bot-btn').classList.toggle('active', atbMode === "bot");
+            document.getElementById('atb-mp-btn').classList.toggle('active', atbMode === "player");
+
+            // Define custom color palettes for players
+            const designs = [
+                { name: "Player 1", color: "#1e90ff", icon: "🧒" },
+                { name: atbMode === "bot" ? "Bot 2" : "Player 2", color: "#ffa502", icon: atbMode === "bot" ? "🤖" : "🦊" },
+                { name: atbMode === "bot" ? "Bot 3" : "Player 3", color: "#2ed573", icon: atbMode === "bot" ? "🤖" : "🦝" },
+                { name: atbMode === "bot" ? "Bot 4" : "Player 4", color: "#ff4757", icon: atbMode === "bot" ? "🤖" : "🐱" }
+            ];
+
+            // Spawn profiles at separate edge coordinates inside the 360x360 canvas boundary box
+            const spawnPoints = [
+                { x: 50, y: 50 },
+                { x: 310, y: 50 },
+                { x: 50, y: 310 },
+                { x: 310, y: 310 }
+            ];
+
+            for(let i = 0; i < atbTotalPlayers; i++) {
+                atbPlayers.push({
+                    id: i,
+                    name: designs[i].name,
+                    color: designs[i].color,
+                    icon: designs[i].icon,
+                    x: spawnPoints[i].x,
+                    y: spawnPoints[i].y,
+                    r: 16,
                     alive: true,
-                    color: labelColors[i],
-                    name: isBotAgent ? `Bot ${i}` : `P${i + 1}`,
+                    isBot: (atbMode === "bot" && i > 0),
                     vx: 0,
-                    vy: 0
+                    vy: 0,
+                    speed: 3.8
                 });
             }
 
-            abBombCarrierIdx = Math.floor(Math.random() * abCompetitors.length);
-            setupVirtualJoysticksLayout();
-            document.getElementById('ab-status-ticker').innerText = `${abCompetitors[abBombCarrierIdx].name} spawns with the 💣 Bomb!`;
-            
-            canvas = document.getElementById('runnerCanvas');
-            ctx = canvas.getContext('2d');
-            canvas.classList.remove('hidden');
-            gameRunning = true;
+            // Elect initial random active carrier
+            atbBombCarrierIdx = Math.floor(Math.random() * atbTotalPlayers);
+            document.getElementById('atb-log').innerText = `💥 Match Initialized! ${atbPlayers[atbBombCarrierIdx].name} holds the live bomb!`;
+            document.getElementById('atb-log').style.color = atbPlayers[atbBombCarrierIdx].color;
+
+            buildJoystickInterfaces();
+            atbLastTime = Date.now();
         }
 
-        function setupVirtualJoysticksLayout() {
-            const container = document.getElementById('ab-joysticks-container');
+        function buildJoystickInterfaces() {
+            const container = document.getElementById('atb-joystick-matrix');
             container.innerHTML = "";
-            
-            let activeHumanPlayers = abCompetitors.filter(p => !p.isBot);
-            
-            activeHumanPlayers.forEach((player) => {
-                let joyWrapper = document.createElement('div');
-                joyWrapper.style.textAlign = "center";
-                
-                let joyLabel = document.createElement('div');
-                joyLabel.style.fontSize = "0.8rem";
-                joyLabel.style.fontWeight = "bold";
-                joyLabel.style.color = player.color;
-                joyLabel.style.marginBottom = "4px";
-                joyLabel.innerText = `${player.name} Joystick`;
-                
-                let baseNode = document.createElement('div');
-                baseNode.className = "joystick-outer-base";
-                baseNode.style.borderColor = player.color;
-                
-                let stickNode = document.createElement('div');
-                stickNode.className = "joystick-inner-stick";
-                stickNode.style.backgroundColor = player.color;
-                
-                baseNode.appendChild(stickNode);
-                joyWrapper.appendChild(joyLabel);
-                joyWrapper.appendChild(baseNode);
-                container.appendChild(joyWrapper);
 
-                // Touch handling logic for multi-joystick steering inputs
-                let activeTouchId = null;
+            // Determine how many touch control pads are rendered
+            let logsNeeded = (atbMode === "bot") ? 1 : atbTotalPlayers;
+
+            for (let i = 0; i < logsNeeded; i++) {
+                let p = atbPlayers[i];
+                if (!p) continue;
+
+                let wrapper = document.createElement('div');
+                wrapper.className = "atb-joystick-box";
+
+                let title = document.createElement('div');
+                title.className = "atb-joystick-label";
+                title.style.color = p.color;
+                title.innerText = `${p.name} Stick`;
+
+                let surface = document.createElement('div');
+                surface.className = "atb-pad-surface";
+                surface.id = `atb-surface-${i}`;
+
+                let thumb = document.createElement('div');
+                thumb.className = "atb-pad-thumb";
+                thumb.id = `atb-thumb-${i}`;
+                thumb.style.backgroundColor = p.color;
+
+                surface.appendChild(thumb);
+                wrapper.appendChild(title);
+                wrapper.appendChild(surface);
+                container.appendChild(wrapper);
+
+                setupJoystickInputLogic(surface, thumb, i);
+            }
+        }
+
+        function setupJoystickInputLogic(surfaceEl, thumbEl, playerIndex) {
+            activeJoysticksData[playerIndex] = { dx: 0, dy: 0 };
+
+            function handleMove(clientX, clientY) {
+                let rect = surfaceEl.getBoundingClientRect();
+                let centerX = rect.left + rect.width / 2;
+                let centerY = rect.top + rect.height / 2;
+
+                let vx = clientX - centerX;
+                let vy = clientY - centerY;
+                let distance = Math.hypot(vx, vy);
+                let maxRadius = 25;
+
+                if (distance > maxRadius) {
+                    vx = (vx / distance) * maxRadius;
+                    vy = (vy / distance) * maxRadius;
+                    distance = maxRadius;
+                }
+
+                thumbEl.style.transform = `translate(${vx}px, ${vy}px)`;
                 
-                baseNode.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    let touch = e.changedTouches[0];
-                    activeTouchId = touch.identifier;
-                    calculateJoystickVector(touch, baseNode, stickNode, player);
-                }, {passive: false});
+                // Save normal scaling vector components (-1.0 to 1.0)
+                activeJoysticksData[playerIndex].dx = vx / maxRadius;
+                activeJoysticksData[playerIndex].dy = vy / maxRadius;
+            }
 
-                baseNode.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    for(let t of e.touches) {
-                        if(t.identifier === activeTouchId) {
-                            calculateJoystickVector(t, baseNode, stickNode, player);
-                        }
-                    }
-                }, {passive: false});
+            function handleReset() {
+                thumbEl.style.transform = "translate(0px, 0px)";
+                activeJoysticksData[playerIndex].dx = 0;
+                activeJoysticksData[playerIndex].dy = 0;
+            }
 
-                const resetStick = () => {
-                    activeTouchId = null;
-                    stickNode.style.left = "27px";
-                    stickNode.style.top = "27px";
-                    player.vx = 0;
-                    player.vy = 0;
-                };
+            surfaceEl.addEventListener('touchstart', (e) => {
+                let t = e.touches[0];
+                handleMove(t.clientX, t.clientY);
+            });
+            surfaceEl.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                let t = e.touches[0];
+                handleMove(t.clientX, t.clientY);
+            });
+            surfaceEl.addEventListener('touchend', handleReset);
 
-                baseNode.addEventListener('touchend', resetStick);
-                baseNode.addEventListener('touchcancel', resetStick);
+            surfaceEl.addEventListener('mousedown', (e) => {
+                function onMouseMove(ev) { handleMove(ev.clientX, ev.clientY); }
+                function onMouseUp() {
+                    handleReset();
+                    window.removeEventListener('mousemove', onMouseMove);
+                    window.removeEventListener('mouseup', onMouseUp);
+                }
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+                handleMove(e.clientX, e.clientY);
             });
         }
 
-        function calculateJoystickVector(touch, baseNode, stickNode, player) {
-            let rect = baseNode.getBoundingClientRect();
-            let centerX = rect.left + 45;
-            let centerY = rect.top + 45;
-            let dx = touch.clientX - centerX;
-            let dy = touch.clientY - centerY;
-            let distance = Math.hypot(dx, dy);
-            let maxRadius = 35;
-
-            if (distance > maxRadius) {
-                dx = (dx / distance) * maxRadius;
-                dy = (dy / distance) * maxRadius;
-                distance = maxRadius;
-            }
-
-            stickNode.style.left = (27 + dx) + "px";
-            stickNode.style.top = (27 + dy) + "px";
-
-            // Map layout normalized output vectors to player controls
-            player.vx = (dx / maxRadius);
-            player.vy = (dy / maxRadius);
-        }
-
-        function updateAceBombEngineFrame() {
-            if (abPassCooldownTimer > 0) abPassCooldownTimer -= 1/60;
-
-            // Decaying detonation clock logic
-            abDetonationTimer -= 1/60;
-            if(abDetonationTimer <= 0) {
-                abDetonationTimer = 0;
-                let deadCarrier = abCompetitors[abBombCarrierIdx];
-                deadCarrier.alive = false;
-                
-                triggerCustomNotification(`💥 BOOM!\n\n${deadCarrier.name} blew up!`, "#ff4757");
-                
-                // Identify remaining contenders
-                let survivors = abCompetitors.filter(p => p.alive);
-                if(survivors.length <= 1) {
-                    gameRunning = false;
-                    if(survivors.length === 1) {
-                        let champion = survivors[0];
-                        if (abGameMode === "bot" && champion.id === 1) {
-                            cash += 500; updateGlobalCash();
-                            triggerCustomNotification(`🏆 CHAMPION!\n\nYou won the match! Received +$500 Cash!`, "#2ed573", handleExitToShop);
-                        } else if (abGameMode === "bot") {
-                            cash = Math.max(0, cash - 500); updateGlobalCash();
-                            triggerCustomNotification(`💀 ELIMINATED!\n\n${champion.name} is the winner. Lost -$500 Cash.`, "#ff4757", handleExitToShop);
-                        } else {
-                            triggerCustomNotification(`👑 MATCH COMPLETE!\n\n${champion.name} is the last one standing!`, "#f1c40f", handleExitToShop);
-                        }
-                    } else {
-                        triggerCustomNotification(`💀 MUTUAL ANNIHILATION!\nNo survivors remaining.`, "#ff4757", handleExitToShop);
-                    }
-                    return;
-                } else {
-                    // Reset bomb sequence onto another random survivor
-                    abBombCarrierIdx = abCompetitors.indexOf(survivors[Math.floor(Math.random() * survivors.length)]);
-                    abDetonationTimer = 15.0;
-                    abPassCooldownTimer = 1.0; 
-                }
-            }
-
-            document.getElementById('ab-timer-banner').innerText = `Detonation: ${abDetonationTimer.toFixed(1)}s`;
-
-            // Run physics position loops for competitors
-            abCompetitors.forEach((p, idx) => {
-                if(!p.alive) return;
-
-                if(p.isBot) {
-                    // Bot AI Routine: Carrier runs towards targets, others escape
-                    if(idx === abBombCarrierIdx) {
-                        let closestTarget = null, minDist = 9999;
-                        abCompetitors.forEach((t, tIdx) => {
-                            if(tIdx !== idx && t.alive) {
-                                let d = Math.hypot(t.x - p.x, t.y - p.y);
-                                if(d < minDist) { minDist = d; closestTarget = t; }
-                            }
-                        });
-                        if(closestTarget) {
-                            let angle = Math.atan2(closestTarget.y - p.y, closestTarget.x - p.x);
-                            p.x += Math.cos(angle) * p.speed * 0.85;
-                            p.y += Math.sin(angle) * p.speed * 0.85;
-                        }
-                    } else {
-                        let carrier = abCompetitors[abBombCarrierIdx];
-                        let d = Math.hypot(p.x - carrier.x, p.y - carrier.y);
-                        if(d < 120) {
-                            let angle = Math.atan2(p.y - carrier.y, p.x - carrier.x);
-                            p.x += Math.cos(angle) * p.speed;
-                            p.y += Math.sin(angle) * p.speed;
-                        } else {
-                            // Relaxed random walking patterns
-                            p.x += (Math.random() - 0.5) * 2;
-                            p.y += (Math.random() - 0.5) * 2;
-                        }
-                    }
-                } else {
-                    // Human movement logic execution
-                    p.x += p.vx * p.speed;
-                    p.y += p.vy * p.speed;
-                }
-
-                // Bounds restriction layout
-                if(p.x < p.radius) p.x = p.radius;
-                if(p.x > canvas.width - p.radius) p.x = canvas.width - p.radius;
-                if(p.y < p.radius) p.y = p.radius;
-                if(p.y > canvas.height - p.radius) p.y = canvas.height - p.radius;
-            });
-
-            // Evaluate tags and handle hot potato transfers
-            if (abPassCooldownTimer <= 0) {
-                let carrier = abCompetitors[abBombCarrierIdx];
-                for(let i = 0; i < abCompetitors.length; i++) {
-                    if(i === abBombCarrierIdx || !abCompetitors[i].alive) continue;
-                    let target = abCompetitors[i];
-                    let distance = Math.hypot(carrier.x - target.x, carrier.y - target.y);
-                    if(distance < (carrier.radius + target.radius)) {
-                        abBombCarrierIdx = i;
-                        abPassCooldownTimer = 1.0; // Absolute 1-second pass safety window
-                        document.getElementById('ab-status-ticker').innerText = `💥 PASSED! ${target.name} now has the bomb!`;
-                        break;
-                    }
-                }
-            }
-
-            // Render positions inside the arena canvas element
-            abCompetitors.forEach((p, idx) => {
-                if(!p.alive) return;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.fill();
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "#ffffff";
-                ctx.stroke();
-
-                // Draw status labels
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 10px sans-serif";
-                ctx.textAlign = "center";
-                ctx.fillText(p.name, p.x, p.y - p.radius - 4);
-
-                if(idx === abBombCarrierIdx) {
-                    ctx.font = "14px sans-serif";
-                    ctx.fillText("💣", p.x, p.y + 4);
-                }
-            });
-        }
-
+        /* --- ARCADE REGISTRY ENGINE HOOK --- */
         function initGame() {
             canvas = document.getElementById('runnerCanvas');
             ctx = canvas.getContext('2d');
@@ -2021,9 +2058,15 @@
             jetBullets = []; jetAliens = []; jetScore = 0;
             fpVelocity = 0; fpPipes = []; fpFrameCounter = 0;
 
-            if (["burger", "guess", "restaurant", "acebomb"].includes(currentGameMode)) {
+            if (currentGameMode === "burger" || currentGameMode === "guess" || currentGameMode === "restaurant") {
                 canvas.classList.add('hidden');
                 if(currentGameMode === "burger") { burgerGamePanel.classList.remove('hidden'); initBurgerGame(); }
+                return;
+            } else if (currentGameMode === "atb") {
+                canvas.classList.remove('hidden');
+                gameRunning = true;
+                initAceTheBombGame();
+                gameLoop();
                 return;
             } else { canvas.classList.remove('hidden'); }
 
@@ -2039,7 +2082,8 @@
                 runner.x = 165; runner.y = 220; runner.speed = 5;
                 canvas.onclick = processFarmCanvasClick;
             } else if (currentGameMode === "chen") {
-                canvas.onclick = processChenMazeClick; generateRandomMazeMatrix();
+                canvas.onclick = processChenMazeClick;
+                generateRandomMazeMatrix();
             } else if (currentGameMode === "flappy") {
                 runner.y = canvas.height / 2; runner.w = 34; runner.h = 24;
                 canvas.onclick = () => { fpVelocity = fpJump; };
@@ -2050,26 +2094,26 @@
             }
 
             window.onkeydown = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "acebomb"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
             };
             window.onkeyup = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "acebomb"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
             };
 
             canvas.ontouchstart = (e) => {
                 if(currentGameMode === "flappy") { fpVelocity = fpJump; return; }
-                if(["farm", "burger", "guess", "chen", "restaurant", "acebomb"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
                 let rect = canvas.getBoundingClientRect();
                 let touchX = e.touches[0].clientX - rect.left;
                 if(touchX < canvas.width / 2) runner.moveLeft = true;
                 else runner.moveRight = true;
             };
             canvas.ontouchend = () => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "acebomb"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
                 runner.moveLeft = false; runner.moveRight = false;
             };
 
@@ -2079,10 +2123,17 @@
         function generateRandomMazeMatrix() {
             mazeGrid = []; mazeCoins = [];
             const layoutTemplate = [
-                [0,0,0,0,1,0,0,0,0], [0,1,1,0,1,0,1,1,0], [0,1,0,0,0,0,0,1,0],
-                [0,0,0,1,1,1,0,0,0], [1,1,0,1,0,1,0,1,1], [0,0,0,1,1,1,0,0,0],
-                [0,1,0,0,0,0,0,1,0], [0,1,1,0,1,0,1,1,0], [0,0,0,0,1,0,0,0,0]
+                [0,0,0,0,1,0,0,0,0],
+                [0,1,1,0,1,0,1,1,0],
+                [0,1,0,0,0,0,0,1,0],
+                [0,0,0,1,1,1,0,0,0],
+                [1,1,0,1,0,1,0,1,1],
+                [0,0,0,1,1,1,0,0,0],
+                [0,1,0,0,0,0,0,1,0],
+                [0,1,1,0,1,0,1,1,0],
+                [0,0,0,0,1,0,0,0,0]
             ];
+            
             for(let r=0; r<mazeRows; r++) {
                 mazeGrid[r] = [];
                 for(let c=0; c<mazeCols; c++) {
@@ -2092,37 +2143,64 @@
                     }
                 }
             }
-            mazePlayer.x = 0; mazePlayer.y = 0; mazeGhost.x = 8; mazeGhost.y = 8; mazeGhostSpeedTimer = 0;
+            mazePlayer.x = 0; mazePlayer.y = 0;
+            mazeGhost.x = 8; mazeGhost.y = 8;
+            mazeGhostSpeedTimer = 0;
         }
 
         function processChenMazeClick(e) {
-            let rect = canvas.getBoundingClientRect(), clickX = e.clientX - rect.left, clickY = e.clientY - rect.top;
-            let targetCol = Math.floor(clickX / mazeCellSize), targetRow = Math.floor(clickY / mazeCellSize);
+            let rect = canvas.getBoundingClientRect();
+            let clickX = e.clientX - rect.left;
+            let clickY = e.clientY - rect.top;
+
+            let targetCol = Math.floor(clickX / mazeCellSize);
+            let targetRow = Math.floor(clickY / mazeCellSize);
+
             if(targetCol >= 0 && targetCol < mazeCols && targetRow >= 0 && targetRow < mazeRows) {
                 if (targetCol === mazePlayer.x && targetRow === mazePlayer.y) return;
-                let dx = targetCol - mazePlayer.x, dy = targetRow - mazePlayer.y, stepX = 0, stepY = 0;
-                if (Math.abs(dx) > Math.abs(dy)) { stepX = dx > 0 ? 1 : -1; } else { stepY = dy > 0 ? 1 : -1; }
-                let currentX = mazePlayer.x, currentY = mazePlayer.y;
+                
+                let dx = targetCol - mazePlayer.x;
+                let dy = targetRow - mazePlayer.y;
+                
+                let stepX = 0;
+                let stepY = 0;
+                
+                if (Math.abs(dx) > Math.abs(dy)) { stepX = dx > 0 ? 1 : -1; } 
+                else { stepY = dy > 0 ? 1 : -1; }
+                
+                let currentX = mazePlayer.x;
+                let currentY = mazePlayer.y;
+                
                 while (true) {
-                    let nextX = currentX + stepX, nextY = currentY + stepY;
+                    let nextX = currentX + stepX;
+                    let nextY = currentY + stepY;
+                    
                     if (nextX >= 0 && nextX < mazeCols && nextY >= 0 && nextY < mazeRows && mazeGrid[nextY][nextX] === 0) {
-                        currentX = nextX; currentY = nextY;
+                        currentX = nextX;
+                        currentY = nextY;
+                        
                         for(let i = mazeCoins.length - 1; i >= 0; i--) {
                             if(mazeCoins[i].r === currentY && mazeCoins[i].c === currentX) {
-                                mazeCoins.splice(i, 1); distance += 1; cash += 5; updateGlobalCash();
+                                mazeCoins.splice(i, 1);
+                                distance += 1; cash += 5; updateGlobalCash();
                                 document.getElementById('distance-val').innerText = distance;
                             }
                         }
                     } else { break; }
                 }
+                
                 if (currentX !== mazePlayer.x || currentY !== mazePlayer.y) {
-                    mazePlayer.x = currentX; mazePlayer.y = currentY; processChenMazeLogicEvaluation();
+                    mazePlayer.x = currentX;
+                    mazePlayer.y = currentY;
+                    processChenMazeLogicEvaluation();
                 }
             }
         }
 
         function processChenMazeLogicEvaluation() {
-            let gdx = mazePlayer.x - mazeGhost.x, gdy = mazePlayer.y - mazeGhost.y;
+            let gdx = mazePlayer.x - mazeGhost.x;
+            let gdy = mazePlayer.y - mazeGhost.y;
+            
             if(Math.abs(gdx) > Math.abs(gdy)) {
                 let step = gdx > 0 ? 1 : -1;
                 if(mazeGrid[mazeGhost.y][mazeGhost.x + step] === 0) mazeGhost.x += step;
@@ -2132,6 +2210,7 @@
                 if(mazeGrid[mazeGhost.y + step]?.[mazeGhost.x] === 0) mazeGhost.y += step;
                 else if(mazeGrid[mazeGhost.y][mazeGhost.x + (gdx > 0 ? 1 : -1)] === 0) mazeGhost.x += (gdx > 0 ? 1 : -1);
             }
+
             if(mazePlayer.x === mazeGhost.x && mazePlayer.y === mazeGhost.y) {
                 gameRunning = false;
                 triggerCustomNotification("💀 CAUGHT BY CHEN CHEN!\n\nYou were trapped inside the maze core matrix.", "#ff4757", () => {
@@ -2141,52 +2220,109 @@
         }
 
         function processFarmCanvasClick(e) {
-            let rect = canvas.getBoundingClientRect(), clickX = e.clientX - rect.left, clickY = e.clientY - rect.top;
+            let rect = canvas.getBoundingClientRect();
+            let clickX = e.clientX - rect.left;
+            let clickY = e.clientY - rect.top;
+            
             if (clickX >= wheatField.x && clickX <= wheatField.x + wheatField.w && clickY >= wheatField.y && clickY <= wheatField.y + wheatField.h) {
-                runner.targetX = wheatField.x + wheatField.w / 2 - 15; runner.targetY = wheatField.y - 15;
-                currentSelectedFarmTarget = "wheat"; refreshFarmUIBubble(); return;
+                runner.targetX = wheatField.x + wheatField.w / 2 - 15;
+                runner.targetY = wheatField.y - 15;
+                
+                currentSelectedFarmTarget = "wheat";
+                refreshFarmUIBubble();
+                return;
             }
+
             for (let i = 0; i < fences.length; i++) {
                 let f = fences[i];
                 if (f && clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
-                    runner.targetX = f.x + f.w / 2 - 15; runner.targetY = f.y + f.h / 2 - 15;
-                    currentSelectedFarmTarget = { type: "fence", index: i }; refreshFarmUIBubble(); return;
+                    runner.targetX = f.x + f.w / 2 - 15; 
+                    runner.targetY = f.y + f.h / 2 - 15;
+                    
+                    currentSelectedFarmTarget = { type: "fence", index: i };
+                    refreshFarmUIBubble();
+                    return;
                 }
             }
         }
 
         function refreshFarmUIBubble() {
-            if (!currentSelectedFarmTarget) { bubbleContainer.innerHTML = ""; return; }
+            if (!currentSelectedFarmTarget) {
+                bubbleContainer.innerHTML = "";
+                return;
+            }
+
             if (currentSelectedFarmTarget === "wheat") {
-                bubbleContainer.innerHTML = `<button class="farm-action-bubble" onclick="executeContextualHarvest()">🌾 Harvest Crop / Gather Wheat (+1 Stack)</button>`;
+                bubbleContainer.innerHTML = `
+                    <button class="farm-action-bubble" onclick="executeContextualHarvest()">
+                        🌾 Harvest Crop / Gather Wheat (+1 Stack)
+                    </button>
+                `;
             } else if (currentSelectedFarmTarget.type === "fence") {
-                let idx = currentSelectedFarmTarget.index, f = fences[idx]; if (!f) return;
+                let idx = currentSelectedFarmTarget.index;
+                let f = fences[idx];
+                if (!f) return;
+
                 if (f.locked) {
-                    bubbleContainer.innerHTML = `<button class="farm-action-bubble lock-style" onclick="unlockPlot(${idx})">🔓 Unlock Plot #${idx+1}? (Costs $150 Cash)</button>`;
+                    bubbleContainer.innerHTML = `
+                        <button class="farm-action-bubble lock-style" onclick="unlockPlot(${idx})">
+                            🔓 Unlock Plot #${idx+1}? (Costs $150 Cash)
+                        </button>
+                    `;
                 } else if (f.pet) {
-                    bubbleContainer.innerHTML = `<button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${idx})">🍖 Feed standard Wheat to Level ${f.age} ${f.pet}</button>`;
+                    bubbleContainer.innerHTML = `
+                        <button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${idx})">
+                            🍖 Feed standard Wheat to Level ${f.age} ${f.pet}
+                        </button>
+                    `;
                 } else {
-                    bubbleContainer.innerHTML = `<div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">Plot #${idx+1} is empty. Buy a Pet from the market below!</div>`;
+                    bubbleContainer.innerHTML = `
+                        <div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">
+                            Plot #${idx+1} is empty. Buy a Pet from the market below!
+                        </div>
+                    `;
                 }
             }
         }
 
-        function executeContextualHarvest() { wheatCount += 1; document.getElementById('distance-val').innerText = wheatCount; saveFarmProgress(); }
+        function executeContextualHarvest() {
+            wheatCount += 1;
+            document.getElementById('distance-val').innerText = wheatCount;
+            saveFarmProgress();
+        }
 
         function executeContextualFeed(index) {
-            let f = fences[index]; if (!f || f.locked || !f.pet) return;
-            if (wheatCount <= 0) { triggerCustomNotification("🚨 Out of wheat! Click the golden Wheat Field to harvest some crops first.", "#ffa502"); return; }
-            wheatCount--; document.getElementById('distance-val').innerText = wheatCount; f.xp += 34;
+            let f = fences[index];
+            if (!f || f.locked || !f.pet) return;
+
+            if (wheatCount <= 0) {
+                triggerCustomNotification("🚨 Out of wheat! Click the golden Wheat Field to harvest some crops first.", "#ffa502");
+                return;
+            }
+
+            wheatCount--;
+            document.getElementById('distance-val').innerText = wheatCount;
+            f.xp += 34;
+            
             if (f.xp >= 100) {
-                f.xp = 0; f.age += 1; let reward = (petRewardsTable[f.pet] || 5) * f.age; cash += reward; updateGlobalCash();
+                f.xp = 0; 
+                f.age += 1;
+                let reward = (petRewardsTable[f.pet] || 5) * f.age;
+                
+                cash += reward;
+                updateGlobalCash();
                 triggerCustomNotification(`🎁 UPGRADE!\n\nYour ${f.pet} grew to Level ${f.age}! Received +$${reward} bonus!`, "#2ed573");
             }
-            saveFarmProgress(); refreshFarmUIBubble(); 
+            
+            saveFarmProgress();
+            refreshFarmUIBubble(); 
         }
 
         function unlockPlot(index) {
             if (cash >= 150) {
-                cash -= 150; fences[index].locked = false; updateGlobalCash(); saveFarmProgress(); refreshFarmUIBubble();
+                cash -= 150; fences[index].locked = false;
+                updateGlobalCash(); saveFarmProgress(); 
+                refreshFarmUIBubble();
             } else { triggerCustomNotification("🚨 Requires $150 Cash!", "#ff4757"); }
         }
 
@@ -2198,47 +2334,229 @@
                 if (fences[i] && !fences[i].locked && fences[i].pet === null) {
                     cash -= cost; fences[i].pet = emoji; fences[i].age = 1; fences[i].xp = 0;
                     updateGlobalCash(); saveFarmProgress(); slotFound = true;
-                    if (currentSelectedFarmTarget && currentSelectedFarmTarget.index === i) refreshFarmUIBubble();
+                    if (currentSelectedFarmTarget && currentSelectedFarmTarget.index === i) {
+                        refreshFarmUIBubble();
+                    }
                     break;
                 }
             }
             if (!slotFound) triggerCustomNotification("🚧 No open, unlocked plots available!", "#ffa502");
         }
 
+        /* --- MASTER LOOP CONTROLLER --- */
         function gameLoop() {
             if(!gameRunning || ["burger", "guess", "restaurant"].includes(currentGameMode)) return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
 
-            if(currentGameMode === "acebomb") {
-                updateAceBombEngineFrame();
-                requestAnimationFrame(gameLoop); return;
+            // ACE THE BOMB REAL-TIME SIMULATION CORE
+            if (currentGameMode === "atb") {
+                let horizontalNow = Date.now();
+                let dt = (horizontalNow - atbLastTime) / 1000;
+                atbLastTime = horizontalNow;
+
+                // Handle clock counting down mechanics
+                let activeSurvivors = atbPlayers.filter(p => p.alive);
+                if (activeSurvivors.length > 1) {
+                    atbBombTimer -= dt;
+                    if (atbBombTimer <= 0) {
+                        atbBombTimer = 15.0;
+                        let deadPlayer = atbPlayers[atbBombCarrierIdx];
+                        deadPlayer.alive = false;
+                        
+                        triggerCustomNotification(`💥 BOOM! ${deadPlayer.name} exploded into pixel dust!`, "#ff4757");
+
+                        let remaining = atbPlayers.filter(p => p.alive);
+                        if (remaining.length === 1) {
+                            // Single survivor standing logic evaluation
+                            let winner = remaining[0];
+                            if (atbMode === "bot") {
+                                if (!winner.isBot) {
+                                    cash += 500;
+                                    triggerCustomNotification(`🏆 VICTORY! You won Ace The Bomb Match! Received +$500 Cash!`, "#2ed573", handleExitToShop);
+                                } else {
+                                    cash = Math.max(0, cash - 500);
+                                    triggerCustomNotification(`💀 DEFEAT! A computer bot won the match field. Lost -$500 Cash.`, "#ff4757", handleExitToShop);
+                                }
+                                updateGlobalCash();
+                            } else {
+                                triggerCustomNotification(`👑 CHAMPION! ${winner.name} outlasted the grid sequence!`, "#9b59b6", handleExitToShop);
+                            }
+                            return;
+                        } else {
+                            // Pass bomb package to another live random survivor entry point
+                            let nextCarrier = remaining[Math.floor(Math.random() * remaining.length)];
+                            atbBombCarrierIdx = nextCarrier.id;
+                        }
+                    }
+                }
+
+                document.getElementById('atb-timer-banner').innerText = `Bomb Fuse: ${Math.max(0, atbBombTimer).toFixed(1)}s`;
+
+                // Render dynamic arena layout backgrounds
+                ctx.fillStyle = "#1e1e1e";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.strokeStyle = "#9b59b6";
+                ctx.lineWidth = 4;
+                ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+                // Update positional loops for vectors inside canvas bounds
+                atbPlayers.forEach((p, idx) => {
+                    if (!p.alive) return;
+
+                    if (p.isBot) {
+                        // AI Tracking state vectors
+                        if (atbBombCarrierIdx === p.id) {
+                            // Running toward nearest live entity to shift hot potato bomb load
+                            let closest = null;
+                            let minDist = 9999;
+                            atbPlayers.forEach(other => {
+                                if (other.id !== p.id && other.alive) {
+                                    let d = Math.hypot(other.x - p.x, other.y - p.y);
+                                    if (d < minDist) { minDist = d; closest = other; }
+                                }
+                            });
+                            if (closest) {
+                                let angle = Math.atan2(closest.y - p.y, closest.x - p.x);
+                                p.x += Math.cos(angle) * (p.speed * 0.85);
+                                p.y += Math.sin(angle) * (p.speed * 0.85);
+                            }
+                        } else {
+                            // Fleeing cleanly away from the bomb container circle
+                            let carrier = atbPlayers[atbBombCarrierIdx];
+                            let d = Math.hypot(carrier.x - p.x, carrier.y - p.y);
+                            if (d < 160) {
+                                let angle = Math.atan2(p.y - carrier.y, p.x - carrier.x);
+                                p.x += Math.cos(angle) * p.speed;
+                                p.y += Math.sin(angle) * p.speed;
+                            }
+                        }
+                    } else {
+                        // Human controls bound check mapping
+                        let input = activeJoysticksData[p.id];
+                        if (input) {
+                            p.x += input.dx * p.speed;
+                            p.y += input.dy * p.speed;
+                        }
+                    }
+
+                    // Canvas boundary collisions
+                    if (p.x - p.r < 0) p.x = p.r;
+                    if (p.x + p.r > canvas.width) p.x = canvas.width - p.r;
+                    if (p.y - p.r < 0) p.y = p.r;
+                    if (p.y + p.r > canvas.height) p.y = canvas.height - p.r;
+                });
+
+                // Check collision tag vectors between active nodes
+                for (let i = 0; i < atbPlayers.length; i++) {
+                    for (let j = i + 1; j < atbPlayers.length; j++) {
+                        let p1 = atbPlayers[i];
+                        let p2 = atbPlayers[j];
+
+                        if (p1.alive && p2.alive) {
+                            let dist = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+                            if (dist < (p1.r + p2.r)) {
+                                // Overlap resolution pushback sequence physics
+                                let overlap = (p1.r + p2.r) - dist;
+                                let angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+                                p1.x -= Math.cos(angle) * (overlap / 2);
+                                p1.y -= Math.sin(angle) * (overlap / 2);
+                                p2.x += Math.cos(angle) * (overlap / 2);
+                                p2.y += Math.sin(angle) * (overlap / 2);
+
+                                // Pass bomb tag swap condition logic
+                                if (atbBombCarrierIdx === p1.id) {
+                                    atbBombCarrierIdx = p2.id;
+                                    document.getElementById('atb-log').innerText = `🔄 Passed! ${p2.name} now has the Bomb!`;
+                                    document.getElementById('atb-log').style.color = p2.color;
+                                } else if (atbBombCarrierIdx === p2.id) {
+                                    atbBombCarrierIdx = p1.id;
+                                    document.getElementById('atb-log').innerText = `🔄 Passed! ${p1.name} now has the Bomb!`;
+                                    document.getElementById('atb-log').style.color = p1.color;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Render players & active blinking bomb states
+                atbPlayers.forEach((p, idx) => {
+                    if (!p.alive) return;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.stroke();
+
+                    // Text icons centered on objects
+                    ctx.fillStyle = "#ffffff";
+                    ctx.font = "16px sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(p.icon, p.x, p.y);
+
+                    // Render fuse spark asset if current index matches target holder
+                    if (atbBombCarrierIdx === p.id) {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.r + 6, 0, Math.PI * 2);
+                        ctx.strokeStyle = (Math.floor(Date.now() / 150) % 2 === 0) ? "#e74c3c" : "transparent";
+                        ctx.lineWidth = 3;
+                        ctx.stroke();
+
+                        ctx.font = "14px Arial";
+                        ctx.fillText("💣", p.x, p.y - 26);
+                    }
+                });
+
+                requestAnimationFrame(gameLoop);
+                return;
             }
 
             if (currentGameMode === "jet") {
                 runner.y = canvas.height - 40; 
                 if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
                 if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
+
                 if (Math.random() < 0.15) { jetBullets.push({ x: runner.x + 13, y: runner.y - 8, w: 4, h: 12 }); }
                 if (Math.random() < 0.04) { jetAliens.push({ x: Math.random() * (canvas.width - 30), y: -20, w: 26, h: 22, speed: 2 }); }
+
                 ctx.fillStyle = '#ffff00';
                 for (let b = jetBullets.length - 1; b >= 0; b--) {
-                    jetBullets[b].y -= 9; ctx.fillRect(jetBullets[b].x, jetBullets[b].y, jetBullets[b].w, jetBullets[b].h);
+                    jetBullets[b].y -= 9;
+                    ctx.fillRect(jetBullets[b].x, jetBullets[b].y, jetBullets[b].w, jetBullets[b].h);
                     if (jetBullets[b].y < -20) jetBullets.splice(b, 1);
                 }
+
                 for (let a = jetAliens.length - 1; a >= 0; a--) {
-                    jetAliens[a].y += jetAliens[a].speed; ctx.font = "20px sans-serif"; ctx.fillText("👽", jetAliens[a].x, jetAliens[a].y + 16);
+                    jetAliens[a].y += jetAliens[a].speed;
+                    ctx.font = "20px sans-serif";
+                    ctx.fillText("👽", jetAliens[a].x, jetAliens[a].y + 16);
+
                     for (let b = jetBullets.length - 1; b >= 0; b--) {
                         if (jetBullets[b] && jetBullets[b].x > jetAliens[a].x && jetBullets[b].x < jetAliens[a].x + jetAliens[a].w &&
                             jetBullets[b].y < jetAliens[a].y + jetAliens[a].h && jetBullets[b].y > jetAliens[a].y) {
-                            jetAliens.splice(a, 1); jetBullets.splice(b, 1); jetScore += 1; cash += 10; updateGlobalCash();
-                            document.getElementById('distance-val').innerText = jetScore; break;
+                            
+                            jetAliens.splice(a, 1);
+                            jetBullets.splice(b, 1);
+                            jetScore += 1; cash += 10; updateGlobalCash();
+                            document.getElementById('distance-val').innerText = jetScore;
+                            break;
                         }
                     }
+
                     if (jetAliens[a] && jetAliens[a].y > canvas.height) {
-                        gameRunning = false; triggerCustomNotification("🚨 BASE DEFENSE INFILTRATED!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                        gameRunning = false;
+                        triggerCustomNotification("🚨 BASE DEFENSE INFILTRATED!", "#ff4757", () => {
+                            gameScreen.classList.add('hidden');
+                        });
+                        return;
                     }
                 }
-                ctx.fillStyle = '#00d2d3'; ctx.font = "28px sans-serif"; ctx.fillText("🚀", runner.x, runner.y + 24);
+
+                ctx.fillStyle = '#00d2d3'; ctx.font = "28px sans-serif";
+                ctx.fillText("🚀", runner.x, runner.y + 24);
                 requestAnimationFrame(gameLoop); return;
             }
 
@@ -2251,40 +2569,62 @@
                         } else { ctx.fillStyle = "#1e1e1e"; ctx.fillRect(c * mazeCellSize, r * mazeCellSize, mazeCellSize, mazeCellSize); }
                     }
                 }
+
                 ctx.fillStyle = "#ffd32a";
                 mazeCoins.forEach(coin => {
                     ctx.beginPath(); ctx.arc(coin.c * mazeCellSize + mazeCellSize/2, coin.r * mazeCellSize + mazeCellSize/2, 6, 0, Math.PI*2); ctx.fill();
                 });
-                ctx.font = "24px Arial"; ctx.fillText("🧒", mazePlayer.x * mazeCellSize + 8, mazePlayer.y * mazeCellSize + 30);
+
+                ctx.font = "24px Arial";
+                ctx.fillText("🧒", mazePlayer.x * mazeCellSize + 8, mazePlayer.y * mazeCellSize + 30);
                 ctx.fillText("💀", mazeGhost.x * mazeCellSize + 8, mazeGhost.y * mazeCellSize + 30);
-                mazeGhostSpeedTimer++; if(mazeGhostSpeedTimer % 35 === 0) { processChenMazeLogicEvaluation(); }
+
+                mazeGhostSpeedTimer++;
+                if(mazeGhostSpeedTimer % 35 === 0) { processChenMazeLogicEvaluation(); }
                 requestAnimationFrame(gameLoop); return;
             }
 
             if (currentGameMode === "flappy") {
-                fpVelocity += fpGravity; runner.y += fpVelocity; fpFrameCounter++;
+                fpVelocity += fpGravity; runner.y += fpVelocity;
+                fpFrameCounter++;
                 if (fpFrameCounter % 90 === 0) {
-                    let clearanceGap = 120, targetHeight = Math.floor(Math.random() * (canvas.height - 200)) + 40;
+                    let clearanceGap = 120;
+                    let targetHeight = Math.floor(Math.random() * (canvas.height - 200)) + 40;
                     fpPipes.push({ x: canvas.width, topHeight: targetHeight, bottomY: targetHeight + clearanceGap, w: 55, passed: false });
                 }
+
                 ctx.fillStyle = "#2ed573";
                 for (let p = fpPipes.length - 1; p >= 0; p--) {
-                    let pipe = fpPipes[p]; pipe.x -= 3.5; ctx.fillRect(pipe.x, 0, pipe.w, pipe.topHeight);
+                    let pipe = fpPipes[p]; pipe.x -= 3.5;
+                    ctx.fillRect(pipe.x, 0, pipe.w, pipe.topHeight);
                     ctx.lineWidth = 2; ctx.strokeStyle = "#ffffff"; ctx.strokeRect(pipe.x, 0, pipe.w, pipe.topHeight);
                     ctx.fillRect(pipe.x, pipe.bottomY, pipe.w, canvas.height - pipe.bottomY); ctx.strokeRect(pipe.x, pipe.bottomY, pipe.w, canvas.height - pipe.bottomY);
+
                     if (runner.x + runner.w > pipe.x && runner.x < pipe.x + pipe.w) {
                         if (runner.y < pipe.topHeight || runner.y + runner.h > pipe.bottomY) {
-                            gameRunning = false; triggerCustomNotification("💥 FLIGHT TERMINATED!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                            gameRunning = false; 
+                            triggerCustomNotification("💥 FLIGHT TERMINATED!", "#ff4757", () => {
+                                gameScreen.classList.add('hidden');
+                            });
+                            return;
                         }
                     }
+
                     if (!pipe.passed && pipe.x < runner.x) {
-                        pipe.passed = true; distance++; cash += 1; updateGlobalCash(); document.getElementById('distance-val').innerText = distance;
+                        pipe.passed = true; distance++; cash += 1; updateGlobalCash();
+                        document.getElementById('distance-val').innerText = distance;
                     }
                     if (pipe.x + pipe.w < 0) fpPipes.splice(p, 1);
                 }
+
                 if (runner.y > canvas.height || runner.y < -40) {
-                    gameRunning = false; triggerCustomNotification("💥 BOUNDS CRASH BOUNDARY!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                    gameRunning = false; 
+                    triggerCustomNotification("💥 BOUNDS CRASH BOUNDARY!", "#ff4757", () => {
+                        gameScreen.classList.add('hidden');
+                    });
+                    return;
                 }
+
                 ctx.font = "26px Arial"; ctx.fillText("🛩️", runner.x, runner.y + 18);
                 requestAnimationFrame(gameLoop); return;
             }
@@ -2293,12 +2633,14 @@
                 ctx.fillStyle = '#f1c40f'; ctx.fillRect(wheatField.x, wheatField.y, wheatField.w, wheatField.h);
                 ctx.fillStyle = '#27ae60'; ctx.fillRect(wheatField.x - 4, wheatField.y + wheatField.h - 4, wheatField.w + 8, 5);
                 ctx.font = "20px Arial"; ctx.fillText("🌾 🌾 🌾", wheatField.x + 6, wheatField.y + 26);
+
                 fences.forEach((f, idx) => {
                     if (!f) return;
                     if (f.locked) {
                         ctx.fillStyle = 'rgba(139, 69, 19, 0.4)'; ctx.fillRect(f.x, f.y, f.w, f.h);
                         ctx.lineWidth = 2; ctx.strokeStyle = '#d63031'; ctx.strokeRect(f.x, f.y, f.w, f.h);
-                        ctx.fillStyle = '#ffffff'; ctx.font = "12px sans-serif"; ctx.fillText(`🔒 Plot ${idx+1}`, f.x + 16, f.y + 35); ctx.fillText("$150", f.x + 24, f.y + 55);
+                        ctx.fillStyle = '#ffffff'; ctx.font = "12px sans-serif"; ctx.fillText(`🔒 Plot ${idx+1}`, f.x + 16, f.y + 35);
+                        ctx.fillText("$150", f.x + 24, f.y + 55);
                     } else {
                         ctx.fillStyle = '#2ed573'; ctx.fillRect(f.x + 3, f.y + 3, f.w - 6, f.h - 6);
                         ctx.lineWidth = 4; ctx.strokeStyle = '#8b4513'; ctx.strokeRect(f.x, f.y, f.w, f.h);
@@ -2308,14 +2650,17 @@
                         } else { ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = "10px sans-serif"; ctx.fillText(`Plot ${idx+1} Empty`, f.x + 8, f.y + 45); }
                     }
                 });
-                let dx = runner.targetX - runner.x, dy = runner.targetY - runner.y, distVec = Math.hypot(dx, dy);
+
+                let dx = runner.targetX - runner.x; let dy = runner.targetY - runner.y; let distVec = Math.hypot(dx, dy);
                 if (distVec > 3) { runner.x += (dx / distVec) * runner.speed; runner.y += (dy / distVec) * runner.speed; } 
+
                 ctx.font = "26px Arial"; ctx.fillText("👨‍🌾", runner.x, runner.y + 22);
                 requestAnimationFrame(gameLoop); return;
             }
 
             if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
             if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
+
             ctx.fillStyle = '#00a8ff'; ctx.beginPath(); ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2); ctx.fill();
 
             if(currentGameMode === "laser") {
@@ -2328,48 +2673,72 @@
                     });
                 }
                 for(let i = obstacles.length - 1; i >= 0; i--) {
-                    let o = obstacles[i]; o.y += o.speed; ctx.fillStyle = '#ff4757'; ctx.fillRect(o.x, o.y, o.w, o.h);
+                    let o = obstacles[i]; o.y += o.speed;
+                    ctx.fillStyle = '#ff4757'; ctx.fillRect(o.x, o.y, o.w, o.h);
                     if (o.x < runner.x + runner.w && o.x + o.w > runner.x && o.y < runner.y + runner.h && o.y + o.h > runner.y) {
                         gameRunning = false; cash += distance; updateGlobalCash();
-                        triggerCustomNotification(`💥 CRASHED!\n\nDistance Cleared: ${distance}\nEarned: +$${distance}`, "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                        triggerCustomNotification(`💥 CRASHED!\n\nDistance Cleared: ${distance}\nEarned: +$${distance}`, "#ff4757", () => {
+                            gameScreen.classList.add('hidden');
+                        });
+                        return;
                     }
                     if(o.y > canvas.height) obstacles.splice(i, 1);
                 }
             } 
             else if(currentGameMode === "train") {
-                let train = obstacles[0], currentTime = Date.now();
+                let train = obstacles[0]; let currentTime = Date.now();
                 if (isTrainAlertActive) {
                     let remaining = Math.ceil((alertEndTime - currentTime) / 1000);
                     if (remaining > 0) { document.getElementById('alert-timer-label').innerText = "⚠️ Train Close! " + remaining + "s"; train.targetY = runner.y + 35; } 
                     else { isTrainAlertActive = false; document.getElementById('alert-timer-label').innerText = ""; train.targetY = canvas.height + 120; }
                 } else { train.targetY = canvas.height + 120; }
+
                 train.y += (train.targetY - train.y) * 0.1;
                 if(train.x + train.w/2 < runner.x + 15) train.x += 3.5; else train.x -= 3.5;
+
                 ctx.fillStyle = '#4b4b4b'; ctx.fillRect(train.x, train.y, train.w, train.h);
                 ctx.fillStyle = '#ff4757'; ctx.fillRect(train.x - 2, train.y, train.w + 4, 10);
                 ctx.fillStyle = '#ff9f43'; ctx.fillRect(train.x + 10, train.y + 15, 12, 10); ctx.fillRect(train.x + train.w - 22, train.y + 15, 12, 10);
+
                 if(Math.random() < 0.025 && activeCoins.length < 4) activeCoins.push({ x: Math.random() * (canvas.width - 40) + 20, y: -10, r: 8, speed: 3 });
                 if(Math.random() < 0.015 && activeBushes.length < 3) activeBushes.push({ x: Math.random() * (canvas.width - 45) + 10, y: -20, w: 35, h: 25, speed: 3.5 });
+
                 for(let c = activeCoins.length - 1; c >= 0; c--) {
-                    let coin = activeCoins[c]; coin.y += coin.speed; ctx.fillStyle = '#ffd32a'; ctx.beginPath(); ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI*2); ctx.fill();
+                    let coin = activeCoins[c]; coin.y += coin.speed;
+                    ctx.fillStyle = '#ffd32a'; ctx.beginPath(); ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI*2); ctx.fill();
                     if(Math.hypot((runner.x + 15) - coin.x, (runner.y + 15) - coin.y) < 15 + coin.r) {
-                        activeCoins.splice(c, 1); distance += 1; cash += 5; updateGlobalCash(); document.getElementById('distance-val').innerText = distance; continue;
+                        activeCoins.splice(c, 1); distance += 1; cash += 5; updateGlobalCash();
+                        document.getElementById('distance-val').innerText = distance; continue;
                     }
                     if(coin.y > canvas.height) activeCoins.splice(c, 1);
                 }
+
                 for(let b = activeBushes.length - 1; b >= 0; b--) {
-                    let bush = activeBushes[b]; bush.y += bush.speed; ctx.fillStyle = '#2ed573'; ctx.beginPath(); ctx.arc(bush.x + 10, bush.y + 12, 12, 0, Math.PI*2); ctx.arc(bush.x + 25, bush.y + 12, 12, 0, Math.PI*2); ctx.arc(bush.x + 17, bush.y + 6, 12, 0, Math.PI*2); ctx.fill();
+                    let bush = activeBushes[b]; bush.y += bush.speed;
+                    ctx.fillStyle = '#2ed573'; ctx.beginPath(); ctx.arc(bush.x + 10, bush.y + 12, 12, 0, Math.PI*2); ctx.arc(bush.x + 25, bush.y + 12, 12, 0, Math.PI*2); ctx.arc(bush.x + 17, bush.y + 6, 12, 0, Math.PI*2); ctx.fill();
                     if (bush.x < runner.x + runner.w && bush.x + bush.w > runner.x && bush.y < runner.y + runner.h && bush.y + bush.h > runner.y) {
-                        activeBushes.splice(b, 1); if (!isTrainAlertActive) { isTrainAlertActive = true; alertEndTime = Date.now() + 5000; } 
-                        else { gameRunning = false; triggerCustomNotification("🚂 CHASED DOWN BY TRAIN!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return; }
+                        activeBushes.splice(b, 1); 
+                        if (!isTrainAlertActive) { isTrainAlertActive = true; alertEndTime = Date.now() + 5000; } 
+                        else { 
+                            gameRunning = false; 
+                            triggerCustomNotification("🚂 CHASED DOWN BY TRAIN!", "#ff4757", () => {
+                                gameScreen.classList.add('hidden');
+                            });
+                            return; 
+                        }
                         continue;
                     }
                     if(bush.y > canvas.height) activeBushes.splice(b, 1);
                 }
                 if (train.y <= runner.y + runner.h && train.y + train.h >= runner.y && train.x < runner.x + runner.w && train.x + train.w > runner.x) {
-                    gameRunning = false; triggerCustomNotification("🚂 TRAIN COLLISION STATE TARGETED!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                    gameRunning = false; 
+                    triggerCustomNotification("🚂 TRAIN COLLISION STATE TARGETED!", "#ff4757", () => {
+                        gameScreen.classList.add('hidden');
+                    });
+                    return;
                 }
             }
+
             requestAnimationFrame(gameLoop);
         }
     </script>
