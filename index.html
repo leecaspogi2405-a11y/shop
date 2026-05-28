@@ -116,25 +116,31 @@
             transform: scale(1.02);
         }
 
+        /* --- UPDATED ARCADE SELECTION GRID --- */
         .game-menu-container {
             margin-top: 30px;
             width: 100%;
             max-width: 420px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            box-sizing: border-box;
         }
 
         .game-column {
             text-align: center;
             background-color: #1e1e1e;
-            padding: 10px 15px;
+            padding: 12px 8px;
             border-radius: 10px;
-            min-width: 85px;
-            flex: 1 1 calc(50% - 15px);
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-column.full-width {
+            grid-column: span 2;
         }
 
         .game-section-title {
@@ -143,12 +149,12 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin: 0 0 5px 0;
+            margin: 0 0 8px 0;
         }
 
         .play-trigger-btn {
             color: #ff4757;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 900;
             cursor: pointer;
             letter-spacing: 1px;
@@ -842,7 +848,6 @@
             <p class="game-section-title">BURGER BOMB</p>
             <button class="play-trigger-btn" id="launch-burger-btn">🍔 PLAY</button>
         </div>
-
         <div class="game-column" style="border: 1px solid #00d2d3;">
             <p class="game-section-title" style="color: #00d2d3;">JET SHOOTER</p>
             <button class="play-trigger-btn" id="launch-jet-btn" style="color: #00d2d3;">🚀 PLAY</button>
@@ -860,7 +865,7 @@
             <button class="play-trigger-btn" id="launch-guess-btn" style="color: #2ed573;">🔮 PLAY</button>
         </div>
         
-        <div class="game-column" style="border: 1px solid #54a0ff; flex: 1 1 100%;">
+        <div class="game-column full-width" style="border: 1px solid #54a0ff;">
             <p class="game-section-title" style="color: #54a0ff;">CLOUDE RESTAURANT</p>
             <button class="play-trigger-btn" id="launch-restaurant-btn" style="color: #54a0ff;">🧑‍🍳 START COOKING</button>
         </div>
@@ -1041,7 +1046,6 @@
         let restaurantIngredientsSelected = [];
         let restaurantOrdersCompleted = 0;
 
-        // Base ingredient master list updated with new items (🍅, 🧅, 🧀, 🧊, 💧, 🥫, 🥖)
         const restaurantIngredientsBaseList = [
             '🥔','🍶','🍞','🥦','🥕','🥬','🥑','🫓','🌰','🍋',
             '🍖','🥒','🍥','🫔','🍡','🥡','🥢','🥚','🍤','🌶',
@@ -1668,7 +1672,6 @@
         }
 
         function generateNewRestaurantOrder() {
-            // Updated with new order names
             const types = [
                 "Fries 🍟", "Sandwich 🥪", "Tacos 🌮", "Ramen 🍜", "Pizza 🍕",
                 "Burger 🍔", "Soda 🥤", "Spaghetti 🍝", "HotDog 🌭"
@@ -1740,7 +1743,6 @@
                 let pizzaTarget = ["🫓", "🫓", "🍤", "🌶"].sort().join("");
                 if (currentString === pizzaTarget) matchesProfile = true;
             }
-            // --- NEW RECIPES LOGIC CHECK ---
             else if (currentRestaurantOrder.includes("Burger")) {
                 let burgerTarget = ["🫓", "🫓", "🥬", "🥒", "🍅", "🧅", "🧀"].sort().join("");
                 if (currentString === burgerTarget) matchesProfile = true;
@@ -1919,7 +1921,7 @@
                 if (currentX !== mazePlayer.x || currentY !== mazePlayer.y) {
                     mazePlayer.x = currentX;
                     mazePlayer.y = currentY;
-                    processMazeLogicEvaluation();
+                    processChenMazeLogicEvaluation();
                 }
             }
         }
