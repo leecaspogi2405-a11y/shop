@@ -754,6 +754,69 @@
             background-color: #57606f;
         }
 
+        /* --- ACE THE BOMB CORES --- */
+        .atb-panel {
+            width: 100%;
+            max-width: 400px;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            border: 2px solid #9b59b6;
+        }
+
+        .joystick-matrix-wrapper {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+            box-sizing: border-box;
+        }
+
+        .joystick-cluster {
+            background-color: #1c1326;
+            border: 1px solid #9b59b6;
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .joystick-title-tag {
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .joystick-pad-base {
+            width: 90px;
+            height: 90px;
+            background-color: #2c2536;
+            border-radius: 50%;
+            position: relative;
+            touch-action: none;
+            border: 2px solid #4a375a;
+        }
+
+        .joystick-handle-knob {
+            width: 36px;
+            height: 36px;
+            background-color: #9b59b6;
+            border-radius: 50%;
+            position: absolute;
+            left: 27px;
+            top: 27px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+        }
+
         .notification-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -792,63 +855,6 @@
             border-radius: 6px;
             cursor: pointer;
             outline: none;
-        }
-
-        /* --- ACE THE BOMB PANEL STYLES --- */
-        .ab-control-panel {
-            width: 100%;
-            max-width: 400px;
-            background-color: #1e1e1e;
-            border-radius: 12px;
-            padding: 15px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-            border: 2px solid #9b59b6;
-        }
-        .joystick-matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .joystick-wrapper {
-            background-color: #151515;
-            border: 1px solid #9b59b6;
-            border-radius: 8px;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .joystick-title {
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #9b59b6;
-            margin-bottom: 4px;
-        }
-        .joystick-cross {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
-            width: 105px;
-        }
-        .joy-btn {
-            background-color: #2f3542;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            width: 32px;
-            height: 32px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-        .joy-btn:active {
-            background-color: #9b59b6;
         }
     </style>
 </head>
@@ -933,13 +939,15 @@
             <p class="game-section-title" style="color: #2ed573;">GUESS NUMBER</p>
             <button class="play-trigger-btn" id="launch-guess-btn" style="color: #2ed573;">🔮 PLAY</button>
         </div>
-        <div class="game-column full-width" style="border: 1px solid #9b59b6;">
-            <p class="game-section-title" style="color: #9b59b6;">💣 ACE THE BOMB</p>
-            <button class="play-trigger-btn" id="launch-ab-btn" style="color: #9b59b6;">🏃‍♂️ PLAY ARENA</button>
-        </div>
+        
         <div class="game-column full-width" style="border: 1px solid #54a0ff;">
             <p class="game-section-title" style="color: #54a0ff;">CLOUDE RESTAURANT</p>
             <button class="play-trigger-btn" id="launch-restaurant-btn" style="color: #54a0ff;">🧑‍🍳 START COOKING</button>
+        </div>
+
+        <div class="game-column full-width" style="border: 2px dashed #9b59b6; background-color: #191221;">
+            <p class="game-section-title" style="color: #e040fb;">💣 ACE THE BOMB 💣</p>
+            <button class="play-trigger-btn" id="launch-atb-btn" style="color: #e040fb;">🏃‍♂️ START MATCH</button>
         </div>
     </div>
 
@@ -1025,18 +1033,42 @@
             </div>
         </div>
 
-        <div class="ab-control-panel hidden" id="ab-control-panel">
+        <div class="atb-panel hidden" id="atb-panel">
             <div class="burger-mode-select">
-                <button class="mode-tab-btn active" id="ab-mode-bot-btn">🤖 BOT MATCH</button>
-                <button class="mode-tab-btn" id="ab-mode-mp-btn">👥 LOCAL PVP PARTY</button>
+                <button class="mode-tab-btn active" id="atb-mode-bot-btn">🤖 BOT MATCH</button>
+                <button class="mode-tab-btn" id="atb-mode-p1-btn">👥 LOCAL PVP</button>
             </div>
-            <div class="burger-instruction-banner" style="background-color: #4a275a; color: #e0b0ff;">
-                Total Combatants: <span id="ab-count-label">4</span>
-                <button style="margin-left:10px; background:#9b59b6; color:white; border:none; border-radius:3px; padding:2px 6px; cursor:pointer;" onclick="toggleABComponents()">Change</button>
-            </div>
-            <div class="action-log-ticker" id="ab-ticker" style="color: #e0b0ff; border-color: #9b59b6;">Detonation Clock: 15.0s</div>
             
-            <div class="joystick-matrix-grid" id="ab-joystick-grid"></div>
+            <div style="margin-bottom: 10px; font-weight: bold; font-size: 0.9rem; width: 100%; display: flex; justify-content: space-between;">
+                <span>Competitors Count:</span>
+                <select id="atb-competitors-dropdown" style="background:#2f3542; color:white; border:1px solid #9b59b6; border-radius:4px; padding:2px 8px;">
+                    <option value="4">4 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="2">2 Players</option>
+                </select>
+            </div>
+
+            <div class="burger-instruction-banner" id="atb-instruction-text">Timer: 15.0s | Active Fuse!</div>
+            <div class="action-log-ticker" id="atb-action-log">Run from the Bomb holder! Pass it by making direct contact.</div>
+            
+            <div class="joystick-matrix-wrapper" id="atb-joystick-matrix">
+                <div class="joystick-cluster" id="joystick-box-p1">
+                    <span class="joystick-title-tag" style="color: #1e90ff;">P1 Joystick</span>
+                    <div class="joystick-pad-base" id="joy-base-p1"><div class="joystick-handle-knob" id="joy-knob-p1"></div></div>
+                </div>
+                <div class="joystick-cluster" id="joystick-box-p2">
+                    <span class="joystick-title-tag" style="color: #ff4757;">P2 Joystick</span>
+                    <div class="joystick-pad-base" id="joy-base-p2"><div class="joystick-handle-knob" id="joy-knob-p2"></div></div>
+                </div>
+                <div class="joystick-cluster" id="joystick-box-p3">
+                    <span class="joystick-title-tag" style="color: #ffa502;">P3 Joystick</span>
+                    <div class="joystick-pad-base" id="joy-base-p3"><div class="joystick-handle-knob" id="joy-knob-p3"></div></div>
+                </div>
+                <div class="joystick-cluster" id="joystick-box-p4">
+                    <span class="joystick-title-tag" style="color: #2ed573;">P4 Joystick</span>
+                    <div class="joystick-pad-base" id="joy-base-p4"><div class="joystick-handle-knob" id="joy-knob-p4"></div></div>
+                </div>
+            </div>
         </div>
 
         <div id="farm-ui-bubble-container" style="margin-top: 15px; min-height: 50px; display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; max-width: 360px;"></div>
@@ -1132,13 +1164,21 @@
         let restaurantIngredientsSelected = [];
         let restaurantOrdersCompleted = 0;
 
-        /* --- ACE THE BOMB CONFIG STATE VARIATION --- */
-        let abMatchMode = "bot";
-        let abConfiguredComponentsCount = 4;
-        let abPlayersData = [];
-        let abBombCarrierIdx = 0;
-        let abBombTimer = 15.0;
-        let abLastTimeStamped = 0;
+        /* --- ACE THE BOMB DATA STORAGE ENTITIES --- */
+        let atbMode = "bot"; 
+        let atbTotalCompetitors = 4; 
+        let atbPlayersList = []; 
+        let atbBombHolderIndex = 0; 
+        let atbBombTimer = 15.0; 
+        let atbCooldownTimer = 0; 
+        let atbLastTimeTick = 0;
+
+        let joysticksData = {
+            p1: { x: 0, y: 0, active: false, identifier: null },
+            p2: { x: 0, y: 0, active: false, identifier: null },
+            p3: { x: 0, y: 0, active: false, identifier: null },
+            p4: { x: 0, y: 0, active: false, identifier: null }
+        };
 
         const restaurantIngredientsBaseList = [
             '🥔','🍶','🍞','🥦','🥕','🥬','🥑','🫓','🌰','🍋',
@@ -1173,7 +1213,7 @@
         const burgerGamePanel = document.getElementById('burger-game-panel');
         const guessGamePanel = document.getElementById('guess-game-panel');
         const restaurantPanel = document.getElementById('restaurant-panel');
-        const abControlPanel = document.getElementById('ab-control-panel');
+        const atbPanel = document.getElementById('atb-panel');
         
         const launchLaserBtn = document.getElementById('launch-laser-btn');
         const launchTrainBtn = document.getElementById('launch-train-btn');
@@ -1184,7 +1224,7 @@
         const launchFlappyBtn = document.getElementById('launch-flappy-btn');
         const launchGuessBtn = document.getElementById('launch-guess-btn');
         const launchRestaurantBtn = document.getElementById('launch-restaurant-btn');
-        const launchABBtn = document.getElementById('launch-ab-btn');
+        const launchAtbBtn = document.getElementById('launch-atb-btn');
 
         cashEl.innerText = cash;
         loadFarmProgress(); 
@@ -1214,7 +1254,7 @@
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
             restaurantPanel.classList.add('hidden');
-            abControlPanel.classList.add('hidden');
+            atbPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             saveFarmProgress(); 
             updateGlobalCash();
@@ -1244,10 +1284,10 @@
             restaurantPanel.classList.remove('hidden');
             initRestaurantGame();
         });
-        launchABBtn.addEventListener('click', () => {
-            setupArcadeMode("ab", "<span style='color:#9b59b6;'>💣 Ace the Bomb Arena</span>", "Keep moving! Run from whoever holds the explosive element and pass it away!");
-            abControlPanel.classList.remove('hidden');
-            initAceTheBombGame();
+        launchAtbBtn.addEventListener('click', () => {
+            setupArcadeMode("atb", "<span style='color:#e040fb;'>💣 Ace The Bomb Arena</span>", "Use virtual analog touchpads to sprint. Tag competitors before the fuse pops!");
+            atbPanel.classList.remove('hidden');
+            initAtbGame();
         });
 
         function setupArcadeMode(modeName, statsHtml, hintText) {
@@ -1256,7 +1296,7 @@
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
             restaurantPanel.classList.add('hidden');
-            abControlPanel.classList.add('hidden');
+            atbPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             currentSelectedFarmTarget = null;
             modeStatLabel.innerHTML = statsHtml + ' <button class="exit-btn" id="exit-game-btn">EXIT</button>';
@@ -1774,243 +1814,155 @@
             generateNewRestaurantOrder();
         }
 
-        /* --- ACE THE BOMB CORE ARCHITECTURE LOGIC --- */
-        document.getElementById('ab-mode-bot-btn').onclick = () => {
-            abMatchMode = "bot";
-            document.getElementById('ab-mode-bot-btn').classList.add('active');
-            document.getElementById('ab-mode-mp-btn').classList.remove('active');
-            initAceTheBombGame();
+        /* --- ACE THE BOMB LOGIC SYSTEM ARCHITECTURE --- */
+        document.getElementById('atb-mode-bot-btn').onclick = () => {
+            atbMode = "bot";
+            document.getElementById('atb-mode-bot-btn').className = "mode-tab-btn active";
+            document.getElementById('atb-mode-p1-btn').className = "mode-tab-btn";
+            initAtbGame();
         };
-        document.getElementById('ab-mode-mp-btn').onclick = () => {
-            abMatchMode = "multiplayer";
-            document.getElementById('ab-mode-mp-btn').classList.add('active');
-            document.getElementById('ab-mode-bot-btn').classList.remove('active');
-            initAceTheBombGame();
+        document.getElementById('atb-mode-p1-btn').onclick = () => {
+            atbMode = "multiplayer";
+            document.getElementById('atb-mode-p1-btn').className = "mode-tab-btn active";
+            document.getElementById('atb-mode-bot-btn').className = "mode-tab-btn";
+            initAtbGame();
+        };
+        document.getElementById('atb-competitors-dropdown').onchange = (e) => {
+            atbTotalCompetitors = parseInt(e.target.value);
+            initAtbGame();
         };
 
-        function toggleABComponents() {
-            if(abConfiguredComponentsCount === 4) abConfiguredComponentsCount = 2;
-            else if(abConfiguredComponentsCount === 2) abConfiguredComponentsCount = 3;
-            else abConfiguredComponentsCount = 4;
-            document.getElementById('ab-count-label').innerText = abConfiguredComponentsCount;
-            initAceTheBombGame();
-        }
+        function initAtbGame() {
+            atbBombTimer = 15.0;
+            atbCooldownTimer = 0;
+            atbPlayersList = [];
+            atbLastTimeTick = Date.now();
 
-        function initAceTheBombGame() {
-            abBombTimer = 15.0;
-            abPlayersData = [];
-            abLastTimeStamped = Date.now();
-            
-            const titles = ["Player 1", "Player 2", "Player 3", "Player 4"];
-            const colors = ["#1e90ff", "#2ed573", "#ffa502", "#e84393"];
-            
-            for(let i = 0; i < abConfiguredComponentsCount; i++) {
-                let isBotEntity = (abMatchMode === "bot" && i > 0);
-                abPlayersData.push({
-                    id: i,
-                    name: titles[i] + (isBotEntity ? " (Bot)" : ""),
-                    x: 40 + (i * 70),
-                    y: 60 + (i * 70),
+            const colors = ["#1e90ff", "#ff4757", "#ffa502", "#2ed573"];
+            const names = ["Player 1", "Player 2", "Player 3", "Player 4"];
+
+            for (let i = 0; i < atbTotalCompetitors; i++) {
+                let isBotPlayer = (atbMode === "bot" && i > 0);
+                atbPlayersList.push({
+                    id: i + 1,
+                    name: isBotPlayer ? `Bot ${i + 1}` : names[i],
+                    x: 60 + (i % 2) * 220,
+                    y: 70 + Math.floor(i / 2) * 190,
                     radius: 14,
                     color: colors[i],
-                    isBot: isBotEntity,
+                    isBot: isBotPlayer,
                     alive: true,
-                    cooldown: 0,
-                    dx: 0, dy: 0
-                });
-            }
-            
-            abBombCarrierIdx = Math.floor(Math.random() * abConfiguredComponentsCount);
-            buildABJoystickLayoutUI();
-        }
-
-        function buildABJoystickLayoutUI() {
-            const container = document.getElementById('ab-joystick-grid');
-            container.innerHTML = "";
-            
-            abPlayersData.forEach((p) => {
-                if(p.isBot || !p.alive) return;
-                
-                let joyBox = document.createElement('div');
-                joyBox.className = "joystick-wrapper";
-                
-                let title = document.createElement('div');
-                title.className = "joystick-title";
-                title.style.color = p.color;
-                title.innerText = p.name;
-                joyBox.appendChild(title);
-                
-                let cross = document.createElement('div');
-                cross.className = "joystick-cross";
-                
-                let blank1 = document.createElement('div');
-                let upBtn = document.createElement('button');
-                upBtn.className = "joy-btn"; upBtn.innerText = "▲";
-                upBtn.onmousedown = () => { p.dy = -4.5; p.dx = 0; };
-                upBtn.ontouchstart = (e) => { e.preventDefault(); p.dy = -4.5; p.dx = 0; };
-                
-                let blank2 = document.createElement('div');
-                let leftBtn = document.createElement('button');
-                leftBtn.className = "joy-btn"; leftBtn.innerText = "◀";
-                leftBtn.onmousedown = () => { p.dx = -4.5; p.dy = 0; };
-                leftBtn.ontouchstart = (e) => { e.preventDefault(); p.dx = -4.5; p.dy = 0; };
-                
-                let stopBtn = document.createElement('button');
-                stopBtn.className = "joy-btn"; stopBtn.innerText = "■";
-                stopBtn.style.background = "#4b5263";
-                stopBtn.onmousedown = () => { p.dx = 0; p.dy = 0; };
-                stopBtn.ontouchstart = (e) => { e.preventDefault(); p.dx = 0; p.dy = 0; };
-                
-                let rightBtn = document.createElement('button');
-                rightBtn.className = "joy-btn"; rightBtn.innerText = "▶";
-                rightBtn.onmousedown = () => { p.dx = 4.5; p.dy = 0; };
-                rightBtn.ontouchstart = (e) => { e.preventDefault(); p.dx = 4.5; p.dy = 0; };
-                
-                let blank3 = document.createElement('div');
-                let downBtn = document.createElement('button');
-                downBtn.className = "joy-btn"; downBtn.innerText = "▼";
-                downBtn.onmousedown = () => { p.dy = 4.5; p.dx = 0; };
-                downBtn.ontouchstart = (e) => { e.preventDefault(); p.dy = 4.5; p.dx = 0; };
-                
-                cross.appendChild(blank1); cross.appendChild(upBtn); cross.appendChild(blank2);
-                cross.appendChild(leftBtn); cross.appendChild(stopBtn); cross.appendChild(rightBtn);
-                cross.appendChild(blank3); cross.appendChild(downBtn);
-                
-                joyBox.appendChild(cross);
-                container.appendChild(joyBox);
-            });
-        }
-
-        function processAceTheBombFrameUpdate() {
-            let currentNow = Date.now();
-            let elapsedSec = (currentNow - abLastTimeStamped) / 1000;
-            abLastTimeStamped = currentNow;
-            
-            abBombTimer -= elapsedSec;
-            if(abBombTimer <= 0) abBombTimer = 0;
-            
-            document.getElementById('ab-ticker').innerText = "Detonation Clock: " + abBombTimer.toFixed(1) + "s";
-            
-            let aliveCount = 0;
-            let lastSurvivor = null;
-            
-            abPlayersData.forEach(p => {
-                if(p.alive) {
-                    aliveCount++;
-                    lastSurvivor = p;
-                }
-            });
-            
-            if(aliveCount <= 1) {
-                gameRunning = false;
-                if(lastSurvivor && lastSurvivor.id === 0) {
-                    if(abMatchMode === "bot") {
-                        cash += 500; updateGlobalCash();
-                        triggerCustomNotification("🏆 ARENA CHAMPION!\nYou aced the bomb and survived! Earned +$500 cash.", "#2ed573", handleExitToShop);
-                    } else {
-                        triggerCustomNotification(`🏆 MATCH OVER!\n${lastSurvivor.name} won the survival arena match!`, "#2ed573", handleExitToShop);
-                    }
-                } else {
-                    if(abMatchMode === "bot") {
-                        cash = Math.max(0, cash - 500); updateGlobalCash();
-                        triggerCustomNotification("💀 ELIMINATED!\nYour player profile blew up. Penalized -$500 cash.", "#ff4757", handleExitToShop);
-                    } else {
-                        triggerCustomNotification(`🏆 MATCH OVER!\n${lastSurvivor ? lastSurvivor.name : "Nobody"} survived the blast radius!`, "#ffa502", handleExitToShop);
-                    }
-                }
-                return;
-            }
-            
-            if(abBombTimer <= 0) {
-                let carrier = abPlayersData[abBombCarrierIdx];
-                if(carrier && carrier.alive) {
-                    carrier.alive = false;
-                    triggerCustomNotification(`💥 BOOM!\n${carrier.name} exploded!`, "#ff4757", () => {
-                        abBombTimer = 15.0;
-                        abLastTimeStamped = Date.now();
-                        let nextLiveIdx = abPlayersData.findIndex(p => p.alive);
-                        if(nextLiveIdx !== -1) abBombCarrierIdx = nextLiveIdx;
-                        buildABJoystickLayoutUI();
-                    });
-                }
-                return;
-            }
-
-            abPlayersData.forEach((p, idx) => {
-                if(!p.alive) return;
-                if(p.cooldown > 0) p.cooldown -= elapsedSec;
-                
-                if(p.isBot) {
-                    let target = null;
-                    if(idx === abBombCarrierIdx) {
-                        let closestDist = 999999;
-                        abPlayersData.forEach((o, oIdx) => {
-                            if(oIdx !== idx && o.alive && o.cooldown <= 0) {
-                                let d = Math.hypot(o.x - p.x, o.y - p.y);
-                                if(d < closestDist) { closestDist = d; target = o; }
-                            }
-                        });
-                        if(target) {
-                            let angle = Math.atan2(target.y - p.y, target.x - p.x);
-                            p.x += Math.cos(angle) * 2.2; p.y += Math.sin(angle) * 2.2;
-                        }
-                    } else {
-                        let carrier = abPlayersData[abBombCarrierIdx];
-                        if(carrier) {
-                            let dist = Math.hypot(carrier.x - p.x, carrier.y - p.y);
-                            if(dist < 120) {
-                                let angle = Math.atan2(p.y - carrier.y, p.x - carrier.x);
-                                p.x += Math.cos(angle) * 2.5; p.y += Math.sin(angle) * 2.5;
-                            } else {
-                                p.x += (Math.random() - 0.5) * 2; p.y += (Math.random() - 0.5) * 2;
-                            }
-                        }
-                    }
-                } else {
-                    p.x += p.dx; p.y += p.dy;
-                }
-                
-                if(p.x < p.radius) p.x = p.radius;
-                if(p.x > canvas.width - p.radius) p.x = canvas.width - p.radius;
-                if(p.y < p.radius) p.y = p.radius;
-                if(p.y > canvas.height - p.radius) p.y = canvas.height - p.radius;
-            });
-
-            let carrier = abPlayersData[abBombCarrierIdx];
-            if(carrier && carrier.alive && carrier.cooldown <= 0) {
-                abPlayersData.forEach((p, idx) => {
-                    if(idx !== abBombCarrierIdx && p.alive && p.cooldown <= 0) {
-                        let dist = Math.hypot(carrier.x - p.x, carrier.y - p.y);
-                        if(dist < (carrier.radius + p.radius)) {
-                            abBombCarrierIdx = idx;
-                            abPlayersData[abBombCarrierIdx].cooldown = 3.0;
-                            carrier.cooldown = 3.0;
-                        }
-                    }
+                    vx: 0,
+                    vy: 0,
+                    speed: 3.5
                 });
             }
 
-            abPlayersData.forEach(p => {
-                if(!p.alive) return;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.fill();
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "#ffffff";
-                ctx.stroke();
-                
-                if(p.id === abBombCarrierIdx) {
-                    ctx.font = "16px Arial";
-                    ctx.fillText("💣", p.x - 8, p.y - 18);
+            atbBombHolderIndex = Math.floor(Math.random() * atbTotalCompetitors);
+            
+            // Adjust virtual layout controls contextually
+            document.getElementById('joystick-box-p2').style.display = (atbTotalCompetitors >= 2 && atbMode === "multiplayer") ? "flex" : "none";
+            document.getElementById('joystick-box-p3').style.display = (atbTotalCompetitors >= 3 && atbMode === "multiplayer") ? "flex" : "none";
+            document.getElementById('joystick-box-p4').style.display = (atbTotalCompetitors >= 4 && atbMode === "multiplayer") ? "flex" : "none";
+
+            // Reset handling knobs
+            ["p1", "p2", "p3", "p4"].forEach(id => {
+                let knob = document.getElementById(`joy-knob-${id}`);
+                if (knob) { knob.style.left = "27px"; knob.style.top = "27px"; }
+                joysticksData[id].x = 0; joysticksData[id].y = 0; joysticksData[id].active = false;
+            });
+            
+            updateAtbHeaderTicker();
+        }
+
+        function updateAtbHeaderTicker() {
+            document.getElementById('atb-instruction-text').innerText = `Timer: ${atbBombTimer.toFixed(1)}s | Active Fuse!`;
+            let holder = atbPlayersList[atbBombHolderIndex];
+            let ticker = document.getElementById('atb-action-log');
+            if (holder) {
+                ticker.innerText = `${holder.name} has the 💣 BOMB! ${atbCooldownTimer > 0 ? `(Pass Cooldown: ${atbCooldownTimer.toFixed(1)}s)` : 'Tag someone to pass it!'}`;
+                ticker.style.color = "#ff4757";
+            }
+        }
+
+        function bindJoystickEvents(playerKey) {
+            let pad = document.getElementById(`joy-base-${playerKey}`);
+            let knob = document.getElementById(`joy-knob-${playerKey}`);
+            if (!pad || !knob) return;
+
+            function processStickMove(clientX, clientY) {
+                let rect = pad.getBoundingClientRect();
+                let centerX = rect.left + rect.width / 2;
+                let centerY = rect.top + rect.height / 2;
+                let dx = clientX - centerX;
+                let dy = clientY - centerY;
+                let distance = Math.hypot(dx, dy);
+                let maxRadius = rect.width / 2 - 10;
+
+                if (distance > maxRadius) {
+                    dx = (dx / distance) * maxRadius;
+                    dy = (dy / distance) * maxRadius;
                 }
-                if(p.cooldown > 0) {
-                    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-                    ctx.font = "bold 9px Arial";
-                    ctx.fillText("🔒 " + Math.ceil(p.cooldown) + "s", p.x - 12, p.y + 3);
+
+                knob.style.left = (27 + dx) + "px";
+                knob.style.top = (27 + dy) + "px";
+
+                joysticksData[playerKey].x = dx / maxRadius;
+                joysticksData[playerKey].y = dy / maxRadius;
+            }
+
+            pad.addEventListener('touchstart', (e) => {
+                let touch = e.changedTouches[0];
+                joysticksData[playerKey].active = true;
+                joysticksData[playerKey].identifier = touch.identifier;
+                processStickMove(touch.clientX, touch.clientY);
+                e.preventDefault();
+            }, { passive: false });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!joysticksData[playerKey].active) return;
+                for (let i = 0; i < e.touches.length; i++) {
+                    if (e.touches[i].identifier === joysticksData[playerKey].identifier) {
+                        processStickMove(e.touches[i].clientX, e.touches[i].clientY);
+                    }
+                }
+            }, { passive: true });
+
+            let endJoy = (e) => {
+                if (!joysticksData[playerKey].active) return;
+                joysticksData[playerKey].active = false;
+                joysticksData[playerKey].identifier = null;
+                joysticksData[playerKey].x = 0;
+                joysticksData[playerKey].y = 0;
+                knob.style.left = "27px";
+                knob.style.top = "27px";
+            };
+            window.addEventListener('touchend', endJoy);
+            window.addEventListener('touchcancel', endJoy);
+
+            // Desktop Mouse fallbacks
+            pad.addEventListener('mousedown', (e) => {
+                joysticksData[playerKey].active = true;
+                processStickMove(e.clientX, e.clientY);
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (joysticksData[playerKey].active && joysticksData[playerKey].identifier === null) {
+                    processStickMove(e.clientX, e.clientY);
+                }
+            });
+            window.addEventListener('mouseup', () => {
+                if (joysticksData[playerKey].active && joysticksData[playerKey].identifier === null) {
+                    joysticksData[playerKey].active = false;
+                    joysticksData[playerKey].x = 0; joysticksData[playerKey].y = 0;
+                    knob.style.left = "27px"; knob.style.top = "27px";
                 }
             });
         }
+
+        bindJoystickEvents("p1");
+        bindJoystickEvents("p2");
+        bindJoystickEvents("p3");
+        bindJoystickEvents("p4");
 
         function initGame() {
             canvas = document.getElementById('runnerCanvas');
@@ -2021,9 +1973,10 @@
             jetBullets = []; jetAliens = []; jetScore = 0;
             fpVelocity = 0; fpPipes = []; fpFrameCounter = 0;
 
-            if (currentGameMode === "burger" || currentGameMode === "guess" || currentGameMode === "restaurant") {
+            if (["burger", "guess", "restaurant", "atb"].includes(currentGameMode)) {
                 canvas.classList.add('hidden');
                 if(currentGameMode === "burger") { burgerGamePanel.classList.remove('hidden'); initBurgerGame(); }
+                if(currentGameMode === "atb") { initAtbGame(); }
                 return;
             } else { canvas.classList.remove('hidden'); }
 
@@ -2044,8 +1997,6 @@
             } else if (currentGameMode === "flappy") {
                 runner.y = canvas.height / 2; runner.w = 34; runner.h = 24;
                 canvas.onclick = () => { fpVelocity = fpJump; };
-            } else if (currentGameMode === "ab") {
-                canvas.onclick = null;
             } else { canvas.onclick = null; }
 
             if(currentGameMode === "train") {
@@ -2053,29 +2004,30 @@
             }
 
             window.onkeydown = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
             };
             window.onkeyup = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
             };
 
             canvas.ontouchstart = (e) => {
                 if(currentGameMode === "flappy") { fpVelocity = fpJump; return; }
-                if(["farm", "burger", "guess", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
                 let rect = canvas.getBoundingClientRect();
                 let touchX = e.touches[0].clientX - rect.left;
                 if(touchX < canvas.width / 2) runner.moveLeft = true;
                 else runner.moveRight = true;
             };
             canvas.ontouchend = () => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
                 runner.moveLeft = false; runner.moveRight = false;
             };
 
+            gameRunning = true;
             gameLoop();
         }
 
@@ -2303,14 +2255,158 @@
         }
 
         function gameLoop() {
-            if(!gameRunning || ["burger", "guess", "restaurant"].includes(currentGameMode)) return;
-            ctx.clearRect(0,0, canvas.width, canvas.height);
+            if(!gameRunning) return;
+            
+            // --- ACE THE BOMB REALTIME CANVAS ENGINE ---
+            if (currentGameMode === "atb") {
+                canvas.classList.remove('hidden');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (currentGameMode === "ab") {
-                processAceTheBombFrameUpdate();
+                let now = Date.now();
+                let dt = (now - atbLastTimeTick) / 1000;
+                atbLastTimeTick = now;
+
+                // Adjust ticking elements
+                if (atbBombTimer > 0) {
+                    atbBombTimer -= dt;
+                    if (atbBombTimer <= 0) {
+                        atbBombTimer = 0;
+                        let deadPlayer = atbPlayersList[atbBombHolderIndex];
+                        deadPlayer.alive = false;
+
+                        let remainder = atbPlayersList.filter(p => p.alive);
+                        if (remainder.length <= 1) {
+                            gameRunning = false;
+                            if (remainder.length === 1 && remainder[0].id === 1 && atbMode === "bot") {
+                                cash += 500; updateGlobalCash();
+                                triggerCustomNotification(`🏆 VICTORY!\nYou outlasted all bots!\nReceived: +$500 Cash.`, "#2ed573", handleExitToShop);
+                            } else if (!atbPlayersList[0].alive && atbMode === "bot") {
+                                cash = Math.max(0, cash - 500); updateGlobalCash();
+                                triggerCustomNotification(`💀 EXPLODED!\nYour bot mode unit died.\nPenalized: -$500 Cash.`, "#ff4757", handleExitToShop);
+                            } else {
+                                let winnerName = remainder.length === 1 ? remainder[0].name : "Nobody";
+                                triggerCustomNotification(`👑 MATCH OVER!\n${winnerName} is the last survivor!`, "#9b59b6", handleExitToShop);
+                            }
+                            return;
+                        } else {
+                            // Detonate holder and hand off the next active bomb
+                            triggerCustomNotification(`💥 BOOM!\n${deadPlayer.name} exploded!`, "#ff4757", () => {
+                                atbBombTimer = 15.0;
+                                atbCooldownTimer = 0;
+                                let aliveIndexes = [];
+                                atbPlayersList.forEach((p, idx) => { if (p.alive) aliveIndexes.push(idx); });
+                                atbBombHolderIndex = aliveIndexes[Math.floor(Math.random() * aliveIndexes.length)];
+                                atbLastTimeTick = Date.now();
+                                gameRunning = true;
+                                gameLoop();
+                            });
+                            gameRunning = false;
+                            return;
+                        }
+                    }
+                }
+
+                if (atbCooldownTimer > 0) {
+                    atbCooldownTimer -= dt;
+                    if (atbCooldownTimer < 0) atbCooldownTimer = 0;
+                }
+
+                updateAtbHeaderTicker();
+
+                // Compute positional path matrix data loops
+                atbPlayersList.forEach((p, idx) => {
+                    if (!p.alive) return;
+
+                    // Manual control translation vs automated computer tracking loops
+                    if (p.isBot || (atbMode === "bot" && idx > 0)) {
+                        // Bot Intelligence Mapping
+                        if (atbBombHolderIndex === idx) {
+                            // Chasing nearest survivor
+                            let target = null;
+                            let minDist = 9999;
+                            atbPlayersList.forEach((other, oIdx) => {
+                                if (oIdx === idx || !other.alive) return;
+                                let d = Math.hypot(other.x - p.x, other.y - p.y);
+                                if (d < minDist) { minDist = d; target = other; }
+                            });
+                            if (target) {
+                                let angle = Math.atan2(target.y - p.y, target.x - p.x);
+                                p.vx = Math.cos(angle) * p.speed * 0.9;
+                                p.vy = Math.sin(angle) * p.speed * 0.9;
+                            }
+                        } else {
+                            // Running away from active bomb vectors
+                            let bombSource = atbPlayersList[atbBombHolderIndex];
+                            if (bombSource) {
+                                let angle = Math.atan2(p.y - bombSource.y, p.x - bombSource.x);
+                                p.vx = Math.cos(angle) * p.speed * 0.85;
+                                p.vy = Math.sin(angle) * p.speed * 0.85;
+                            }
+                        }
+                    } else {
+                        // Human Node translation links
+                        let padKey = `p${p.id}`;
+                        if (joysticksData[padKey] && (atbMode === "multiplayer" || p.id === 1)) {
+                            p.vx = joysticksData[padKey].x * p.speed;
+                            p.vy = joysticksData[padKey].y * p.speed;
+                        } else {
+                            p.vx = 0; p.vy = 0;
+                        }
+                    }
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Keep entities inside boundaries
+                    if (p.x < p.radius) p.x = p.radius;
+                    if (p.x > canvas.width - p.radius) p.x = canvas.width - p.radius;
+                    if (p.y < p.radius) p.y = p.radius;
+                    if (p.y > canvas.height - p.radius) p.y = canvas.height - p.radius;
+                });
+
+                // Check collision handoffs
+                if (atbCooldownTimer === 0) {
+                    let holder = atbPlayersList[atbBombHolderIndex];
+                    atbPlayersList.forEach((other, oIdx) => {
+                        if (oIdx === atbBombHolderIndex || !other.alive) return;
+                        let dist = Math.hypot(holder.x - other.x, holder.y - other.y);
+                        if (dist < (holder.radius + other.radius)) {
+                            atbBombHolderIndex = oIdx;
+                            atbCooldownTimer = 1.0; // 1-second passing cooldown tracking window
+                        }
+                    });
+                }
+
+                // Render match arena field layers
+                atbPlayersList.forEach((p, idx) => {
+                    if (!p.alive) return;
+
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.stroke();
+
+                    // Draw labels
+                    ctx.fillStyle = "#ffffff";
+                    ctx.font = "bold 9px monospace";
+                    ctx.textAlign = "center";
+                    ctx.fillText(p.name, p.x, p.y - p.radius - 4);
+
+                    // Render active explosives indicator attachment graphics
+                    if (atbBombHolderIndex === idx) {
+                        ctx.font = "14px sans-serif";
+                        ctx.fillText("💣", p.x, p.y + 5);
+                    }
+                });
+
                 requestAnimationFrame(gameLoop);
                 return;
             }
+
+            ctx.clearRect(0,0, canvas.width, canvas.height);
 
             if (currentGameMode === "jet") {
                 runner.y = canvas.height - 40; 
