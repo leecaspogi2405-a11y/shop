@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xdragon Web Shop & Arcade</title>
     <style>
         body {
@@ -795,7 +795,7 @@
         }
 
         /* --- ACE THE BOMB PANEL STYLES --- */
-        .atb-config-panel {
+        .ab-control-panel {
             width: 100%;
             max-width: 400px;
             background-color: #1e1e1e;
@@ -808,63 +808,47 @@
             margin-top: 10px;
             border: 2px solid #9b59b6;
         }
-        .atb-player-count-row {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            margin-top: 5px;
-            margin-bottom: 15px;
-        }
-        .atb-count-btn {
-            flex: 1;
-            padding: 8px;
-            background-color: #2f3542;
-            color: white;
-            border: 1px solid #4b5263;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .atb-count-btn.active {
-            background-color: #9b59b6;
-            border-color: #be2edd;
-        }
-        .joysticks-container-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 360px;
+        .joystick-matrix-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 10px;
+            width: 100%;
             margin-top: 15px;
-            box-sizing: border-box;
         }
-        .joystick-zone {
-            background-color: rgba(47, 53, 66, 0.4);
-            border: 2px dashed rgba(155, 89, 182, 0.5);
-            height: 110px;
-            border-radius: 55px;
-            position: relative;
+        .joystick-wrapper {
+            background-color: #151515;
+            border: 1px solid #9b59b6;
+            border-radius: 8px;
+            padding: 8px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            touch-action: none;
         }
-        .joystick-handle {
-            width: 44px;
-            height: 44px;
-            background: radial-gradient(circle, #e056fd, #9b59b6);
-            border-radius: 22px;
-            position: absolute;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-            pointer-events: none;
-        }
-        .joystick-label {
-            position: absolute;
-            top: -18px;
+        .joystick-title {
             font-size: 0.75rem;
             font-weight: bold;
-            letter-spacing: 0.5px;
+            color: #9b59b6;
+            margin-bottom: 4px;
+        }
+        .joystick-cross {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            width: 105px;
+        }
+        .joy-btn {
+            background-color: #2f3542;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 32px;
+            height: 32px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .joy-btn:active {
+            background-color: #9b59b6;
         }
     </style>
 </head>
@@ -951,7 +935,7 @@
         </div>
         <div class="game-column full-width" style="border: 1px solid #9b59b6;">
             <p class="game-section-title" style="color: #9b59b6;">💣 ACE THE BOMB</p>
-            <button class="play-trigger-btn" id="launch-atb-btn" style="color: #9b59b6;">🏃‍♂️ START MATCH</button>
+            <button class="play-trigger-btn" id="launch-ab-btn" style="color: #9b59b6;">🏃‍♂️ PLAY ARENA</button>
         </div>
         <div class="game-column full-width" style="border: 1px solid #54a0ff;">
             <p class="game-section-title" style="color: #54a0ff;">CLOUDE RESTAURANT</p>
@@ -968,24 +952,6 @@
         
         <canvas id="runnerCanvas" width="360" height="360"></canvas>
         
-        <div class="atb-config-panel hidden" id="atb-config-panel">
-            <div class="burger-mode-select">
-                <button class="mode-tab-btn active" id="atb-mode-bot-btn">🤖 BOT MODE</button>
-                <button class="mode-tab-btn" id="atb-mode-player-btn">👥 PLAYER MODE</button>
-            </div>
-            <div style="font-size: 0.85rem; font-weight: bold; color: #a4b0be; width: 100%; text-align: left; margin-bottom: 4px;">Total Competitors:</div>
-            <div class="atb-player-count-row">
-                <button class="atb-count-btn active" id="atb-count-2-btn">2 Players</button>
-                <button class="atb-count-btn" id="atb-count-3-btn">3 Players</button>
-                <button class="atb-count-btn" id="atb-count-4-btn">4 Players</button>
-            </div>
-            <div class="burger-instruction-banner" id="atb-instruction-text">Pass the bomb before it explodes every 15 seconds!</div>
-            <div class="action-log-ticker" id="atb-action-log" style="color: #be2edd; border-color: #9b59b6;">Time until detonation: 15.0s</div>
-            
-            <div class="joysticks-container-wrapper" id="atb-joysticks-grid">
-                </div>
-        </div>
-
         <div class="burger-game-panel hidden" id="burger-game-panel">
             <div class="burger-mode-select">
                 <button class="mode-tab-btn active" id="burger-mode-bot-btn">🤖 BOT MATCH</button>
@@ -1057,6 +1023,20 @@
                 <button class="restaurant-clear-btn" onclick="clearRestaurantBowl()">Clear</button>
                 <button class="restaurant-done-btn" onclick="serveRestaurantOrder()">Done?</button>
             </div>
+        </div>
+
+        <div class="ab-control-panel hidden" id="ab-control-panel">
+            <div class="burger-mode-select">
+                <button class="mode-tab-btn active" id="ab-mode-bot-btn">🤖 BOT MATCH</button>
+                <button class="mode-tab-btn" id="ab-mode-mp-btn">👥 LOCAL PVP PARTY</button>
+            </div>
+            <div class="burger-instruction-banner" style="background-color: #4a275a; color: #e0b0ff;">
+                Total Combatants: <span id="ab-count-label">4</span>
+                <button style="margin-left:10px; background:#9b59b6; color:white; border:none; border-radius:3px; padding:2px 6px; cursor:pointer;" onclick="toggleABComponents()">Change</button>
+            </div>
+            <div class="action-log-ticker" id="ab-ticker" style="color: #e0b0ff; border-color: #9b59b6;">Detonation Clock: 15.0s</div>
+            
+            <div class="joystick-matrix-grid" id="ab-joystick-grid"></div>
         </div>
 
         <div id="farm-ui-bubble-container" style="margin-top: 15px; min-height: 50px; display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%; max-width: 360px;"></div>
@@ -1152,15 +1132,13 @@
         let restaurantIngredientsSelected = [];
         let restaurantOrdersCompleted = 0;
 
-        /* --- ACE THE BOMB CORE ENGINE MUTABLES --- */
-        let atbMode = "bot"; 
-        let atbConfigCount = 4; 
-        let atbActors = []; 
-        let atbBombCarrierIndex = 0; 
-        let atbTimerValue = 15.0; 
-        let atbLastTimestamp = 0;
-        let atbTagCooldownDuration = 3000; 
-        let atbActiveJoysticksData = {}; 
+        /* --- ACE THE BOMB CONFIG STATE VARIATION --- */
+        let abMatchMode = "bot";
+        let abConfiguredComponentsCount = 4;
+        let abPlayersData = [];
+        let abBombCarrierIdx = 0;
+        let abBombTimer = 15.0;
+        let abLastTimeStamped = 0;
 
         const restaurantIngredientsBaseList = [
             '🥔','🍶','🍞','🥦','🥕','🥬','🥑','🫓','🌰','🍋',
@@ -1195,7 +1173,7 @@
         const burgerGamePanel = document.getElementById('burger-game-panel');
         const guessGamePanel = document.getElementById('guess-game-panel');
         const restaurantPanel = document.getElementById('restaurant-panel');
-        const atbConfigPanel = document.getElementById('atb-config-panel');
+        const abControlPanel = document.getElementById('ab-control-panel');
         
         const launchLaserBtn = document.getElementById('launch-laser-btn');
         const launchTrainBtn = document.getElementById('launch-train-btn');
@@ -1206,7 +1184,7 @@
         const launchFlappyBtn = document.getElementById('launch-flappy-btn');
         const launchGuessBtn = document.getElementById('launch-guess-btn');
         const launchRestaurantBtn = document.getElementById('launch-restaurant-btn');
-        const launchAtbBtn = document.getElementById('launch-atb-btn');
+        const launchABBtn = document.getElementById('launch-ab-btn');
 
         cashEl.innerText = cash;
         loadFarmProgress(); 
@@ -1236,7 +1214,7 @@
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
             restaurantPanel.classList.add('hidden');
-            atbConfigPanel.classList.add('hidden');
+            abControlPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             saveFarmProgress(); 
             updateGlobalCash();
@@ -1266,10 +1244,10 @@
             restaurantPanel.classList.remove('hidden');
             initRestaurantGame();
         });
-        launchAtbBtn.addEventListener('click', () => {
-            setupArcadeMode("atb", "💣 Ace the Bomb Match", "Use the dynamic thumb joysticks below to steer characters and transfer the explosive device!");
-            atbConfigPanel.classList.remove('hidden');
-            initAceTheBombSetup();
+        launchABBtn.addEventListener('click', () => {
+            setupArcadeMode("ab", "<span style='color:#9b59b6;'>💣 Ace the Bomb Arena</span>", "Keep moving! Run from whoever holds the explosive element and pass it away!");
+            abControlPanel.classList.remove('hidden');
+            initAceTheBombGame();
         });
 
         function setupArcadeMode(modeName, statsHtml, hintText) {
@@ -1278,7 +1256,7 @@
             burgerGamePanel.classList.add('hidden');
             guessGamePanel.classList.add('hidden');
             restaurantPanel.classList.add('hidden');
-            atbConfigPanel.classList.add('hidden');
+            abControlPanel.classList.add('hidden');
             bubbleContainer.innerHTML = "";
             currentSelectedFarmTarget = null;
             modeStatLabel.innerHTML = statsHtml + ' <button class="exit-btn" id="exit-game-btn">EXIT</button>';
@@ -1585,10 +1563,14 @@
         document.getElementById('guess-mode-mp-btn').onclick = () => { guessMode = "multiplayer"; initGuessGame(); };
 
         function initGuessGame() {
-            p1SecretTarget = null; p2SecretTarget = null;
-            p1AttemptsLeft = 5; p2AttemptsLeft = 5;
-            p1GuessesHistory = []; p2GuessesHistory = [];
-            currentTurnPlayer = 1; lastBotGuessFeedback = "";
+            p1SecretTarget = null;
+            p2SecretTarget = null;
+            p1AttemptsLeft = 5;
+            p2AttemptsLeft = 5;
+            p1GuessesHistory = [];
+            p2GuessesHistory = [];
+            currentTurnPlayer = 1;
+            lastBotGuessFeedback = "";
 
             if (guessMode === "bot") {
                 guessPhase = "setup";
@@ -1611,8 +1593,11 @@
                 let btn = document.createElement('button');
                 btn.className = "guess-num-btn";
                 btn.innerText = i;
-                if (guessMode === "bot" && guessPhase === "play" && p1GuessesHistory.includes(i)) {
-                    btn.classList.add('selected-p1');
+
+                if (guessMode === "bot" && guessPhase === "play") {
+                    if (p1GuessesHistory.includes(i)) {
+                        btn.classList.add('selected-p1');
+                    }
                 }
                 btn.onclick = () => handleGuessSelection(i);
                 matrixContainer.appendChild(btn);
@@ -1625,7 +1610,8 @@
             if (guessPhase === "setup" && guessMode === "bot") {
                 p1SecretTarget = selectedNumber; 
                 p2SecretTarget = Math.floor(Math.random() * 100) + 1; 
-                guessPhase = "play"; currentTurnPlayer = 1;
+                guessPhase = "play";
+                currentTurnPlayer = 1;
                 document.getElementById('guess-instruction-text').innerText = "Crack the Bot's Target! Your Turns are Blinded.";
                 logEl.innerText = `Your secret number: ${p1SecretTarget}. Attempts: ${p1AttemptsLeft}`;
                 logEl.style.color = "#2ed573";
@@ -1643,7 +1629,8 @@
                     triggerCustomNotification("Player 1 Code Confirmed!\n\nHand device over to Player 2 now.", "#1e90ff");
                 } else if (p2SecretTarget === null) {
                     p2SecretTarget = selectedNumber;
-                    guessPhase = "play"; currentTurnPlayer = 1;
+                    guessPhase = "play";
+                    currentTurnPlayer = 1;
                     document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
                     logEl.innerText = "Attempts Remaining: " + p1AttemptsLeft;
                     logEl.style.color = "#1e90ff";
@@ -1675,6 +1662,7 @@
                             });
                             return;
                         }
+
                         executeBotGuessingTurn(userHintDirection);
                     }
                 } 
@@ -1697,6 +1685,7 @@
                                 return;
                             }
                             let personalHint = (selectedNumber < p2SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                            
                             if (p2AttemptsLeft > 0) {
                                 currentTurnPlayer = 2;
                                 document.getElementById('guess-instruction-text').innerText = "Player 2 Turn: Guess Player 1's target!";
@@ -1726,6 +1715,7 @@
                                 return;
                             }
                             let personalHint = (selectedNumber < p1SecretTarget) ? "HIGHER ⬆️" : "LOWER ⬇️";
+                            
                             if (p1AttemptsLeft > 0) {
                                 currentTurnPlayer = 1;
                                 document.getElementById('guess-instruction-text').innerText = "Player 1 Turn: Guess Player 2's target!";
@@ -1742,7 +1732,9 @@
         }
 
         function executeBotGuessingTurn(userHintDirection) {
-            let botLowBound = 1; let botHighBound = 100;
+            let botLowBound = 1;
+            let botHighBound = 100;
+            
             p2GuessesHistory.forEach(g => {
                 if (g < p1SecretTarget && g > botLowBound) botLowBound = g + 1;
                 if (g > p1SecretTarget && g < botHighBound) botHighBound = g - 1;
@@ -1768,6 +1760,7 @@
                     });
                     return;
                 }
+
                 const logEl = document.getElementById('guess-action-log');
                 logEl.innerText = `Your last guess was ${userHintDirection}. ${lastBotGuessFeedback} | Turns Left: ${p1AttemptsLeft}`;
                 logEl.style.color = "#ffa502";
@@ -1781,417 +1774,241 @@
             generateNewRestaurantOrder();
         }
 
-        /* --- ACE THE BOMB DESIGN AND RUNTIME LOGIC --- */
-        document.getElementById('atb-mode-bot-btn').onclick = () => {
-            atbMode = "bot";
-            document.getElementById('atb-mode-bot-btn').classList.add('active');
-            document.getElementById('atb-mode-player-btn').classList.remove('active');
-            initAceTheBombSetup();
+        /* --- ACE THE BOMB CORE ARCHITECTURE LOGIC --- */
+        document.getElementById('ab-mode-bot-btn').onclick = () => {
+            abMatchMode = "bot";
+            document.getElementById('ab-mode-bot-btn').classList.add('active');
+            document.getElementById('ab-mode-mp-btn').classList.remove('active');
+            initAceTheBombGame();
         };
-        document.getElementById('atb-mode-player-btn').onclick = () => {
-            atbMode = "player";
-            document.getElementById('atb-mode-player-btn').classList.add('active');
-            document.getElementById('atb-mode-bot-btn').classList.remove('active');
-            initAceTheBombSetup();
+        document.getElementById('ab-mode-mp-btn').onclick = () => {
+            abMatchMode = "multiplayer";
+            document.getElementById('ab-mode-mp-btn').classList.add('active');
+            document.getElementById('ab-mode-bot-btn').classList.remove('active');
+            initAceTheBombGame();
         };
-        ['2','3','4'].forEach(numStr => {
-            document.getElementById(`atb-count-${numStr}-btn`).onclick = () => {
-                ['2','3','4'].forEach(n => document.getElementById(`atb-count-${n}-btn`).classList.remove('active'));
-                document.getElementById(`atb-count-${numStr}-btn`).classList.add('active');
-                atbConfigCount = parseInt(numStr);
-                initAceTheBombSetup();
-            };
-        });
 
-        function initAceTheBombSetup() {
-            atbTimerValue = 15.0;
-            atbActiveJoysticksData = {};
-            document.getElementById('atb-action-log').innerText = "Time until detonation: 15.0s";
+        function toggleABComponents() {
+            if(abConfiguredComponentsCount === 4) abConfiguredComponentsCount = 2;
+            else if(abConfiguredComponentsCount === 2) abConfiguredComponentsCount = 3;
+            else abConfiguredComponentsCount = 4;
+            document.getElementById('ab-count-label').innerText = abConfiguredComponentsCount;
+            initAceTheBombGame();
+        }
+
+        function initAceTheBombGame() {
+            abBombTimer = 15.0;
+            abPlayersData = [];
+            abLastTimeStamped = Date.now();
             
-            const joyGrid = document.getElementById('atb-joysticks-grid');
-            joyGrid.innerHTML = "";
+            const titles = ["Player 1", "Player 2", "Player 3", "Player 4"];
+            const colors = ["#1e90ff", "#2ed573", "#ffa502", "#e84393"];
+            
+            for(let i = 0; i < abConfiguredComponentsCount; i++) {
+                let isBotEntity = (abMatchMode === "bot" && i > 0);
+                abPlayersData.push({
+                    id: i,
+                    name: titles[i] + (isBotEntity ? " (Bot)" : ""),
+                    x: 40 + (i * 70),
+                    y: 60 + (i * 70),
+                    radius: 14,
+                    color: colors[i],
+                    isBot: isBotEntity,
+                    alive: true,
+                    cooldown: 0,
+                    dx: 0, dy: 0
+                });
+            }
+            
+            abBombCarrierIdx = Math.floor(Math.random() * abConfiguredComponentsCount);
+            buildABJoystickLayoutUI();
+        }
 
-            let loopsCount = (atbMode === "bot") ? 1 : atbConfigCount;
-            for(let i = 1; i <= loopsCount; i++) {
-                let zone = document.createElement('div');
-                zone.className = "joystick-zone";
-                zone.id = `atb-joyzone-${i}`;
-                let label = document.createElement('span');
-                label.className = "joystick-label";
-                label.style.color = (i===1) ? "#2ed573" : (i===2 ? "#1e90ff" : (i===3 ? "#ffa502" : "#e056fd"));
-                label.innerText = `🕹️ P${i} Control`;
-                let handle = document.createElement('div');
-                handle.className = "joystick-handle";
-                handle.id = `atb-joyhandle-${i}`;
-                handle.style.left = "calc(50% - 22px)";
-                handle.style.top = "calc(50% - 22px)";
+        function buildABJoystickLayoutUI() {
+            const container = document.getElementById('ab-joystick-grid');
+            container.innerHTML = "";
+            
+            abPlayersData.forEach((p) => {
+                if(p.isBot || !p.alive) return;
                 
-                zone.appendChild(label);
-                zone.appendChild(handle);
-                joyGrid.appendChild(zone);
+                let joyBox = document.createElement('div');
+                joyBox.className = "joystick-wrapper";
+                
+                let title = document.createElement('div');
+                title.className = "joystick-title";
+                title.style.color = p.color;
+                title.innerText = p.name;
+                joyBox.appendChild(title);
+                
+                let cross = document.createElement('div');
+                cross.className = "joystick-cross";
+                
+                let blank1 = document.createElement('div');
+                let upBtn = document.createElement('button');
+                upBtn.className = "joy-btn"; upBtn.innerText = "▲";
+                upBtn.onmousedown = () => { p.dy = -4.5; p.dx = 0; };
+                upBtn.ontouchstart = (e) => { e.preventDefault(); p.dy = -4.5; p.dx = 0; };
+                
+                let blank2 = document.createElement('div');
+                let leftBtn = document.createElement('button');
+                leftBtn.className = "joy-btn"; leftBtn.innerText = "◀";
+                leftBtn.onmousedown = () => { p.dx = -4.5; p.dy = 0; };
+                leftBtn.ontouchstart = (e) => { e.preventDefault(); p.dx = -4.5; p.dy = 0; };
+                
+                let stopBtn = document.createElement('button');
+                stopBtn.className = "joy-btn"; stopBtn.innerText = "■";
+                stopBtn.style.background = "#4b5263";
+                stopBtn.onmousedown = () => { p.dx = 0; p.dy = 0; };
+                stopBtn.ontouchstart = (e) => { e.preventDefault(); p.dx = 0; p.dy = 0; };
+                
+                let rightBtn = document.createElement('button');
+                rightBtn.className = "joy-btn"; rightBtn.innerText = "▶";
+                rightBtn.onmousedown = () => { p.dx = 4.5; p.dy = 0; };
+                rightBtn.ontouchstart = (e) => { e.preventDefault(); p.dx = 4.5; p.dy = 0; };
+                
+                let blank3 = document.createElement('div');
+                let downBtn = document.createElement('button');
+                downBtn.className = "joy-btn"; downBtn.innerText = "▼";
+                downBtn.onmousedown = () => { p.dy = 4.5; p.dx = 0; };
+                downBtn.ontouchstart = (e) => { e.preventDefault(); p.dy = 4.5; p.dx = 0; };
+                
+                cross.appendChild(blank1); cross.appendChild(upBtn); cross.appendChild(blank2);
+                cross.appendChild(leftBtn); cross.appendChild(stopBtn); cross.appendChild(rightBtn);
+                cross.appendChild(blank3); cross.appendChild(downBtn);
+                
+                joyBox.appendChild(cross);
+                container.appendChild(joyBox);
+            });
+        }
 
-                atbActiveJoysticksData[i] = { dx: 0, dy: 0, touchId: null };
-                setupJoystickInputHandlers(zone, handle, i);
+        function processAceTheBombFrameUpdate() {
+            let currentNow = Date.now();
+            let elapsedSec = (currentNow - abLastTimeStamped) / 1000;
+            abLastTimeStamped = currentNow;
+            
+            abBombTimer -= elapsedSec;
+            if(abBombTimer <= 0) abBombTimer = 0;
+            
+            document.getElementById('ab-ticker').innerText = "Detonation Clock: " + abBombTimer.toFixed(1) + "s";
+            
+            let aliveCount = 0;
+            let lastSurvivor = null;
+            
+            abPlayersData.forEach(p => {
+                if(p.alive) {
+                    aliveCount++;
+                    lastSurvivor = p;
+                }
+            });
+            
+            if(aliveCount <= 1) {
+                gameRunning = false;
+                if(lastSurvivor && lastSurvivor.id === 0) {
+                    if(abMatchMode === "bot") {
+                        cash += 500; updateGlobalCash();
+                        triggerCustomNotification("🏆 ARENA CHAMPION!\nYou aced the bomb and survived! Earned +$500 cash.", "#2ed573", handleExitToShop);
+                    } else {
+                        triggerCustomNotification(`🏆 MATCH OVER!\n${lastSurvivor.name} won the survival arena match!`, "#2ed573", handleExitToShop);
+                    }
+                } else {
+                    if(abMatchMode === "bot") {
+                        cash = Math.max(0, cash - 500); updateGlobalCash();
+                        triggerCustomNotification("💀 ELIMINATED!\nYour player profile blew up. Penalized -$500 cash.", "#ff4757", handleExitToShop);
+                    } else {
+                        triggerCustomNotification(`🏆 MATCH OVER!\n${lastSurvivor ? lastSurvivor.name : "Nobody"} survived the blast radius!`, "#ffa502", handleExitToShop);
+                    }
+                }
+                return;
+            }
+            
+            if(abBombTimer <= 0) {
+                let carrier = abPlayersData[abBombCarrierIdx];
+                if(carrier && carrier.alive) {
+                    carrier.alive = false;
+                    triggerCustomNotification(`💥 BOOM!\n${carrier.name} exploded!`, "#ff4757", () => {
+                        abBombTimer = 15.0;
+                        abLastTimeStamped = Date.now();
+                        let nextLiveIdx = abPlayersData.findIndex(p => p.alive);
+                        if(nextLiveIdx !== -1) abBombCarrierIdx = nextLiveIdx;
+                        buildABJoystickLayoutUI();
+                    });
+                }
+                return;
             }
 
-            atbActors = [];
-            const startingPositions = [
-                {x: 60, y: 60}, {x: 300, y: 60},
-                {x: 60, y: 300}, {x: 300, y: 300}
-            ];
+            abPlayersData.forEach((p, idx) => {
+                if(!p.alive) return;
+                if(p.cooldown > 0) p.cooldown -= elapsedSec;
+                
+                if(p.isBot) {
+                    let target = null;
+                    if(idx === abBombCarrierIdx) {
+                        let closestDist = 999999;
+                        abPlayersData.forEach((o, oIdx) => {
+                            if(oIdx !== idx && o.alive && o.cooldown <= 0) {
+                                let d = Math.hypot(o.x - p.x, o.y - p.y);
+                                if(d < closestDist) { closestDist = d; target = o; }
+                            }
+                        });
+                        if(target) {
+                            let angle = Math.atan2(target.y - p.y, target.x - p.x);
+                            p.x += Math.cos(angle) * 2.2; p.y += Math.sin(angle) * 2.2;
+                        }
+                    } else {
+                        let carrier = abPlayersData[abBombCarrierIdx];
+                        if(carrier) {
+                            let dist = Math.hypot(carrier.x - p.x, carrier.y - p.y);
+                            if(dist < 120) {
+                                let angle = Math.atan2(p.y - carrier.y, p.x - carrier.x);
+                                p.x += Math.cos(angle) * 2.5; p.y += Math.sin(angle) * 2.5;
+                            } else {
+                                p.x += (Math.random() - 0.5) * 2; p.y += (Math.random() - 0.5) * 2;
+                            }
+                        }
+                    }
+                } else {
+                    p.x += p.dx; p.y += p.dy;
+                }
+                
+                if(p.x < p.radius) p.x = p.radius;
+                if(p.x > canvas.width - p.radius) p.x = canvas.width - p.radius;
+                if(p.y < p.radius) p.y = p.radius;
+                if(p.y > canvas.height - p.radius) p.y = canvas.height - p.radius;
+            });
 
-            for(let i = 0; i < atbConfigCount; i++) {
-                let isBotActor = (atbMode === "bot" && i > 0);
-                atbActors.push({
-                    id: i + 1,
-                    x: startingPositions[i].x,
-                    y: startingPositions[i].y,
-                    r: 16,
-                    isBot: isBotActor,
-                    alive: true,
-                    cooldownTimer: 0, 
-                    speed: isBotActor ? 2.6 : 3.6,
-                    color: (i===0) ? "#2ed573" : (i===1 ? "#1e90ff" : (i===2 ? "#ffa502" : "#e056fd")),
-                    label: isBotActor ? `🤖 B${i+1}` : `👤 P${i+1}`
+            let carrier = abPlayersData[abBombCarrierIdx];
+            if(carrier && carrier.alive && carrier.cooldown <= 0) {
+                abPlayersData.forEach((p, idx) => {
+                    if(idx !== abBombCarrierIdx && p.alive && p.cooldown <= 0) {
+                        let dist = Math.hypot(carrier.x - p.x, carrier.y - p.y);
+                        if(dist < (carrier.radius + p.radius)) {
+                            abBombCarrierIdx = idx;
+                            abPlayersData[abBombCarrierIdx].cooldown = 3.0;
+                            carrier.cooldown = 3.0;
+                        }
+                    }
                 });
             }
 
-            atbBombCarrierIndex = Math.floor(Math.random() * atbConfigCount);
-            atbLastTimestamp = Date.now();
-        }
-
-        function setupJoystickInputHandlers(zoneEl, handleEl, id) {
-            function handleJoystickMove(clientX, clientY, touchIdentifier) {
-                let rect = zoneEl.getBoundingClientRect();
-                let centerX = rect.left + rect.width / 2;
-                let centerY = rect.top + rect.height / 2;
-                let deltaX = clientX - centerX;
-                let deltaY = clientY - centerY;
-                let distance = Math.hypot(deltaX, deltaY);
-                let maxRadius = 35;
-
-                if(distance > maxRadius) {
-                    deltaX = (deltaX / distance) * maxRadius;
-                    deltaY = (deltaY / distance) * maxRadius;
-                    distance = maxRadius;
-                }
-
-                handleEl.style.left = `calc(50% - 22px + ${deltaX}px)`;
-                handleEl.style.top = `calc(50% - 22px + ${deltaY}px)`;
-
-                if(atbActiveJoysticksData[id]) {
-                    atbActiveJoysticksData[id].dx = deltaX / maxRadius;
-                    atbActiveJoysticksData[id].dy = deltaY / maxRadius;
-                }
-            }
-
-            zoneEl.addEventListener('touchstart', (e) => {
-                let t = e.changedTouches[0];
-                if(atbActiveJoysticksData[id] && atbActiveJoysticksData[id].touchId === null) {
-                    atbActiveJoysticksData[id].touchId = t.identifier;
-                    handleJoystickMove(t.clientX, t.clientY, t.identifier);
-                }
-            }, {passive: true});
-
-            window.addEventListener('touchmove', (e) => {
-                if(!atbActiveJoysticksData[id] || atbActiveJoysticksData[id].touchId === null) return;
-                for(let i=0; i<e.touches.length; i++) {
-                    if(e.touches[i].identifier === atbActiveJoysticksData[id].touchId) {
-                        handleJoystickMove(e.touches[i].clientX, e.touches[i].clientY, e.touches[i].identifier);
-                    }
-                }
-            }, {passive: true});
-
-            const clearJoystick = (identifier) => {
-                if(atbActiveJoysticksData[id] && (identifier === undefined || atbActiveJoysticksData[id].touchId === identifier)) {
-                    atbActiveJoysticksData[id].touchId = null;
-                    atbActiveJoysticksData[id].dx = 0;
-                    atbActiveJoysticksData[id].dy = 0;
-                    handleEl.style.left = "calc(50% - 22px)";
-                    handleEl.style.top = "calc(50% - 22px)";
-                }
-            };
-
-            zoneEl.addEventListener('touchend', (e) => clearJoystick(e.changedTouches[0].identifier), {passive: true});
-            zoneEl.addEventListener('touchcancel', (e) => clearJoystick(e.changedTouches[0].identifier), {passive: true});
-
-            zoneEl.addEventListener('mousedown', (e) => {
-                atbActiveJoysticksData[id].touchId = 999;
-                handleJoystickMove(e.clientX, e.clientY);
-                
-                const mouseMoveHandler = (ev) => {
-                    if(atbActiveJoysticksData[id].touchId === 999) handleJoystickMove(ev.clientX, ev.clientY);
-                };
-                const mouseUpHandler = () => {
-                    clearJoystick(999);
-                    window.removeEventListener('mousemove', mouseMoveHandler);
-                    window.removeEventListener('mouseup', mouseUpHandler);
-                };
-                window.addEventListener('mousemove', mouseMoveHandler);
-                window.addEventListener('mouseup', mouseUpHandler);
-            });
-        }
-
-        function runAceTheBombRuntimeEngine() {
-            let now = Date.now();
-            let delta = (now - atbLastTimestamp) / 1000;
-            atbLastTimestamp = now;
-
-            if(!gameRunning || currentGameMode !== "atb") return;
-
-            // Tick and evaluate bomb fuse clock metrics
-            atbTimerValue -= delta;
-            if(atbTimerValue <= 0) atbTimerValue = 0;
-            document.getElementById('atb-action-log').innerText = `Time until detonation: ${atbTimerValue.toFixed(1)}s`;
-
-            // Process movement calculations
-            atbActors.forEach((actor, index) => {
-                if(!actor.alive) return;
-
-                if(actor.cooldownTimer > 0) {
-                    actor.cooldownTimer -= delta * 1000;
-                    if(actor.cooldownTimer < 0) actor.cooldownTimer = 0;
-                }
-
-                if(!actor.isBot) {
-                    let joyData = atbActiveJoysticksData[actor.id];
-                    if(joyData) {
-                        actor.x += joyData.dx * actor.speed;
-                        actor.y += joyData.dy * actor.speed;
-                    }
-                } else {
-                    // Artificial Intelligence nodes pathing matrix
-                    if(atbBombCarrierIndex === index) {
-                        let closestTarget = null;
-                        let minDist = 9999;
-                        atbActors.forEach((target, tIdx) => {
-                            if(tIdx !== index && target.alive) {
-                                let d = Math.hypot(target.x - actor.x, target.y - actor.y);
-                                if(d < minDist) { minDist = d; closestTarget = target; }
-                            }
-                        });
-                        if(closestTarget) {
-                            let angle = Math.atan2(closestTarget.y - actor.y, closestTarget.x - actor.x);
-                            actor.x += Math.cos(angle) * actor.speed;
-                            actor.y += Math.sin(angle) * actor.speed;
-                        }
-                    } else {
-                        let carrier = atbActors[atbBombCarrierIndex];
-                        if(carrier) {
-                            let angle = Math.atan2(actor.y - carrier.y, actor.x - carrier.x);
-                            actor.x += Math.cos(angle) * actor.speed;
-                            actor.y += Math.sin(angle) * actor.speed;
-                        }
-                    }
-                }
-
-                // Bounds clipping rules
-                if(actor.x < actor.r) actor.x = actor.r;
-                if(actor.x > canvas.width - actor.r) actor.x = canvas.width - actor.r;
-                if(actor.y < actor.r) actor.y = actor.r;
-                if(actor.y > canvas.height - actor.r) actor.y = canvas.height - actor.r;
-            });
-
-            // Process inter-actor contact vectors and transfer explosive payload
-            for(let i = 0; i < atbActors.length; i++) {
-                for(let j = i + 1; j < atbActors.length; j++) {
-                    let a1 = atbActors[i];
-                    let a2 = atbActors[j];
-                    if(!a1.alive || !a2.alive) continue;
-
-                    let d = Math.hypot(a1.x - a2.x, a1.y - a2.y);
-                    if(d < (a1.r + a2.r)) {
-                        if(atbBombCarrierIndex === i && a1.cooldownTimer === 0) {
-                            atbBombCarrierIndex = j;
-                            a2.cooldownTimer = atbTagCooldownDuration; 
-                        } else if(atbBombCarrierIndex === j && a2.cooldownTimer === 0) {
-                            atbBombCarrierIndex = i;
-                            a1.cooldownTimer = atbTagCooldownDuration;
-                        }
-                    }
-                }
-            }
-
-            // Render execution block
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Map floor boundaries
-            ctx.strokeStyle = "rgba(155, 89, 182, 0.4)";
-            ctx.lineWidth = 4;
-            ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-            atbActors.forEach((actor, index) => {
-                if(!actor.alive) return;
-
-                // Render cooldown lock rings
-                if(actor.cooldownTimer > 0) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = "rgba(255, 234, 167, 0.7)";
-                    ctx.lineWidth = 3;
-                    ctx.arc(actor.x, actor.y, actor.r + 6, 0, (Math.PI * 2) * (actor.cooldownTimer / atbTagCooldownDuration));
-                    ctx.stroke();
-                }
-
+            abPlayersData.forEach(p => {
+                if(!p.alive) return;
                 ctx.beginPath();
-                ctx.fillStyle = actor.color;
-                ctx.arc(actor.x, actor.y, actor.r, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
                 ctx.fill();
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = "#ffffff";
                 ctx.stroke();
-
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 10px sans-serif";
-                ctx.textAlign = "center";
-                ctx.fillText(actor.label, actor.x, actor.y + 4);
-
-                // Attach ticking asset tracking vector overlay
-                if(atbBombCarrierIndex === index) {
-                    ctx.font = "18px sans-serif";
-                    ctx.fillText("💣", actor.x, actor.y - 20);
-                }
-            });
-
-            // Handle timer expiration
-            if(atbTimerValue <= 0) {
-                let victim = atbActors[atbBombCarrierIndex];
-                victim.alive = false;
                 
-                let activeSurvivors = atbActors.filter(a => a.alive);
-                if(activeSurvivors.length <= 1) {
-                    gameRunning = false;
-                    let matchWinnerName = activeSurvivors.length === 1 ? activeSurvivors[0].label : "Nobody";
-                    
-                    if(atbMode === "bot") {
-                        if(activeSurvivors.length === 1 && !activeSurvivors[0].isBot) {
-                            cash += 500; updateGlobalCash();
-                            triggerCustomNotification(`🏆 MATCH CONCLUDED!\n\nYou won Ace the Bomb! Received +$500 Cash.`, "#2ed573", handleExitToShop);
-                        } else {
-                            cash = Math.max(0, cash - 500); updateGlobalCash();
-                            triggerCustomNotification(`💀 ELIMINATED!\n\nThe bots outmaneuvered you. Penalized -$500 Cash.`, "#ff4757", handleExitToShop);
-                        }
-                    } else {
-                        triggerCustomNotification(`👑 MATCH OVER!\n\nWinner: Competitor ${matchWinnerName}!`, "#9b59b6", handleExitToShop);
-                    }
-                    return;
-                } else {
-                    // Reset detonation timer sequence loop metrics
-                    atbTimerValue = 15.0;
-                    let indexPool = [];
-                    atbActors.forEach((a, idx) => { if(a.alive) indexPool.push(idx); });
-                    atbBombCarrierIndex = indexPool[Math.floor(Math.random() * indexPool.length)];
-                    triggerCustomNotification(`💥 BOOM!\n\nPlayer ${victim.label} exploded! ${activeSurvivors.length} players remaining!`, "#ff4757");
+                if(p.id === abBombCarrierIdx) {
+                    ctx.font = "16px Arial";
+                    ctx.fillText("💣", p.x - 8, p.y - 18);
                 }
-            }
-
-            requestAnimationFrame(runAceTheBombRuntimeEngine);
-        }
-
-        function generateNewRestaurantOrder() {
-            const types = [
-                "Fries 🍟", "Sandwich 🥪", "Tacos 🌮", "Ramen 🍜", "Pizza 🍕",
-                "Burger 🍔", "Soda 🥤", "Spaghetti 🍝", "HotDog 🌭"
-            ];
-            currentRestaurantOrder = types[Math.floor(Math.random() * types.length)];
-            document.getElementById('restaurant-order-display').innerText = `Order: ${currentRestaurantOrder}`;
-            
-            let shuffledIngredients = [...restaurantIngredientsBaseList];
-            for (let i = shuffledIngredients.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffledIngredients[i], shuffledIngredients[j]] = [shuffledIngredients[j], shuffledIngredients[i]];
-            }
-
-            const stripContainer = document.getElementById('restaurant-ingredient-strip');
-            stripContainer.innerHTML = "";
-            shuffledIngredients.forEach(emoji => {
-                let bin = document.createElement('div');
-                bin.className = "restaurant-ingredient-bin";
-                bin.innerText = emoji;
-                bin.onclick = () => addRestaurantIngredient(emoji);
-                stripContainer.appendChild(bin);
-            });
-            clearRestaurantBowl();
-        }
-
-        function addRestaurantIngredient(emoji) {
-            restaurantIngredientsSelected.push(emoji);
-            renderRestaurantBowl();
-        }
-
-        function clearRestaurantBowl() {
-            restaurantIngredientsSelected = [];
-            renderRestaurantBowl();
-        }
-
-        function renderRestaurantBowl() {
-            const bowlEl = document.getElementById('restaurant-bowl-display');
-            if (restaurantIngredientsSelected.length === 0) {
-                bowlEl.innerText = "[Empty Mixing Bowl]";
-                bowlEl.style.color = "#747d8c";
-            } else {
-                bowlEl.innerText = restaurantIngredientsSelected.join(" ");
-                bowlEl.style.color = "#ffffff";
-            }
-        }
-
-        function serveRestaurantOrder() {
-            let matchesProfile = false;
-            let currentString = [...restaurantIngredientsSelected].sort().join("");
-
-            if (currentRestaurantOrder.includes("Fries")) {
-                let friesTarget = ["🥔", "🍶"].sort().join("");
-                if (currentString === friesTarget) matchesProfile = true;
-            } 
-            else if (currentRestaurantOrder.includes("Sandwich")) {
-                let sandwichTarget = ["🍞", "🥦", "🥕", "🥬", "🥑"].sort().join("");
-                if (currentString === sandwichTarget) matchesProfile = true;
-            } 
-            else if (currentRestaurantOrder.includes("Tacos")) {
-                let tacosTarget = ["🫓", "🌰", "🍋", "🍖", "🥒"].sort().join("");
-                if (currentString === tacosTarget) matchesProfile = true;
-            } 
-            else if (currentRestaurantOrder.includes("Ramen")) {
-                let ramenTarget = ["🍥", "🫔", "🍡", "🥡", "🥢", "🥚"].sort().join("");
-                if (currentString === ramenTarget) matchesProfile = true;
-            } 
-            else if (currentRestaurantOrder.includes("Pizza")) {
-                let pizzaTarget = ["🫓", "🫓", "🍤", "🌶"].sort().join("");
-                if (currentString === pizzaTarget) matchesProfile = true;
-            }
-            else if (currentRestaurantOrder.includes("Burger")) {
-                let burgerTarget = ["🫓", "🫓", "🥬", "🥒", "🍅", "🧅", "🧀"].sort().join("");
-                if (currentString === burgerTarget) matchesProfile = true;
-            }
-            else if (currentRestaurantOrder.includes("Soda")) {
-                let sodaTarget = ["🧊", "🍶", "💧"].sort().join("");
-                if (currentString === sodaTarget) matchesProfile = true;
-            }
-            else if (currentRestaurantOrder.includes("Spaghetti")) {
-                let spaghettiTarget = ["🫔", "🥫", "🧅"].sort().join("");
-                if (currentString === spaghettiTarget) matchesProfile = true;
-            }
-            else if (currentRestaurantOrder.includes("HotDog")) {
-                let hotdogTarget = ["🥖", "🍅", "🫓"].sort().join("");
-                if (currentString === hotdogTarget) matchesProfile = true;
-            }
-
-            let generatedPayout = 0; let statusMessage = ""; let colorTheme = "";
-
-            if (matchesProfile) {
-                generatedPayout = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
-                statusMessage = `✨ PERFECT RECIPE!\nThe customer loved your beautifully cooked ${currentRestaurantOrder}!`;
-                colorTheme = "#2ed573";
-                restaurantOrdersCompleted++;
-                document.getElementById('distance-val').innerText = restaurantOrdersCompleted;
-            } else {
-                generatedPayout = Math.floor(Math.random() * (40 - 5 + 1)) + 5;
-                statusMessage = `🤢 WRONG INGREDIENTS!\nYou scrambled the recipe requirements for the ${currentRestaurantOrder}.`;
-                colorTheme = "#ff4757";
-            }
-
-            cash += generatedPayout; updateGlobalCash();
-            triggerCustomNotification(`${statusMessage}\n\nEarnings Received: +$${generatedPayout} Cash.`, colorTheme, () => {
-                generateNewRestaurantOrder();
+                if(p.cooldown > 0) {
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                    ctx.font = "bold 9px Arial";
+                    ctx.fillText("🔒 " + Math.ceil(p.cooldown) + "s", p.x - 12, p.y + 3);
+                }
             });
         }
 
@@ -2200,13 +2017,13 @@
             ctx = canvas.getContext('2d');
             distance = 0; obstacles = []; activeCoins = []; activeBushes = [];
             isTrainAlertActive = false; alertEndTime = 0;
+            
             jetBullets = []; jetAliens = []; jetScore = 0;
             fpVelocity = 0; fpPipes = []; fpFrameCounter = 0;
 
-            if (["burger", "guess", "restaurant", "atb"].includes(currentGameMode)) {
+            if (currentGameMode === "burger" || currentGameMode === "guess" || currentGameMode === "restaurant") {
                 canvas.classList.add('hidden');
                 if(currentGameMode === "burger") { burgerGamePanel.classList.remove('hidden'); initBurgerGame(); }
-                if(currentGameMode === "atb") { canvas.classList.remove('hidden'); gameRunning = true; runAceTheBombRuntimeEngine(); }
                 return;
             } else { canvas.classList.remove('hidden'); }
 
@@ -2227,6 +2044,8 @@
             } else if (currentGameMode === "flappy") {
                 runner.y = canvas.height / 2; runner.w = 34; runner.h = 24;
                 canvas.onclick = () => { fpVelocity = fpJump; };
+            } else if (currentGameMode === "ab") {
+                canvas.onclick = null;
             } else { canvas.onclick = null; }
 
             if(currentGameMode === "train") {
@@ -2234,26 +2053,26 @@
             }
 
             window.onkeydown = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = true;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = true;
             };
             window.onkeyup = (e) => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
                 if(e.key === 'a' || e.key === 'ArrowLeft') runner.moveLeft = false;
                 if(e.key === 'd' || e.key === 'ArrowRight') runner.moveRight = false;
             };
 
             canvas.ontouchstart = (e) => {
                 if(currentGameMode === "flappy") { fpVelocity = fpJump; return; }
-                if(["farm", "burger", "guess", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
                 let rect = canvas.getBoundingClientRect();
                 let touchX = e.touches[0].clientX - rect.left;
                 if(touchX < canvas.width / 2) runner.moveLeft = true;
                 else runner.moveRight = true;
             };
             canvas.ontouchend = () => {
-                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "atb"].includes(currentGameMode)) return;
+                if(["farm", "burger", "guess", "flappy", "chen", "restaurant", "ab"].includes(currentGameMode)) return;
                 runner.moveLeft = false; runner.moveRight = false;
             };
 
@@ -2263,10 +2082,17 @@
         function generateRandomMazeMatrix() {
             mazeGrid = []; mazeCoins = [];
             const layoutTemplate = [
-                [0,0,0,0,1,0,0,0,0], [0,1,1,0,1,0,1,1,0], [0,1,0,0,0,0,0,1,0],
-                [0,0,0,1,1,1,0,0,0], [1,1,0,1,0,1,0,1,1], [0,0,0,1,1,1,0,0,0],
-                [0,1,0,0,0,0,0,1,0], [0,1,1,0,1,0,1,1,0], [0,0,0,0,1,0,0,0,0]
+                [0,0,0,0,1,0,0,0,0],
+                [0,1,1,0,1,0,1,1,0],
+                [0,1,0,0,0,0,0,1,0],
+                [0,0,0,1,1,1,0,0,0],
+                [1,1,0,1,0,1,0,1,1],
+                [0,0,0,1,1,1,0,0,0],
+                [0,1,0,0,0,0,0,1,0],
+                [0,1,1,0,1,0,1,1,0],
+                [0,0,0,0,1,0,0,0,0]
             ];
+            
             for(let r=0; r<mazeRows; r++) {
                 mazeGrid[r] = [];
                 for(let c=0; c<mazeCols; c++) {
@@ -2276,42 +2102,64 @@
                     }
                 }
             }
-            mazePlayer.x = 0; mazePlayer.y = 0; mazeGhost.x = 8; mazeGhost.y = 8; mazeGhostSpeedTimer = 0;
+            mazePlayer.x = 0; mazePlayer.y = 0;
+            mazeGhost.x = 8; mazeGhost.y = 8;
+            mazeGhostSpeedTimer = 0;
         }
 
         function processChenMazeClick(e) {
             let rect = canvas.getBoundingClientRect();
-            let clickX = e.clientX - rect.left; let clickY = e.clientY - rect.top;
-            let targetCol = Math.floor(clickX / mazeCellSize); let targetRow = Math.floor(clickY / mazeCellSize);
+            let clickX = e.clientX - rect.left;
+            let clickY = e.clientY - rect.top;
+
+            let targetCol = Math.floor(clickX / mazeCellSize);
+            let targetRow = Math.floor(clickY / mazeCellSize);
 
             if(targetCol >= 0 && targetCol < mazeCols && targetRow >= 0 && targetRow < mazeRows) {
                 if (targetCol === mazePlayer.x && targetRow === mazePlayer.y) return;
-                let dx = targetCol - mazePlayer.x; let dy = targetRow - mazePlayer.y;
-                let stepX = 0; let stepY = 0;
-                if (Math.abs(dx) > Math.abs(dy)) { stepX = dx > 0 ? 1 : -1; } else { stepY = dy > 0 ? 1 : -1; }
-                let currentX = mazePlayer.x; let currentY = mazePlayer.y;
+                
+                let dx = targetCol - mazePlayer.x;
+                let dy = targetRow - mazePlayer.y;
+                
+                let stepX = 0;
+                let stepY = 0;
+                
+                if (Math.abs(dx) > Math.abs(dy)) { stepX = dx > 0 ? 1 : -1; } 
+                else { stepY = dy > 0 ? 1 : -1; }
+                
+                let currentX = mazePlayer.x;
+                let currentY = mazePlayer.y;
                 
                 while (true) {
-                    let nextX = currentX + stepX; let nextY = currentY + stepY;
+                    let nextX = currentX + stepX;
+                    let nextY = currentY + stepY;
+                    
                     if (nextX >= 0 && nextX < mazeCols && nextY >= 0 && nextY < mazeRows && mazeGrid[nextY][nextX] === 0) {
-                        currentX = nextX; currentY = nextY;
+                        currentX = nextX;
+                        currentY = nextY;
+                        
                         for(let i = mazeCoins.length - 1; i >= 0; i--) {
                             if(mazeCoins[i].r === currentY && mazeCoins[i].c === currentX) {
-                                mazeCoins.splice(i, 1); distance += 1; cash += 5; updateGlobalCash();
+                                mazeCoins.splice(i, 1);
+                                distance += 1; cash += 5; updateGlobalCash();
                                 document.getElementById('distance-val').innerText = distance;
                             }
                         }
                     } else { break; }
                 }
+                
                 if (currentX !== mazePlayer.x || currentY !== mazePlayer.y) {
-                    mazePlayer.x = currentX; mazePlayer.y = currentY;
+                    mazePlayer.x = currentX;
+                    mazePlayer.y = currentY;
                     processChenMazeLogicEvaluation();
                 }
             }
         }
 
         function processChenMazeLogicEvaluation() {
-            let gdx = mazePlayer.x - mazeGhost.x; let gdy = mazePlayer.y - mazeGhost.y;
+            let gdx = mazePlayer.x - mazeGhost.x;
+            let gdy = mazePlayer.y - mazeGhost.y;
+            
             if(Math.abs(gdx) > Math.abs(gdy)) {
                 let step = gdx > 0 ? 1 : -1;
                 if(mazeGrid[mazeGhost.y][mazeGhost.x + step] === 0) mazeGhost.x += step;
@@ -2332,59 +2180,108 @@
 
         function processFarmCanvasClick(e) {
             let rect = canvas.getBoundingClientRect();
-            let clickX = e.clientX - rect.left; let clickY = e.clientY - rect.top;
+            let clickX = e.clientX - rect.left;
+            let clickY = e.clientY - rect.top;
             
             if (clickX >= wheatField.x && clickX <= wheatField.x + wheatField.w && clickY >= wheatField.y && clickY <= wheatField.y + wheatField.h) {
-                runner.targetX = wheatField.x + wheatField.w / 2 - 15; runner.targetY = wheatField.y - 15;
-                currentSelectedFarmTarget = "wheat"; refreshFarmUIBubble(); return;
+                runner.targetX = wheatField.x + wheatField.w / 2 - 15;
+                runner.targetY = wheatField.y - 15;
+                
+                currentSelectedFarmTarget = "wheat";
+                refreshFarmUIBubble();
+                return;
             }
+
             for (let i = 0; i < fences.length; i++) {
                 let f = fences[i];
                 if (f && clickX >= f.x && clickX <= f.x + f.w && clickY >= f.y && clickY <= f.y + f.h) {
-                    runner.targetX = f.x + f.w / 2 - 15; runner.targetY = f.y + f.h / 2 - 15;
-                    currentSelectedFarmTarget = { type: "fence", index: i }; refreshFarmUIBubble(); return;
+                    runner.targetX = f.x + f.w / 2 - 15; 
+                    runner.targetY = f.y + f.h / 2 - 15;
+                    
+                    currentSelectedFarmTarget = { type: "fence", index: i };
+                    refreshFarmUIBubble();
+                    return;
                 }
             }
         }
 
         function refreshFarmUIBubble() {
-            if (!currentSelectedFarmTarget) { bubbleContainer.innerHTML = ""; return; }
+            if (!currentSelectedFarmTarget) {
+                bubbleContainer.innerHTML = "";
+                return;
+            }
+
             if (currentSelectedFarmTarget === "wheat") {
-                bubbleContainer.innerHTML = `<button class="farm-action-bubble" onclick="executeContextualHarvest()">🌾 Harvest Crop / Gather Wheat (+1 Stack)</button>`;
+                bubbleContainer.innerHTML = `
+                    <button class="farm-action-bubble" onclick="executeContextualHarvest()">
+                        🌾 Harvest Crop / Gather Wheat (+1 Stack)
+                    </button>
+                `;
             } else if (currentSelectedFarmTarget.type === "fence") {
-                let idx = currentSelectedFarmTarget.index; let f = fences[idx]; if (!f) return;
+                let idx = currentSelectedFarmTarget.index;
+                let f = fences[idx];
+                if (!f) return;
+
                 if (f.locked) {
-                    bubbleContainer.innerHTML = `<button class="farm-action-bubble lock-style" onclick="unlockPlot(${idx})">🔓 Unlock Plot #${idx+1}? (Costs $150 Cash)</button>`;
+                    bubbleContainer.innerHTML = `
+                        <button class="farm-action-bubble lock-style" onclick="unlockPlot(${idx})">
+                            🔓 Unlock Plot #${idx+1}? (Costs $150 Cash)
+                        </button>
+                    `;
                 } else if (f.pet) {
-                    bubbleContainer.innerHTML = `<button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${idx})">🍖 Feed standard Wheat to Level ${f.age} ${f.pet}</button>`;
+                    bubbleContainer.innerHTML = `
+                        <button class="farm-action-bubble feed-style" onclick="executeContextualFeed(${idx})">
+                            🍖 Feed standard Wheat to Level ${f.age} ${f.pet}
+                        </button>
+                    `;
                 } else {
-                    bubbleContainer.innerHTML = `<div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">Plot #${idx+1} is empty. Buy a Pet from the market below!</div>`;
+                    bubbleContainer.innerHTML = `
+                        <div style="color: #747d8c; font-size: 0.95rem; font-weight: bold; padding: 10px;">
+                            Plot #${idx+1} is empty. Buy a Pet from the market below!
+                        </div>
+                    `;
                 }
             }
         }
 
         function executeContextualHarvest() {
-            wheatCount += 1; document.getElementById('distance-val').innerText = wheatCount; saveFarmProgress();
+            wheatCount += 1;
+            document.getElementById('distance-val').innerText = wheatCount;
+            saveFarmProgress();
         }
 
         function executeContextualFeed(index) {
-            let f = fences[index]; if (!f || f.locked || !f.pet) return;
+            let f = fences[index];
+            if (!f || f.locked || !f.pet) return;
+
             if (wheatCount <= 0) {
-                triggerCustomNotification("🚨 Out of wheat! Click the golden Wheat Field to harvest some crops first.", "#ffa502"); return;
+                triggerCustomNotification("🚨 Out of wheat! Click the golden Wheat Field to harvest some crops first.", "#ffa502");
+                return;
             }
-            wheatCount--; document.getElementById('distance-val').innerText = wheatCount; f.xp += 34;
+
+            wheatCount--;
+            document.getElementById('distance-val').innerText = wheatCount;
+            f.xp += 34;
+            
             if (f.xp >= 100) {
-                f.xp = 0; f.age += 1;
+                f.xp = 0; 
+                f.age += 1;
                 let reward = (petRewardsTable[f.pet] || 5) * f.age;
-                cash += reward; updateGlobalCash();
+                
+                cash += reward;
+                updateGlobalCash();
                 triggerCustomNotification(`🎁 UPGRADE!\n\nYour ${f.pet} grew to Level ${f.age}! Received +$${reward} bonus!`, "#2ed573");
             }
-            saveFarmProgress(); refreshFarmUIBubble(); 
+            
+            saveFarmProgress();
+            refreshFarmUIBubble(); 
         }
 
         function unlockPlot(index) {
             if (cash >= 150) {
-                cash -= 150; fences[index].locked = false; updateGlobalCash(); saveFarmProgress(); refreshFarmUIBubble();
+                cash -= 150; fences[index].locked = false;
+                updateGlobalCash(); saveFarmProgress(); 
+                refreshFarmUIBubble();
             } else { triggerCustomNotification("🚨 Requires $150 Cash!", "#ff4757"); }
         }
 
@@ -2396,7 +2293,9 @@
                 if (fences[i] && !fences[i].locked && fences[i].pet === null) {
                     cash -= cost; fences[i].pet = emoji; fences[i].age = 1; fences[i].xp = 0;
                     updateGlobalCash(); saveFarmProgress(); slotFound = true;
-                    if (currentSelectedFarmTarget && currentSelectedFarmTarget.index === i) refreshFarmUIBubble();
+                    if (currentSelectedFarmTarget && currentSelectedFarmTarget.index === i) {
+                        refreshFarmUIBubble();
+                    }
                     break;
                 }
             }
@@ -2404,35 +2303,58 @@
         }
 
         function gameLoop() {
-            if(!gameRunning || ["burger", "guess", "restaurant", "atb"].includes(currentGameMode)) return;
+            if(!gameRunning || ["burger", "guess", "restaurant"].includes(currentGameMode)) return;
             ctx.clearRect(0,0, canvas.width, canvas.height);
+
+            if (currentGameMode === "ab") {
+                processAceTheBombFrameUpdate();
+                requestAnimationFrame(gameLoop);
+                return;
+            }
 
             if (currentGameMode === "jet") {
                 runner.y = canvas.height - 40; 
                 if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
                 if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
+
                 if (Math.random() < 0.15) { jetBullets.push({ x: runner.x + 13, y: runner.y - 8, w: 4, h: 12 }); }
                 if (Math.random() < 0.04) { jetAliens.push({ x: Math.random() * (canvas.width - 30), y: -20, w: 26, h: 22, speed: 2 }); }
 
                 ctx.fillStyle = '#ffff00';
                 for (let b = jetBullets.length - 1; b >= 0; b--) {
-                    jetBullets[b].y -= 9; ctx.fillRect(jetBullets[b].x, jetBullets[b].y, jetBullets[b].w, jetBullets[b].h);
+                    jetBullets[b].y -= 9;
+                    ctx.fillRect(jetBullets[b].x, jetBullets[b].y, jetBullets[b].w, jetBullets[b].h);
                     if (jetBullets[b].y < -20) jetBullets.splice(b, 1);
                 }
+
                 for (let a = jetAliens.length - 1; a >= 0; a--) {
-                    jetAliens[a].y += jetAliens[a].speed; ctx.font = "20px sans-serif"; ctx.fillText("👽", jetAliens[a].x, jetAliens[a].y + 16);
+                    jetAliens[a].y += jetAliens[a].speed;
+                    ctx.font = "20px sans-serif";
+                    ctx.fillText("👽", jetAliens[a].x, jetAliens[a].y + 16);
+
                     for (let b = jetBullets.length - 1; b >= 0; b--) {
                         if (jetBullets[b] && jetBullets[b].x > jetAliens[a].x && jetBullets[b].x < jetAliens[a].x + jetAliens[a].w &&
                             jetBullets[b].y < jetAliens[a].y + jetAliens[a].h && jetBullets[b].y > jetAliens[a].y) {
-                            jetAliens.splice(a, 1); jetBullets.splice(b, 1); jetScore += 1; cash += 10; updateGlobalCash();
-                            document.getElementById('distance-val').innerText = jetScore; break;
+                            
+                            jetAliens.splice(a, 1);
+                            jetBullets.splice(b, 1);
+                            jetScore += 1; cash += 10; updateGlobalCash();
+                            document.getElementById('distance-val').innerText = jetScore;
+                            break;
                         }
                     }
+
                     if (jetAliens[a] && jetAliens[a].y > canvas.height) {
-                        gameRunning = false; triggerCustomNotification("🚨 BASE DEFENSE INFILTRATED!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                        gameRunning = false;
+                        triggerCustomNotification("🚨 BASE DEFENSE INFILTRATED!", "#ff4757", () => {
+                            gameScreen.classList.add('hidden');
+                        });
+                        return;
                     }
                 }
-                ctx.fillStyle = '#00d2d3'; ctx.font = "28px sans-serif"; ctx.fillText("🚀", runner.x, runner.y + 24);
+
+                ctx.fillStyle = '#00d2d3'; ctx.font = "28px sans-serif";
+                ctx.fillText("🚀", runner.x, runner.y + 24);
                 requestAnimationFrame(gameLoop); return;
             }
 
@@ -2445,19 +2367,30 @@
                         } else { ctx.fillStyle = "#1e1e1e"; ctx.fillRect(c * mazeCellSize, r * mazeCellSize, mazeCellSize, mazeCellSize); }
                     }
                 }
+
                 ctx.fillStyle = "#ffd32a";
-                mazeCoins.forEach(coin => { ctx.beginPath(); ctx.arc(coin.c * mazeCellSize + mazeCellSize/2, coin.r * mazeCellSize + mazeCellSize/2, 6, 0, Math.PI*2); ctx.fill(); });
-                ctx.font = "24px Arial"; ctx.fillText("🧒", mazePlayer.x * mazeCellSize + 8, mazePlayer.y * mazeCellSize + 30); ctx.fillText("💀", mazeGhost.x * mazeCellSize + 8, mazeGhost.y * mazeCellSize + 30);
-                mazeGhostSpeedTimer++; if(mazeGhostSpeedTimer % 35 === 0) { processChenMazeLogicEvaluation(); }
+                mazeCoins.forEach(coin => {
+                    ctx.beginPath(); ctx.arc(coin.c * mazeCellSize + mazeCellSize/2, coin.r * mazeCellSize + mazeCellSize/2, 6, 0, Math.PI*2); ctx.fill();
+                });
+
+                ctx.font = "24px Arial";
+                ctx.fillText("🧒", mazePlayer.x * mazeCellSize + 8, mazePlayer.y * mazeCellSize + 30);
+                ctx.fillText("💀", mazeGhost.x * mazeCellSize + 8, mazeGhost.y * mazeCellSize + 30);
+
+                mazeGhostSpeedTimer++;
+                if(mazeGhostSpeedTimer % 35 === 0) { processChenMazeLogicEvaluation(); }
                 requestAnimationFrame(gameLoop); return;
             }
 
             if (currentGameMode === "flappy") {
-                fpVelocity += fpGravity; runner.y += fpVelocity; fpFrameCounter++;
+                fpVelocity += fpGravity; runner.y += fpVelocity;
+                fpFrameCounter++;
                 if (fpFrameCounter % 90 === 0) {
-                    let clearanceGap = 120; let targetHeight = Math.floor(Math.random() * (canvas.height - 200)) + 40;
+                    let clearanceGap = 120;
+                    let targetHeight = Math.floor(Math.random() * (canvas.height - 200)) + 40;
                     fpPipes.push({ x: canvas.width, topHeight: targetHeight, bottomY: targetHeight + clearanceGap, w: 55, passed: false });
                 }
+
                 ctx.fillStyle = "#2ed573";
                 for (let p = fpPipes.length - 1; p >= 0; p--) {
                     let pipe = fpPipes[p]; pipe.x -= 3.5;
@@ -2467,17 +2400,29 @@
 
                     if (runner.x + runner.w > pipe.x && runner.x < pipe.x + pipe.w) {
                         if (runner.y < pipe.topHeight || runner.y + runner.h > pipe.bottomY) {
-                            gameRunning = false; triggerCustomNotification("💥 FLIGHT TERMINATED!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                            gameRunning = false; 
+                            triggerCustomNotification("💥 FLIGHT TERMINATED!", "#ff4757", () => {
+                                gameScreen.classList.add('hidden');
+                            });
+                            return;
                         }
                     }
+
                     if (!pipe.passed && pipe.x < runner.x) {
-                        pipe.passed = true; distance++; cash += 1; updateGlobalCash(); document.getElementById('distance-val').innerText = distance;
+                        pipe.passed = true; distance++; cash += 1; updateGlobalCash();
+                        document.getElementById('distance-val').innerText = distance;
                     }
                     if (pipe.x + pipe.w < 0) fpPipes.splice(p, 1);
                 }
+
                 if (runner.y > canvas.height || runner.y < -40) {
-                    gameRunning = false; triggerCustomNotification("💥 BOUNDS CRASH BOUNDARY!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                    gameRunning = false; 
+                    triggerCustomNotification("💥 BOUNDS CRASH BOUNDARY!", "#ff4757", () => {
+                        gameScreen.classList.add('hidden');
+                    });
+                    return;
                 }
+
                 ctx.font = "26px Arial"; ctx.fillText("🛩️", runner.x, runner.y + 18);
                 requestAnimationFrame(gameLoop); return;
             }
@@ -2492,7 +2437,8 @@
                     if (f.locked) {
                         ctx.fillStyle = 'rgba(139, 69, 19, 0.4)'; ctx.fillRect(f.x, f.y, f.w, f.h);
                         ctx.lineWidth = 2; ctx.strokeStyle = '#d63031'; ctx.strokeRect(f.x, f.y, f.w, f.h);
-                        ctx.fillStyle = '#ffffff'; ctx.font = "12px sans-serif"; ctx.fillText(`🔒 Plot ${idx+1}`, f.x + 16, f.y + 35); ctx.fillText("$150", f.x + 24, f.y + 55);
+                        ctx.fillStyle = '#ffffff'; ctx.font = "12px sans-serif"; ctx.fillText(`🔒 Plot ${idx+1}`, f.x + 16, f.y + 35);
+                        ctx.fillText("$150", f.x + 24, f.y + 55);
                     } else {
                         ctx.fillStyle = '#2ed573'; ctx.fillRect(f.x + 3, f.y + 3, f.w - 6, f.h - 6);
                         ctx.lineWidth = 4; ctx.strokeStyle = '#8b4513'; ctx.strokeRect(f.x, f.y, f.w, f.h);
@@ -2505,12 +2451,14 @@
 
                 let dx = runner.targetX - runner.x; let dy = runner.targetY - runner.y; let distVec = Math.hypot(dx, dy);
                 if (distVec > 3) { runner.x += (dx / distVec) * runner.speed; runner.y += (dy / distVec) * runner.speed; } 
+
                 ctx.font = "26px Arial"; ctx.fillText("👨‍🌾", runner.x, runner.y + 22);
                 requestAnimationFrame(gameLoop); return;
             }
 
             if(runner.moveLeft && runner.x > 0) runner.x -= runner.speed;
             if(runner.moveRight && runner.x < canvas.width - runner.w) runner.x += runner.speed;
+
             ctx.fillStyle = '#00a8ff'; ctx.beginPath(); ctx.arc(runner.x + 15, runner.y + 15, 15, 0, Math.PI*2); ctx.fill();
 
             if(currentGameMode === "laser") {
@@ -2523,10 +2471,14 @@
                     });
                 }
                 for(let i = obstacles.length - 1; i >= 0; i--) {
-                    let o = obstacles[i]; o.y += o.speed; ctx.fillStyle = '#ff4757'; ctx.fillRect(o.x, o.y, o.w, o.h);
+                    let o = obstacles[i]; o.y += o.speed;
+                    ctx.fillStyle = '#ff4757'; ctx.fillRect(o.x, o.y, o.w, o.h);
                     if (o.x < runner.x + runner.w && o.x + o.w > runner.x && o.y < runner.y + runner.h && o.y + o.h > runner.y) {
                         gameRunning = false; cash += distance; updateGlobalCash();
-                        triggerCustomNotification(`💥 CRASHED!\n\nDistance Cleared: ${distance}\nEarned: +$${distance}`, "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                        triggerCustomNotification(`💥 CRASHED!\n\nDistance Cleared: ${distance}\nEarned: +$${distance}`, "#ff4757", () => {
+                            gameScreen.classList.add('hidden');
+                        });
+                        return;
                     }
                     if(o.y > canvas.height) obstacles.splice(i, 1);
                 }
@@ -2541,6 +2493,7 @@
 
                 train.y += (train.targetY - train.y) * 0.1;
                 if(train.x + train.w/2 < runner.x + 15) train.x += 3.5; else train.x -= 3.5;
+
                 ctx.fillStyle = '#4b4b4b'; ctx.fillRect(train.x, train.y, train.w, train.h);
                 ctx.fillStyle = '#ff4757'; ctx.fillRect(train.x - 2, train.y, train.w + 4, 10);
                 ctx.fillStyle = '#ff9f43'; ctx.fillRect(train.x + 10, train.y + 15, 12, 10); ctx.fillRect(train.x + train.w - 22, train.y + 15, 12, 10);
@@ -2549,26 +2502,41 @@
                 if(Math.random() < 0.015 && activeBushes.length < 3) activeBushes.push({ x: Math.random() * (canvas.width - 45) + 10, y: -20, w: 35, h: 25, speed: 3.5 });
 
                 for(let c = activeCoins.length - 1; c >= 0; c--) {
-                    let coin = activeCoins[c]; coin.y += coin.speed; ctx.fillStyle = '#ffd32a'; ctx.beginPath(); ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI*2); ctx.fill();
+                    let coin = activeCoins[c]; coin.y += coin.speed;
+                    ctx.fillStyle = '#ffd32a'; ctx.beginPath(); ctx.arc(coin.x, coin.y, coin.r, 0, Math.PI*2); ctx.fill();
                     if(Math.hypot((runner.x + 15) - coin.x, (runner.y + 15) - coin.y) < 15 + coin.r) {
-                        activeCoins.splice(c, 1); distance += 1; cash += 5; updateGlobalCash(); document.getElementById('distance-val').innerText = distance; continue;
+                        activeCoins.splice(c, 1); distance += 1; cash += 5; updateGlobalCash();
+                        document.getElementById('distance-val').innerText = distance; continue;
                     }
                     if(coin.y > canvas.height) activeCoins.splice(c, 1);
                 }
+
                 for(let b = activeBushes.length - 1; b >= 0; b--) {
-                    let bush = activeBushes[b]; bush.y += bush.speed; ctx.fillStyle = '#2ed573'; ctx.beginPath(); ctx.arc(bush.x + 10, bush.y + 12, 12, 0, Math.PI*2); ctx.arc(bush.x + 25, bush.y + 12, 12, 0, Math.PI*2); ctx.arc(bush.x + 17, bush.y + 6, 12, 0, Math.PI*2); ctx.fill();
+                    let bush = activeBushes[b]; bush.y += bush.speed;
+                    ctx.fillStyle = '#2ed573'; ctx.beginPath(); ctx.arc(bush.x + 10, bush.y + 12, 12, 0, Math.PI*2); ctx.arc(bush.x + 25, bush.y + 12, 12, 0, Math.PI*2); ctx.arc(bush.x + 17, bush.y + 6, 12, 0, Math.PI*2); ctx.fill();
                     if (bush.x < runner.x + runner.w && bush.x + bush.w > runner.x && bush.y < runner.y + runner.h && bush.y + bush.h > runner.y) {
                         activeBushes.splice(b, 1); 
                         if (!isTrainAlertActive) { isTrainAlertActive = true; alertEndTime = Date.now() + 5000; } 
-                        else { gameRunning = false; triggerCustomNotification("🚂 CHASED DOWN BY TRAIN!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return; }
+                        else { 
+                            gameRunning = false; 
+                            triggerCustomNotification("🚂 CHASED DOWN BY TRAIN!", "#ff4757", () => {
+                                gameScreen.classList.add('hidden');
+                            });
+                            return; 
+                        }
                         continue;
                     }
                     if(bush.y > canvas.height) activeBushes.splice(b, 1);
                 }
                 if (train.y <= runner.y + runner.h && train.y + train.h >= runner.y && train.x < runner.x + runner.w && train.x + train.w > runner.x) {
-                    gameRunning = false; triggerCustomNotification("🚂 TRAIN COLLISION STATE TARGETED!", "#ff4757", () => { gameScreen.classList.add('hidden'); }); return;
+                    gameRunning = false; 
+                    triggerCustomNotification("🚂 TRAIN COLLISION STATE TARGETED!", "#ff4757", () => {
+                        gameScreen.classList.add('hidden');
+                    });
+                    return;
                 }
             }
+
             requestAnimationFrame(gameLoop);
         }
     </script>
